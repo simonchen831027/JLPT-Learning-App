@@ -34,11 +34,18 @@
 
 | 狀態 | 項目 | 待決內容 | 最晚決策時點 |
 |---|---|---|---|
-| 待決策 | Python lockfile 格式 | 採用的相依鎖定檔格式及工具 | Phase 0 完成依賴版本策略前（§38.2）；最遲於 Python Content Pipeline 實作前 |
-| 待決策 | Python 多平台鎖定 | Windows 開發與其他實際執行/CI 平台如何產生及驗證 lockfile | Phase 0 確認平台與 CI 建置路徑前（§38.2）；最遲於 Python Content Pipeline 實作前 |
-| 待決策 | iOS 建置主機 | 使用自有 Mac 或 macOS CI runner | Phase 0 完成平台 target 與最小 CI 規劃前（§38.2）；最遲於首次 iOS 建置前 |
+| 已選定 | Python lockfile 格式 | uv 0.12.19 + `uv.lock`；本次授權評估選定，實際套件加入時驗證 | 見 [Phase 0 基礎建設決策](phase-0-foundation.md) |
+| 已選定 | Python 多平台鎖定 | 同一跨平台 lockfile；Windows／Ubuntu 使用 locked sync 並驗證 | 見 [Phase 0 基礎建設決策](phase-0-foundation.md) |
+| 已核准 | iOS 建置主機 | 使用者於 2026-09-26 選擇 macOS GitHub Actions；未簽署編譯 | 見 [Phase 0 基礎建設決策](phase-0-foundation.md) |
 | 待決策 | STT/TTS providers | Provider、平台支援及成本限制 | Phase 2/3 導入對應 provider 前（依 V2.3 §38.11） |
 
-SDK 版本與 lockfile 決策已部分完成，但依賴項目尚未出現，實際相容性驗證仍屬後續工作：Python 套件加入時需驗證 Python 3.14.7；若失敗須先新增 Decision Record 才能更改 Python 版本。規格 §38.2 的 App Shell、SQLite migration framework 與最小 CI 等待辦不在本次範圍。
+SDK 與依賴策略已記錄於 [Phase 0 基礎建設決策](phase-0-foundation.md)。Flutter 依賴已加入並鎖定；Python 套件加入時仍需驗證 Python 3.14.7，若失敗須先新增 Decision Record 才能改版。App Shell、SQLite migration framework 與最小 CI 已納入本次實作，實際閘門狀態見 [Phase 0 交付紀錄](../phase-0-validation.md)。
+
+## 實作前仍須補齊的決策
+
+| 項目 | 影響與決策時點 |
+|---|---|
+| Entity ID、時區與 nullable 規則 | V2.3 §42.1；正式 Phase 1 schema 開始前記錄，KnowledgeConcept identity 仍依 Phase 1.5 決策。 |
+| 正式 application/bundle ID、簽署 | 目前使用 Flutter 範本開發識別；對外發布、安裝正式資料或配置簽署前選定。 |
 
 決策完成時，記錄決定、理由、日期與 policy/version，並連結實際採用的 SDK 設定或工具文件。不得只將建議當成已核准決策。

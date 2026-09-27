@@ -1,46 +1,90 @@
-# 開發環境盤點與版本決策
+# 開發環境與重現步驟
 
-本文件記錄 Phase 0 環境盤點與已核准的 SDK/依賴版本決策。SDK 選定不代表已安裝；本次未安裝或更新任何工具。
+更新日期：2026-09-27。版本選定、工具可用、專案測試與裝置驗證分別記錄；工具檢查通過不代表階段閘門完成。最新結果見 [Phase 0 Closure](phase-0-closure.md)，2026-09-26 的歷史結果另行保留。
 
-## 目前環境（盤點日期：2026-09-26）
+## 版本與本機盤點
 
-| 工具 | 已知狀態 |
+| 工具 | 版本與狀態 |
 |---|---|
-| Git | 2.55.0.windows.3 |
-| .NET SDK | 10.0.401（已安裝，與 repository `global.json` 精確相符） |
-| ASP.NET Core Runtime | 10.0.12 |
-| Flutter | 3.47.5 stable 已選定，尚未安裝 |
-| Dart | Flutter 3.47.5 隨附 3.13.4；不獨立安裝，Flutter 尚未安裝故目前無 Dart 命令 |
-| Python | 3.14.7 已選定，尚未安裝；`python`、`python3` 不可用 |
-| Python launcher / pip | Windows `py` launcher 存在但找不到預設 Python；`pip`、`pip3` 不可用 |
+| Flutter | 3.47.5 stable，已實際執行 `flutter --version` 確認；根目錄 `.flutter-version` 記錄 |
+| Dart | Flutter 隨附 3.13.4，不獨立安裝 |
+| .NET SDK | 10.0.401，已實際執行確認；`global.json` 精確鎖定且禁止 roll-forward |
+| Python | 沿用選定 3.14.7，`.python-version` 記錄；本次未確認該解譯器已可執行 |
+| uv | 選定 0.12.19；本次只制定策略，未安裝／執行 |
+| Android | 2026-09-27 debug APK build 通過；API 36 x86_64 system image 已安裝。無連線實機與可用硬體加速，驗證專用軟體 AVD 未能開機，Android smoke test 未完成 |
+| Windows | 首次加入 plugin 時遭 symlink 限制；後續讀到 Developer Mode 已啟用，locked restore、release build 與原生 smoke test 均通過 |
+| iOS | 使用者選定 macOS GitHub Actions；Windows 不執行 iOS build |
 
-Flutter/Dart/Python 尚無可用執行環境。平台 SDK 亦未完成盤點：Android 需要 Android Studio/SDK 工具鏈；Windows 桌面建置需要 Visual Studio 的 Desktop development with C++ workload；iOS 建置需要 macOS 與 Xcode。Repository 尚無 Flutter、.NET、Python 專案或依賴設定，因此目前沒有專案建置/測試命令可執行。
+2026-09-26 的 `py --list-paths` 解析至既有 Python 3.6 路徑並回報參數錯誤，不能將其視為 Python 3.14.7 可用證據；不修改既有 Python 安裝。實際驗證結果與更新狀態以 [Phase 0 Closure](phase-0-closure.md) 為準。
 
-## 已核准的版本決策
+## 乾淨 checkout
 
-- **Flutter / Dart：**Flutter 3.47.5 stable；使用其隨附 Dart 3.13.4，不獨立安裝 Dart。Flutter 精確版本記錄於本文件；未來 `pubspec.yaml` 的 SDK constraint 用於相容性限制，不能取代 Flutter SDK 精確版本記錄。
-- **.NET：**SDK 10.0.401。根目錄 `global.json` 精確鎖版，`rollForward` 設為 `disable`。此檔只選取 .NET SDK，不表示已建立 .NET 專案。
-- **Python：**Content Pipeline 選用 Python 3.14.7。加入實際 Python 套件時需驗證相容性；若不相容，須先新增 Decision Record 才能改用其他 Python 版本。
+安裝所選 Flutter 並將 `flutter`、`dart` 加入 PATH。首次下載依賴、Flutter artifacts、Android Gradle／SDK 元件需要網路；這不影響 App 執行時的離線設計。
 
-版本選定依據：Flutter 官方 [Windows SDK release index](https://storage.googleapis.com/flutter_infra_release/releases/releases_windows.json)（3.47.5 stable / Dart 3.13.4）、Microsoft [.NET 10 SDK download](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)（10.0.401）、Python.org [downloads](https://www.python.org/downloads/)（3.14.7）。版本若需變更，應更新待決策紀錄及本文件，並保留理由與日期。
+Windows 需 Visual Studio Desktop development with C++ workload，以及 Windows Developer Mode（提供 plugin symlink 支援）。Android 需 Android Studio／SDK 與已接受 licenses。iOS 由 macOS CI 使用 Xcode 建置。
 
-## 版本記錄與依賴鎖定
+從根目錄執行：
 
-- Flutter/Dart：Flutter SDK 版本及隨附 Dart 版本以本文件記錄；應用程式 `pubspec.yaml` 記錄 SDK 相容範圍。
-- .NET SDK：以根目錄 `global.json` 精確選取 10.0.401 並停用 roll-forward。
-- Python：以本文件記錄已選定解譯器版本；Python 專案建立時在 `pyproject.toml` 宣告支援範圍，且不得將相容範圍誤當成精確 pin。
-- Flutter App 的 `pubspec.lock` 納入 Git。
-- NuGet 專案開始時提交 `packages.lock.json`，restore 採 locked mode。
-- Python lockfile 格式及跨平台鎖定方式尚未決定；不得在此之前加入未核准的鎖定工具或流程。
+```powershell
+cd app
+dart tool/check_sdk.dart
+flutter pub get --enforce-lockfile
+dart format --output=none --set-exit-if-changed lib test integration_test tool
+flutter analyze --no-pub
+flutter test --no-pub
+flutter build windows --release --no-pub
+flutter build apk --debug --no-pub
+```
 
-## 平台建置
+各命令都應成功才繼續下一步。PowerShell 手動執行時請核對 exit code；不要用忽略失敗的腳本串接。SDK 不符應先回到版本決策，不自行升級或降版。
 
-- Windows 11 可用於 Android 開發/建置；需依 Flutter 官方 Android setup 準備 Android Studio、Android SDK 與所需工具及 licenses。
-- Windows 11 可建置 Flutter Windows 桌面版；需 Visual Studio（不同於 VS Code）及 Desktop development with C++ workload。
-- Flutter iOS 建置需要 macOS 與 Xcode。自有 Mac 或 macOS CI runner 的選擇延後決策；在選定前，不宣稱 Windows 環境可建置 iOS。
+`flutter pub get --enforce-lockfile` 必須使用版控中的 `app/pubspec.lock`，CI 不自行升級依賴。依賴修改才使用一般 `flutter pub get` 更新 lockfile，並檢查 diff、formatter、analyzer、tests 及受影響平台 build。NuGet 專案開始時提交 `packages.lock.json` 並用 locked restore；目前尚無 .NET 專案。
 
-官方平台文件：[Flutter Android setup](https://docs.flutter.dev/platform-integration/android/setup)、[Flutter Windows setup](https://docs.flutter.dev/platform-integration/windows/setup)、[Flutter iOS deployment](https://docs.flutter.dev/deployment/ios)。
+## 啟動與原生 smoke test
 
-## Git 分支策略
+```powershell
+cd app
+flutter run -d windows
+flutter test integration_test/app_shell_test.dart -d windows --no-pub
+flutter emulators
+flutter devices
+```
 
-目前分支為 `main`。依主要規格 §21 記錄分支名稱 `main`、`develop`、`feature/*`、`fix/*`；目前沒有建立其他分支。本文件只記錄規格既有名稱，不增訂分支保護、release 分支、命名格式或額外工作流程。
+若無 AVD，先於 Android Studio Device Manager 建立虛擬裝置並啟動，或連接已開啟 USB debugging 的實體 Android。裝置出現後執行：
+
+```powershell
+flutter run -d <android-device-id>
+flutter test integration_test/app_shell_test.dart -d <android-device-id> --no-pub
+```
+
+驗收：開啟後顯示 N5 空教材畫面；學習／複習／設定導覽可切換；重開後本機資料庫仍可開啟。integration test 使用與 App 相同的 Application Support 資料庫，僅驗證開啟／重開，不刪除既有資料。Phase 0 沒有教材或學習資料可供完整 Slice 回歸。
+
+## iOS 與 CI
+
+GitHub Actions workflow 的品質檢查通過後，才執行 Windows release、Android debug 與 iOS unsigned release 建置。iOS 命令只在 macOS 執行：
+
+```sh
+cd app
+flutter pub get --enforce-lockfile
+flutter build ios --release --no-codesign --no-pub
+```
+
+此編譯不代表完成裝置安裝、簽署或 App Store 發布。Flutter 模板目前保留開發 application/bundle ID；正式 ID、簽署與 iOS 原生依賴 lock（若所選整合方式產生）須在首次 macOS 驗證及發布前核對。Flutter 的 `pubspec.lock` 不等同原生依賴鎖定。
+
+Repository 目前無 Git remote，workflow 尚未在 GitHub 執行。設定 GitHub remote 並經 Human review 推送後，需取得三平台 workflow 成功紀錄，才能關閉該項閘門。
+
+## Python 依賴策略
+
+採 uv 0.12.19 與單一 `python/uv.lock`，Windows／Ubuntu 用同一份 lockfile 執行 locked sync，Python 固定 3.14.7。首批套件加入時驗證兩平台，失敗先新增 Decision Record。詳見 [基礎建設決策](decisions/phase-0-foundation.md)；目前不建立 Pipeline，亦不聲稱已執行 pytest。
+
+## Migration 與資料
+
+資料庫位於平台 Application Support directory 的 `jlpt_learning.sqlite3`。目前 v1 只建立 migration history。未來新增 schema 時，附加連續版本 migration 與升級測試；不要改寫已發布 migration，不透過刪除資料庫解決升級失敗。
+
+`onCreate`／`onUpgrade` 由 sqflite transaction 包裹；失敗保留前一版資料。降版與不一致 history 顯示安全的啟動錯誤，可重試，不清除資料。Content Data、User Learning State、Derived Analytics 在對應階段分開建模；Reset 需明確 scope 與 transaction，不屬於 Phase 0。
+
+## Git
+
+沿用 V2.3 的 `main`、`develop`、`feature/*`、`fix/*`。本次使用 `feature/phase-0-foundation`，保留既有實作與使用者治理文件。Closure 依使用者明確授權建立提交與驗證；Human review 前不將階段標示為完成。提交與 clean-checkout 結果見 [Phase 0 Closure](phase-0-closure.md)。
+
+官方文件：[Android setup](https://docs.flutter.dev/platform-integration/android/setup)、[Windows setup](https://docs.flutter.dev/platform-integration/windows/setup)、[iOS deployment](https://docs.flutter.dev/deployment/ios)、[uv locked sync](https://docs.astral.sh/uv/concepts/projects/sync/)。
