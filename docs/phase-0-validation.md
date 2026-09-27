@@ -1,6 +1,6 @@
 # Phase 0 交付與驗證紀錄
 
-歷史驗證日期：2026-09-26。以下保留當時工作樹與來源副本的結果，不代表後續提交版本已通過驗證。最新收尾狀態見 [Phase 0 Closure](phase-0-closure.md)。範圍限定 V2.3 §38.2；**實作已提供，Phase 0 閘門尚未全部關閉**。
+歷史驗證日期：2026-09-26。以下保留當時工作樹與來源副本的結果，不代表後續提交版本已通過驗證。最新收尾狀態、Developer 已接受的 `4d8f435` committed clean-checkout evidence，以及 `DEC-P0-002` 修正的 gate 分類見 [Phase 0 Closure](phase-0-closure.md)。範圍限定 V2.3 §38.2；**實作已提供，Phase 0 閘門尚未全部關閉**。
 
 ## 交付範圍與變更層
 
@@ -56,8 +56,8 @@ Migration 測試刻意製造缺表、降版與 history 不一致，因此 sqflit
 
 Phase 0 前沒有可執行 Vertical Slice，因此前階段回歸不適用；本次建立的 Shell／migration／原生 smoke test 是後續階段的基線。
 
-待補驗證：正式 commit 的乾淨 checkout、GitHub Actions 三平台成功紀錄、Android 裝置操作、iOS 編譯與 Human review。正式 application/bundle ID、簽署、Phase 1 Entity ID／時區／nullable，以及後續 Knowledge／Readiness 等政策仍需按登錄表決策。Python／uv 已選策略，未安裝或執行，也未宣稱套件相容。
+本節是 2026-09-26 的歷史待辦快照。後續 `4d8f435` 的正式 commit 乾淨 checkout 驗證已由 Developer 完成並透過 `DEC-P0-001` 接受。`DEC-P0-002` 確認 §38.2 的 CI 基本工作可執行是 Phase 0 mandatory gate，目前仍缺 GitHub Actions 實際執行證據；§40 的最終 Human review 也待完成。Android 裝置操作與 iOS macOS build 仍為 **BLOCKED／未執行** 的待補平台驗證與已知限制，但不是 §38.2 mandatory gate，不能單獨阻止 Phase 0 完成，也不能宣稱已驗證。正式 application/bundle ID、簽署、Phase 1 Entity ID／時區／nullable，以及後續 Knowledge／Readiness 等政策仍需按登錄表於適用階段決策。Python／uv 已選策略，未安裝或執行，也未宣稱套件相容。
 
 ## Git 狀態
 
-分支：`feature/phase-0-foundation`。未新增 commit、未推送；repository 沒有 remote。本次程式與文件為未提交變更，保留原有 `AGENTS.md` 修改與 `.gitignore` 內容。請先完成 Human review，再依既有 Conventional Commit 流程提交。
+以下是 2026-09-26 的歷史 Git 狀態，不能用來描述目前工作樹：分支 `feature/phase-0-foundation`，當時尚未新增 commit、未推送，repository 無 remote，程式與文件為未提交變更。現行 Git 與 gate 狀態以 [Phase 0 Closure](phase-0-closure.md) 的本次核對及交付報告為準。
