@@ -702,6 +702,121 @@ evidence / CODEX_DECISION、未重跑原因與未執行項目。
 ## Git Status
 說明目前 Git 狀態。
 
+## 13.1 Codex Review Packet
+
+當 Codex 完成 implementation、bug fix、validation、Phase closure、`CODEX_DECISION`
+相關工作，或其他需要 Developer Review 的工作，且準備停止等待 Review 時，
+建立或覆寫 `local_data/codex-review/CODEX_REVIEW_PACKET.md`。產生前確認
+`local_data/` 確實受 `.gitignore` 忽略；若未忽略，先回報是否需要一次性的
+`.gitignore` governance adjustment，不得自行假設。每個新的 Review-ready task
+可覆寫前一次 packet；packet 不應 commit。
+
+Review Packet 是供 Developer / 01 Chat 閱讀的 convenience artifact，承載本節
+交付報告內容與實際 diff，不另設一套完成標準。它不是 Source of Truth、正式
+Requirement、`CHANGE_REQUEST`、`CODEX_DECISION`、Developer approval 或新的
+validation result，也不能取代 Repository、Git、CI、正式文件、§12 evidence、
+§6 `CHAT_HANDOFF`、§15.2 `SESSION_HANDOFF`、STOP Condition 或 Phase gate。
+尚未達到 Developer Review 狀態就結束 session 時，仍依 §15.2 交接。
+
+Review Packet 使用以下格式；依 §12 標示 validation 來源與適用範圍，並以
+§13 的 Scope、Migration、Regression、Tests 等交付要求填入對應欄位：
+
+```text
+# CODEX_REVIEW_PACKET
+
+Generated For:
+Developer / JLPT App｜01 需求・架構決策
+
+Task:
+...
+
+Phase:
+...
+
+Related Decision:
+CODEX_DECISION / CHANGE_REQUEST / None
+
+Current Approved Spec:
+...
+
+Repository State:
+- Branch:
+- HEAD:
+- Upstream:
+- Working Tree:
+
+Objective:
+...
+
+Implementation Summary:
+...
+
+Changed Files:
+- path
+
+Requirement / Decision Coverage:
+...
+
+Diff Review:
+本 task 實際修改的 patch / diff。
+
+Validation Evidence:
+對每項實際執行的 validation 記錄：
+- Evidence type
+- Command / CI Run
+- Result
+- Commit / Working Tree
+- Environment
+- Relevant limitation
+
+CI Evidence:
+- Workflow:
+- Run ID / URL:
+- Commit:
+- Jobs / Results:
+- 若未執行則寫 Not Run
+
+Known Limitations:
+...
+
+Pending Decisions:
+...
+
+Phase Gate Impact:
+...
+
+Git Status:
+...
+
+Recommended Next Action:
+...
+
+Developer Review Requested:
+Yes
+
+# END_CODEX_REVIEW_PACKET
+```
+
+產生規則：
+
+1. 內容取自實際 Repository、command、CI evidence；不得從 session memory 猜測，
+   也不得將未執行項目寫為 PASS。記錄實際 branch、HEAD、upstream 與工作樹狀態。
+2. `Diff Review` 對一般小型 source、test、documentation 變更提供足以 Review
+   的實際 diff，不只摘要；generated、binary 或 extremely large diff 可省略完整
+   內容，但須列出 omitted file、理由及驗證方式。區分本 task 修改與其他既存變更。
+3. 不放入 secrets、credentials、token、個人資料或不必要的敏感內容；若 diff
+   含此類資料，遮蔽並註明遮蔽範圍，不得以 packet 擴散。
+4. Validation 沿用 §12 的 evidence 分類；記錄 command / CI run、result、
+   commit / working tree、environment 與限制。未執行依 §12 標示；CI 未執行
+   填 `Not Run`。不因 packet 產生而新增驗證結果。
+5. 若有 unresolved STOP Condition，明列於 `Pending Decisions`、`Known Limitations`
+   或 `Phase Gate Impact`；不得宣稱受影響 Task 或 Phase 已完成。
+6. 產生 packet 不授權 commit、push、merge、改變 Phase status 或繞過既有
+   Manual approval / STOP 規則。
+7. 若檔案產生失敗，在終端輸出相同格式並明確說明檔案未建立。
+8. 檔案建立後，Codex 最終回覆提供 packet path、branch / HEAD、是否有未提交
+   修改，以及下一步需要 Developer Review；不需重複輸出完整報告。
+
 ---
 
 # 14. Git 與安全
