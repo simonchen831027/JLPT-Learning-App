@@ -17,10 +17,10 @@
 
 目前開發 Baseline：
 
-`JLPT_Learning_App_Technical_Spec_V2.3.md`
+`JLPT_Learning_App_Technical_Spec_V2.4.md`
 
-V2.3 是目前的 Current Approved Spec，但版本未來可以經正式 Change Request
-流程升級為 V2.4、V2.5、V3.0 等。
+V2.4 是目前的 Current Approved Spec；V2.3 保留為被取代的歷史 Spec。
+版本未來可以經正式 Change Request 流程升級為 V2.5、V3.0 等。
 
 一旦新版 Spec：
 
@@ -31,7 +31,7 @@ V2.3 是目前的 Current Approved Spec，但版本未來可以經正式 Change 
 
 則新版 Spec 成為新的 Current Approved Spec。
 
-Codex 不得因 AGENTS.md 曾記載 V2.3，而忽略 repository 中後續正式核准的新版本。
+Codex 不得因 AGENTS.md 曾記載 V2.4，而忽略 repository 中後續正式核准的新版本。
 
 ---
 
@@ -594,7 +594,7 @@ AI 功能另需確認：
 
 ## 11.1 Phase gate 與階段完成宣告
 
-Phase 順序、範圍與完成閘門依 Current Approved Spec；V2.3 對應 §38，
+Phase 順序、範圍與完成閘門依 Current Approved Spec；V2.4 對應 §38，
 既有 Vertical Slice 回歸依 §42.3，Definition of Done 依 §40。
 
 Phase gate 尚未完成，不得宣稱 `Phase Complete`，也不得提前開始下一 Phase
@@ -651,7 +651,7 @@ Developer 手動執行並提供完整 command/result 的驗證可以作為有效
 僅因切換 session 或執行者不同，不構成重跑理由。
 
 接受 evidence 不降低 Spec 的測試、CI、平台、乾淨 checkout 與回歸要求。
-V2.3 §42.3 要求的階段回歸仍須針對該交付執行；符合該交付範圍的 Developer
+V2.4 §42.3 要求的階段回歸仍須針對該交付執行；符合該交付範圍的 Developer
 evidence 可以作為執行證據，舊階段結果不能自動替代本階段回歸。
 
 ## 12.3 慢速下載 / 長時間 build
@@ -936,7 +936,7 @@ Git 狀態，保留既有修改。
 
 分支名稱依 Current Approved Spec 所定義流程。
 
-目前 V2.3 §21 定義：
+目前 V2.4 §21 定義：
 
 - `main`
 - `develop`
