@@ -27,6 +27,7 @@ V2.3 是目前的 Current Approved Spec，但版本未來可以經正式 Change 
 1. 已經由 Developer 核准；
 2. 已正式放入 repository；
 3. 已明確指定取代前一版；
+4. 對應 Change Request 已正式成為 `APPLIED`。
 
 則新版 Spec 成為新的 Current Approved Spec。
 
@@ -38,14 +39,17 @@ Codex 不得因 AGENTS.md 曾記載 V2.3，而忽略 repository 中後續正式�
 
 若資訊互相衝突，依以下順序判定：
 
-1. Current Approved Spec
-2. 已核准且尚待套用的 Change Request
-3. `AGENTS.md`
-4. Repository 中正式 Architecture / Decision Record / Project Documents
+1. Current Approved Repository Spec
+2. Approved Change Request
+3. 正式 Project Documents / Architecture Documents / Decision Records
+4. `AGENTS.md`
 5. Existing Code / Tests
-6. Developer 當前明確指令
-7. Current Codex Task Context
-8. Previous Codex Session / Conversation Context
+6. Current Chat / Work / Codex Task Context
+7. Previous Session / Conversation
+8. ChatGPT Memory
+
+此順序用於判定正式專案需求與狀態；Approved Change Request 的排序不代表
+可在 Spec 更新前依新版需求實作。需求套用狀態依 §1.4 判定。
 
 ChatGPT Memory、過去 Chat 討論、過去 Work 輸出、舊 Spec 草稿，以及 Codex
 歷史 session 均不得覆蓋 Current Approved Spec。
@@ -75,6 +79,31 @@ Spec，也不得直接假設 Spec 已過時。
 - 是否涉及產品或架構決策。
 
 若需要產品或架構決策，進入 STOP / CHAT_HANDOFF 流程。
+
+---
+
+## 1.4 Requirement / Change 狀態
+
+正式需求變更遵循：
+
+`DRAFT → APPROVED → APPLIED`
+
+- `DRAFT`：尚在 Chat / Product Decision 流程討論中的 Requirement / Change Proposal。
+  不得視為正式 Requirement，不得據此 implementation。
+- `APPROVED`：Developer 已明確確認方案，並產生正式 `CHANGE_REQUEST`，
+  Status 為 `APPROVED`。Spec 維護 Work 可依其修改 Candidate Spec，
+  但 Codex 尚不得依新版 Requirement implementation。
+- `APPLIED`：Candidate Spec 經 Developer Review / Approve，正式進入 Repository
+  並成為新的 Current Approved Spec。
+
+不得建立「`CHANGE_REQUEST: DRAFT`」作為必要正式 artifact。
+
+Work 完成或產生 Candidate Spec 不等於 `APPLIED`。未 `APPLIED` 的 Change Request
+不得讓 Codex 依新版需求 implementation；仍可進行不受影響的既有 Spec 工作。
+若 CR 與 Current Approved Spec 有未解決衝突，不得自行以 CR 覆蓋現行規格。
+
+此狀態流程用於需求變更；不改變 Spec 的 Implementation Decision 依 §7.1
+處理。Developer 明確授權的純治理文件維護，不因此取得產品需求或實作修改權限。
 
 ---
 
@@ -140,6 +169,26 @@ Codex 可以提出技術建議，但最終產品與架構決策由 Developer 決
 
 ---
 
+## 3.3 Chat / Work / Developer / Repository / Codex 分工
+
+| 角色 | 職責 |
+|---|---|
+| Chat | 需求 / Product / Architecture Decision 討論，交由 Developer 決定 |
+| Spec 維護 Work | 正式 Spec 與治理文件維護；精確寫入已核准決策 |
+| Developer | 最終批准需求、決策與文件 |
+| Repository | 正式專案狀態；保存 Current Approved Spec 與正式文件，Git 反映實際程式狀態 |
+| Codex | Implementation / Test / Validation，並依規格進行 Review 與交付回報 |
+
+Spec 維護 Work 即使可以存取 Repository，除非有 Developer 明確授權，仍不得
+修改 application implementation、test implementation、CI implementation、
+Backend 或 Python implementation。文件維護授權不隱含任何上述實作授權。
+
+治理文件不得新增、刪除或改變產品 Requirement、Architecture / API Contract、
+Database Semantic、Data Lifecycle、Migration、Compatibility、Privacy / Security
+或產品範圍；若需要這類變更，依正式 Specification Decision 流程處理。
+
+---
+
 # 4. STOP Conditions
 
 遇到以下任一情況時，Codex 必須停止「受影響部分」的實作：
@@ -178,6 +227,10 @@ Codex 可以提出技術建議，但最終產品與架構決策由 Developer 決
 13. 需求涉及尚未建立但 Spec 要求先建立的 Decision Record。
 
 14. 實作會超出 Current Approved Spec 所定義的 Phase 或產品範圍。
+
+15. 要依尚未 `APPLIED` 的 Change Request 實作新版需求。
+
+16. 目前 Phase gate 尚未完成，卻要求開始下一 Phase implementation。
 
 ---
 
@@ -330,14 +383,52 @@ Developer 會將 `CHAT_HANDOFF` 帶到需求／架構討論流程。
 - 不改變正式 Architecture / API / Data Contract；
 - 不需要修改 Spec；
 
-Developer 可以直接提供 implementation decision。
+流程：
+
+`Implementation Decision → CODEX_DECISION → Codex Resume`
+
+Developer 以 `CODEX_DECISION` 明確記錄 implementation decision，使用以下固定正式格式：
+
+```text
+# CODEX_DECISION
+
+Decision ID:
+DEC-XXXX
+
+Related CHAT_HANDOFF:
+若無正式 CHAT_HANDOFF，填 None。
+
+Decision:
+...
+
+Reason:
+...
+
+Spec Change Required:
+No
+
+Constraints:
+...
+
+Validation:
+...
+
+# END_CODEX_DECISION
+```
+
+若接受 validation evidence，在 `Validation` 中列出證據來源、適用版本／工作樹、
+command/result 與接受範圍（依 §12）。
+
+Codex 的建議或自行撰寫的紀錄不等於 Developer 核准。
+`CODEX_DECISION` 不得取代需要 Specification Decision 的 CHANGE_REQUEST，也不得豁免 Spec gate。
+§3.1 的一般 implementation-level decision 不需要逐項升級為 `CODEX_DECISION`。
 
 Codex 收到明確決策後：
 
 1. 確認決策不與 Current Approved Spec 衝突；
 2. 繼續 blocked work；
-3. 執行相關 tests；
-4. 在交付報告記錄該 implementation decision。
+3. 依 §12 確認已接受證據的適用性，執行尚需完成的相關 tests / validation；
+4. 在交付報告引用該 `CODEX_DECISION` 與驗證證據。
 
 ---
 
@@ -359,11 +450,13 @@ Codex 收到明確決策後：
 
 此時 Codex 必須等待：
 
-Chat 討論
-→ Developer 核准 Change Request
-→ Work 更新 Spec
-→ Developer Review
-→ 新版 Current Approved Spec 進入 Repository
+Specification Decision
+→ CHANGE_REQUEST（Developer 核准為 APPROVED）
+→ Work 修改 Spec 並產生 Candidate Spec
+→ Developer Review / Approve
+→ Repository 更新並指定新的 Current Approved Spec
+→ APPLIED
+→ Codex Resume
 
 之後才能繼續 blocked work。
 
@@ -388,9 +481,11 @@ Codex
 → `CHAT_HANDOFF`
 → Developer / Chat 討論
 → `CHANGE_REQUEST: APPROVED`
-→ Work 更新 Spec
-→ Developer Review
-→ 新 Spec 進 Repository
+→ Work 進行 Impact Analysis / Conflict Check
+→ Work 修改 Spec / Consistency Check / 產生 Candidate Spec
+→ Developer Review / Approve
+→ 新 Spec 正式進 Repository 並指定為 Current Approved Spec
+→ APPLIED
 → Codex Resume
 
 除非 Developer 明確指示 Codex 執行已核准的純文件同步工作，否則 Codex
@@ -497,6 +592,15 @@ AI 功能另需確認：
 - Readiness policy version
 - Knowledge mapping completeness
 
+## 11.1 Phase gate 與階段完成宣告
+
+Phase 順序、範圍與完成閘門依 Current Approved Spec；V2.3 對應 §38，
+既有 Vertical Slice 回歸依 §42.3，Definition of Done 依 §40。
+
+Phase gate 尚未完成，不得宣稱 `Phase Complete`，也不得提前開始下一 Phase
+implementation。個別 Task 完成、部分驗證通過或文件更新，不代表整個 Phase 完成。
+缺少的 gate 證據須明列為未完成／待驗證，不得用 session 摘要或推測補足。
+
 ---
 
 # 12. 測試結果回報
@@ -511,6 +615,56 @@ Codex 必須回報實際執行的檢查與結果。
 
 Repository 尚未建立對應專案或執行環境時，不得聲稱已執行其 build、analyze
 或 test。
+
+## 12.1 Validation evidence 分類
+
+| 分類 | 可證明的範圍與限制 |
+|---|---|
+| Historical validation | 過去版本或 session 的檢查結果；須標明當時版本，不自動證明目前工作樹有效 |
+| Current working-tree validation | 目前工作樹（包含未提交修改）上的檢查；記錄 HEAD 與修改狀態，不等同乾淨 checkout |
+| Committed clean-checkout validation | 指定 commit 的乾淨 checkout 上執行的檢查；須記錄 commit、乾淨狀態與環境 |
+| CI validation | 指定 commit / CI run / job 的實際結果；CI 設定存在不等於 CI 已執行或通過 |
+| Device / platform validation | 指定裝置、模擬器或平台環境上的檢查；build 通過不等於裝置流程驗證通過 |
+| Developer manual validation | Developer 手動執行並提供完整 command/result 的檢查；可作有效證據，須標明提供者與環境 |
+
+分類可並列，例如 Developer 手動驗證也可能是 committed clean-checkout validation；
+不得只因分類名稱或 Developer 接受證據就擴張其可證明的範圍。
+
+每筆 evidence 應記錄：
+
+- 執行者、日期、工作目錄與環境／平台，必要時包含 SDK、裝置資訊；
+- 對應 commit 或 HEAD 與工作樹差異／狀態；
+- 完整 command、result、exit code（可取得時）與相關 log／產物位置；
+- 覆蓋的 requirement / gate、限制與未執行項目。
+
+未知資訊須明列未知，不得推測補齊。歷史或外部提供的證據，不得宣稱為 Codex
+本次親自執行；本次未重跑時，明列「本次未執行；採用既有 evidence」及其來源。
+
+## 12.2 Developer evidence 與重跑判斷
+
+Developer 手動執行並提供完整 command/result 的驗證可以作為有效 evidence。
+若 Developer 已透過 `CODEX_DECISION` 接受該 evidence，Codex 不應無條件重跑
+相同高成本驗證；先確認證據對應的程式、依賴、設定、環境與驗收範圍仍適用。
+
+若後續修改影響受測行為、環境或依賴改變、出現新的失敗／矛盾證據，或既有證據
+未覆蓋必要 gate，應說明具體原因並執行必要範圍的補驗證，而非全面重跑。
+僅因切換 session 或執行者不同，不構成重跑理由。
+
+接受 evidence 不降低 Spec 的測試、CI、平台、乾淨 checkout 與回歸要求。
+V2.3 §42.3 要求的階段回歸仍須針對該交付執行；符合該交付範圍的 Developer
+evidence 可以作為執行證據，舊階段結果不能自動替代本階段回歸。
+
+## 12.3 慢速下載 / 長時間 build
+
+- 無輸出不等同失敗；優先確認 process 是否仍正常執行，檢視可取得的 process
+  狀態、log、CPU / I/O 或下載進度，不能只依沉默時間判定失敗。
+- 不得無限重跑相同 restore / build / download；原 process 仍在執行時，
+  不得僅因沒有新輸出就啟動相同工作或終止重跑。
+- 重試前記錄前次結果與新的 diagnostic evidence，指出此次重試要驗證或修正什麼。
+- 無新 diagnostic evidence 時，停止重複嘗試，回報現況、已知限制與尚缺證據；
+  正常執行中的 process 可持續等待與觀察，不得把停止重試寫成驗證通過。
+- 長時間工作期間提供進度或不確定性說明；交接時記錄仍在執行的 process 與 log
+  位置，避免下一 session 重複啟動。
 
 ---
 
@@ -534,7 +688,8 @@ Repository 尚未建立對應專案或執行環境時，不得聲稱已執行其
 列出既有 Vertical Slice 回歸結果。
 
 ## Tests
-實際執行測試與結果。
+實際執行測試與結果、§12 的 evidence 分類與適用範圍；引用的 Developer
+evidence / CODEX_DECISION、未重跑原因與未執行項目。
 
 ## Limitations
 目前限制。
@@ -551,7 +706,9 @@ Repository 尚未建立對應專案或執行環境時，不得聲稱已執行其
 
 # 14. Git 與安全
 
-目前使用 `main`。
+Current branch、HEAD、工作樹是否乾淨及未提交修改，必須由 Git repository
+實際狀態判定，不得由本文件或 previous session 推定。開始工作與交付時確認
+Git 狀態，保留既有修改。
 
 分支名稱依 Current Approved Spec 所定義流程。
 
@@ -591,9 +748,14 @@ AI 請求一律經 Backend Gateway。
 
 # 15. Codex Session Continuity
 
-`codex resume --last` 可以用於延續目前 implementation context。
+## 15.1 Resume 與正式狀態
 
-但 Codex Session 不是 Source of Truth。
+- 預設建議使用 `codex resume`，由 Developer 從 session picker 選擇正確 session。
+- 僅在能明確確認最近 session 就是本次要延續的 session 時，使用 `codex resume --last`。
+- Codex Session 永遠不是 Source of Truth；resume 不代表舊工作範圍、決策、
+  Phase 狀態或驗證證據自動仍有效。
+
+CLI 指令參考：[OpenAI 官方文件](https://learn.chatgpt.com/docs/developer-commands?surface=cli)。
 
 每次遇到以下情況：
 
@@ -601,6 +763,7 @@ AI 請求一律經 Backend Gateway。
 - `AGENTS.md` 更新；
 - Developer 提供新的 Approved Change Request；
 - 從 CHAT_HANDOFF 回復；
+- 收到 `CODEX_DECISION` 或 `SESSION_HANDOFF`；
 - 開始新的 Phase；
 
 Codex 應重新讀取相關正式文件，而不能只依賴 previous session memory。
@@ -609,6 +772,27 @@ Codex 應重新讀取相關正式文件，而不能只依賴 previous session me
 
 以 repository 正式文件為準。
 
+## 15.2 Session checkpoint / SESSION_HANDOFF
+
+在長任務的可安全中斷點、切換 session 前或需要交接時，建立 session checkpoint；
+以 `SESSION_HANDOFF` 記錄可讓下一 session 核對的事實。至少包含：
+
+- Task、Phase、Current Approved Spec 與相關正式文件；
+- repository / 工作目錄、實際 branch、HEAD、未提交修改及需保留的工作；
+- 已完成項目、尚未完成項目與 Phase gate 狀態；
+- CR 狀態、已核准 `CODEX_DECISION`、未解決 `CHAT_HANDOFF`；
+- validation evidence 分類、command/result、適用版本、未執行與不需重跑的理由；
+- 仍在執行的 process、log／產物位置、已嘗試的診斷及結果；
+- 下一步安全工作、blocked work 與需要 Developer 決定的事項。
+
+交接內容以 `# SESSION_HANDOFF` 開始、`# END_SESSION_HANDOFF` 結束；可在
+交付訊息或專案交接文件保存，不含 secrets 或不必要的敏感資料。
+Checkpoint 不要求為交接而自動 commit、切換 branch 或清除工作樹。
+
+接手時重新核對 Git 與相關正式文件，不把 checkpoint 當成正式需求、批准或新的
+驗證結果。`SESSION_HANDOFF` 用於延續工作，不能取代處理未決產品／架構問題的
+`CHAT_HANDOFF`，也不能解除 STOP Condition。
+
 ---
 
 # 16. 核心工作原則
@@ -616,26 +800,31 @@ Codex 應重新讀取相關正式文件，而不能只依賴 previous session me
 整個專案遵循：
 
 Chat
-→ 討論需求與架構
+→ Requirement / CHAT_HANDOFF 分析
 → Developer Decision
-→ APPROVED CHANGE_REQUEST
 
-Work
-→ Impact Analysis
-→ Conflict Check
-→ 更新 Spec
-→ Consistency Check
+若為 Implementation Decision：
 
-Developer
-→ Review / Approve
+Developer Decision
+→ CODEX_DECISION
+→ Codex Resume
+→ Implementation / Test / Validation / Review
 
-Repository
-→ Current Approved Spec
+若為 Specification Decision：
 
-Codex
-→ Implementation
-→ Test
-→ Review
+DRAFT discussion
+→ Developer 明確確認
+→ CHANGE_REQUEST: APPROVED
+→ Spec 維護 Work
+→ Impact Analysis / Conflict Check
+→ Candidate Spec
+→ Developer Review / Approve
+→ Repository 更新
+→ APPLIED
+→ Codex Resume
+
+Spec 維護 Work 也可依 Developer 明確授權維護治理文件；遵守 §3.3 的文件與
+實作邊界，不將治理維護視為產品變更或 Phase gate 完成。
 
 若 Codex 發現 Spec / Product / Architecture 問題：
 
