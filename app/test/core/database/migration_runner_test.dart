@@ -12,6 +12,7 @@ void main() {
   late String databasePath;
   final factory = databaseFactoryFfi;
   sqfliteFfiInit();
+  final baseMigrations = [appMigrations.first];
 
   final fixtureV2 = SchemaMigration(
     version: 2,
@@ -41,27 +42,28 @@ void main() {
     'fresh database and repeated open retain one migration record',
     () async {
       var database = await open(appMigrations);
-      expect(await database.getVersion(), 1);
+      expect(await database.getVersion(), 2);
       expect(await database.query('schema_migrations'), [
         {'version': 1, 'name': 'initialize_migration_history'},
+        {'version': 2, 'name': 'phase_1_content_data'},
       ]);
       expect(await database.rawQuery('PRAGMA foreign_keys'), [
         {'foreign_keys': 1},
       ]);
       await database.close();
       database = await open(appMigrations);
-      expect(await database.query('schema_migrations'), hasLength(1));
+      expect(await database.query('schema_migrations'), hasLength(2));
       await database.close();
     },
   );
 
   test('upgrade preserves content, user state and derived fixtures', () async {
-    var database = await open([...appMigrations, fixtureV2]);
+    var database = await open([...baseMigrations, fixtureV2]);
     await database.insert('content_fixture', {'id': 1, 'title': 'fixture'});
     await database.insert('state_fixture', {'id': 1, 'content_id': 1});
     await database.insert('analytics_fixture', {'id': 1, 'value': 7});
     await database.close();
-    database = await open([...appMigrations, fixtureV2, fixtureV3]);
+    database = await open([...baseMigrations, fixtureV2, fixtureV3]);
     expect(await database.getVersion(), 3);
     expect(await database.query('content_fixture'), [
       {'id': 1, 'title': 'fixture', 'note': null},
@@ -82,7 +84,7 @@ void main() {
   test(
     'failed multi-version upgrade rolls back DDL, rows, history and version',
     () async {
-      var database = await open([...appMigrations, fixtureV2]);
+      var database = await open([...baseMigrations, fixtureV2]);
       await database.insert('content_fixture', {'id': 1, 'title': 'keep'});
       await database.close();
       final invalidV4 = SchemaMigration(
@@ -95,10 +97,10 @@ void main() {
         ],
       );
       await expectLater(
-        open([...appMigrations, fixtureV2, fixtureV3, invalidV4]),
+        open([...baseMigrations, fixtureV2, fixtureV3, invalidV4]),
         throwsA(anything),
       );
-      database = await open([...appMigrations, fixtureV2]);
+      database = await open([...baseMigrations, fixtureV2]);
       expect(await database.getVersion(), 2);
       expect(await database.query('content_fixture'), [
         {'id': 1, 'title': 'keep'},
@@ -115,11 +117,11 @@ void main() {
   );
 
   test('downgrade is rejected without erasing data', () async {
-    var database = await open([...appMigrations, fixtureV2]);
+    var database = await open([...baseMigrations, fixtureV2]);
     await database.insert('content_fixture', {'id': 1, 'title': 'keep'});
     await database.close();
-    await expectLater(open(appMigrations), throwsA(anything));
-    database = await open([...appMigrations, fixtureV2]);
+    await expectLater(open(baseMigrations), throwsA(anything));
+    database = await open([...baseMigrations, fixtureV2]);
     expect(await database.getVersion(), 2);
     expect(await database.query('content_fixture'), [
       {'id': 1, 'title': 'keep'},
@@ -128,10 +130,10 @@ void main() {
   });
 
   test('inconsistent history prevents further migration', () async {
-    var database = await open(appMigrations);
+    var database = await open(baseMigrations);
     await database.update('schema_migrations', {'name': 'unexpected'});
     await database.close();
-    await expectLater(open([...appMigrations, fixtureV2]), throwsA(anything));
+    await expectLater(open([...baseMigrations, fixtureV2]), throwsA(anything));
     database = await factory.openDatabase(
       databasePath,
       options: OpenDatabaseOptions(singleInstance: false),
@@ -150,11 +152,11 @@ void main() {
     expect(() => MigrationRunner([]), throwsArgumentError);
     expect(() => MigrationRunner([fixtureV2]), throwsArgumentError);
     expect(
-      () => MigrationRunner([...appMigrations, fixtureV3]),
+      () => MigrationRunner([...baseMigrations, fixtureV3]),
       throwsArgumentError,
     );
     expect(
-      () => MigrationRunner([...appMigrations, ...appMigrations]),
+      () => MigrationRunner([...baseMigrations, ...baseMigrations]),
       throwsArgumentError,
     );
   });

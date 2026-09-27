@@ -11,6 +11,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   sqfliteFfiInit();
+  final baseMigrations = [appMigrations.first];
 
   final fixtureV2 = SchemaMigration(
     version: 2,
@@ -71,7 +72,7 @@ void main() {
       Future<Database> open(List<SchemaMigration> migrations) =>
           MigrationRunner(migrations).open(factory, databasePath);
 
-      var database = await open([...appMigrations, fixtureV2]);
+      var database = await open([...baseMigrations, fixtureV2]);
       const createdAt = '2024-03-01T12:34:56.000Z';
       await database.insert('persistence_fixture', {
         'id': uuidV7,
@@ -91,7 +92,7 @@ void main() {
       );
       await database.close();
 
-      database = await open([...appMigrations, fixtureV2, fixtureV3]);
+      database = await open([...baseMigrations, fixtureV2, fixtureV3]);
       expect(await database.getVersion(), 3);
       final rows = await database.query('persistence_fixture');
       expect(rows, hasLength(1));
@@ -114,7 +115,7 @@ void main() {
       );
       await database.close();
 
-      database = await open([...appMigrations, fixtureV2, fixtureV3]);
+      database = await open([...baseMigrations, fixtureV2, fixtureV3]);
       expect(await database.query('persistence_fixture'), rows);
       await database.close();
     },
