@@ -44,7 +44,7 @@ Codex 不得因 AGENTS.md 曾記載 V2.3，而忽略 repository 中後續正式�
 3. 正式 Project Documents / Architecture Documents / Decision Records
 4. `AGENTS.md`
 5. Existing Code / Tests
-6. Current Chat / Work / Codex Task Context
+6. Current Task Packet / Current Chat / Work / Codex Task Context
 7. Previous Session / Conversation
 8. ChatGPT Memory
 
@@ -816,6 +816,115 @@ Yes
 7. 若檔案產生失敗，在終端輸出相同格式並明確說明檔案未建立。
 8. 檔案建立後，Codex 最終回覆提供 packet path、branch / HEAD、是否有未提交
    修改，以及下一步需要 Developer Review；不需重複輸出完整報告。
+
+## 13.2 Codex Task Packet
+
+`local_data/codex-task/CURRENT_TASK.md` 是執行前的 input transport artifact；
+§13.1 的 `local_data/codex-review/CODEX_REVIEW_PACKET.md` 是執行後供 Developer /
+01 Chat Review 的 output artifact。大型正式任務優先使用 Task Packet，包括
+`CODEX_DECISION`、依 §1.4 已 `APPLIED` 的變更實作、Phase task / closure、多步驟
+validation、帶有 constraints 的 bug fix、長 implementation instruction，或包含
+大量 Must Not Change、Acceptance Criteria、repository context、commands、evidence
+的工作。短小、單一步驟且少 constraints 的任務可直接使用 Composer。
+
+產生或使用 Task Packet 前，確認 `local_data/` 確實受 `.gitignore` 忽略；
+若未忽略，先回報 Developer 是否需要一次性的 `.gitignore` governance adjustment，
+不得自行修改 `.gitignore`。`CURRENT_TASK.md` 可依 Developer / 01 Chat 提供的
+新任務內容覆寫前一個 task，不應 commit。
+
+Task Packet 是 convenience / transport artifact，屬 §1.2 第 6 項的 Current
+Task Context。它不是 Source of Truth、正式 Requirement、Developer approval、
+`CHANGE_REQUEST` 或 `CODEX_DECISION` 本身；不能覆蓋 Current Approved Spec、
+Approved Change Request、正式 Decision Record 或 `AGENTS.md`，不能解除 STOP
+Condition、構成 Phase Complete，或授權自動 commit / push / merge。Packet 可包含
+完整 `CODEX_DECISION`、Approved Change Request、validation instructions 與
+Execution Profile；其正式性只來自原有 Developer approval / governance lifecycle。
+若內容衝突，依 §1.2、§1.4、§4–8 處理，不得自行改寫 packet 以繼續受影響工作。
+
+標準格式；不適用的欄位填 `None` 或 `Not Applicable`，不得猜測：
+
+```text
+# CODEX_TASK_PACKET
+
+Generated For:
+Codex
+
+Task:
+...
+
+Phase:
+...
+
+Execution Profile:
+- Environment:
+- Preferred Model:
+- Reasoning:
+- Approval:
+- Escalation:
+
+Related Decision:
+...
+
+Current Approved Spec:
+...
+
+Objective:
+...
+
+Context:
+...
+
+Required Work:
+...
+
+Constraints:
+...
+
+Must Not Change:
+...
+
+Validation:
+...
+
+Expected Review Output:
+local_data/codex-review/CODEX_REVIEW_PACKET.md
+
+Developer Approval State:
+...
+
+# END_CODEX_TASK_PACKET
+```
+
+`Execution Profile` 是 Developer / Chat 的執行建議，並非產品 Requirement 或
+Codex 實際 runtime state。`AGENTS.md` 與 Task Packet 不能保證實際 model、
+reasoning effort、approval mode 或 execution environment。Codex 使用目前實際
+runtime capability；無法確認 model 名稱時不得猜測，也不得把 runtime 設定寫成
+產品 Decision。若建議的 Model / Reasoning / Approval 與實際 runtime 明顯不一致，
+且可能影響安全、正確性或 Developer 預期，開始受影響工作前簡短回報；不因
+Execution Profile 不完全一致就停止所有工作。
+
+當檔案已存在，且 Developer 明確輸入「執行目前任務」時，這只是 invocation
+shortcut：Codex 必須完整讀取 `CURRENT_TASK.md`，重新讀取 `AGENTS.md`，確認
+Current Approved Spec，並核對實際 branch、HEAD、upstream、working tree；
+判斷 §4 STOP Condition 後，依 packet 與正式文件執行。不得要求 Developer 重貼
+完整 packet、只憑 shortcut 猜測 scope、跳過 packet 或只依 previous session。
+Shortcut 不提升 packet 權威，也不是 Developer 對任務結果的預先批准。
+
+若 packet 與 Spec、Approved Change Request 或 Decision Record 衝突，缺少必要
+產品決策，要求超出目前 Phase，或需要修改 Spec，依 §4–6 停止受影響部分並
+產生 `CHAT_HANDOFF`；Task Packet 不取代 `CHAT_HANDOFF`。若尚未 Review-ready
+就中斷 session，依 §15.2 建立 `SESSION_HANDOFF`；接續時重新核對 Spec、
+`AGENTS.md`、`CURRENT_TASK.md` 與 Git 狀態。Review-ready 時依 §13.1 建立或
+覆寫 Review Packet，沿用既有交付、validation evidence 與 Human Review 規則。
+
+「我Review完了」不是正式 shortcut，也不自動觸發後續工作；Review 後以新的
+`CURRENT_TASK.md` 或明確、短小且無歧義的 Developer 指令繼續。此流程不依賴
+特定 TUI hotkey；大型正式任務使用 Task Packet，短任務可使用 Composer。
+
+若由 Task Packet 執行且 Review Packet 已建立，最終回覆提供兩個 packet 路徑、
+branch / HEAD、是否有未提交修改及是否等待 Developer Review；完整決策、報告與
+diff 留在 packet 中，不重複貼回 terminal。若 Review Packet 產生失敗，依 §13.1
+第 7 項在終端回報。
 
 ---
 
