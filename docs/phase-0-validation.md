@@ -1,6 +1,21 @@
 # Phase 0 交付與驗證紀錄
 
-歷史驗證日期：2026-09-26。以下保留當時工作樹與來源副本的結果，不代表後續提交版本已通過驗證。最新收尾狀態、Developer 已接受的 `4d8f435` committed clean-checkout evidence，以及 `DEC-P0-002` 修正的 gate 分類見 [Phase 0 Closure](phase-0-closure.md)。範圍限定 V2.3 §38.2；**實作已提供，Phase 0 閘門尚未全部關閉**。
+歷史驗證日期：2026-09-26。以下保留當時工作樹與來源副本的結果，不代表後續提交版本已通過驗證。最新收尾狀態、Developer 已接受的 `4d8f435` committed clean-checkout evidence，以及 `DEC-P0-002`／`DEC-P0-004` 的 gate 分類見 [Phase 0 Closure](phase-0-closure.md)。範圍限定 V2.3 §38.2；**四項完成閘門已有 evidence，Developer 依 `DEC-P0-005` 完成 §40 最終 Human Review（PASS）並正式接受 Phase 0：COMPLETE**。
+
+## 2026-09-27 後續 CI evidence
+
+此節是後續驗證，不改寫下方 2026-09-26 歷史表格。分類：**CI validation**；執行者：GitHub Actions；工作目錄由 workflow 指定為 `app/`。Codex 讀取 GitHub Actions run／jobs API，核對 [`Phase 0 Flutter` run 36297736172](https://github.com/simonchen831027/JLPT-Learning-App/actions/runs/36297736172) 是 `feature/phase-0-foundation` 的 push run，attempt 1，`head_sha=1ca4db06ed161ad511a9e56feba5a9cab3b0ff08`，completed／success。2026-09-27 05:37:26–05:44:00 UTC 的四個 job 結果：
+
+| Job | Result | 覆蓋與限制 |
+|---|---|---|
+| `checks` | PASS | Ubuntu SDK check、locked restore、format、analyze、tests。 |
+| `windows` | PASS | Windows SDK check、tests、release build。 |
+| `android` | PASS | Android debug APK build；**不等於 Android device smoke**。 |
+| `ios` | PASS | macOS `flutter build ios --release --no-codesign --no-pub`；不含裝置、簽署或發布。 |
+
+完整 job ID、workflow commands 與證據限制見 [Phase 0 Closure](phase-0-closure.md)。本次未在本機重跑上述 CI commands。歷史 [run 36296055262](https://github.com/simonchen831027/JLPT-Learning-App/actions/runs/36296055262) 對應 `aefc809307c7a9f90bdd2f7159af610f86f8b4a8`，overall failure；Windows `dart tool/check_sdk.dart` 失敗，Windows test／build 被跳過。`DEC-P0-003` 修正 Flutter bootstrap stdout 的 JSON 解析後，`1ca4db0` 的新 run 成功；它不是舊 run 的 re-run。
+
+Android device smoke 仍 **BLOCKED／未執行**，保留為 additional Device / Platform validation。依 `DEC-P0-002`，它不屬 V2.3 §38.2 mandatory gate。iOS `macos-26` unsigned build 為 CI PASS，不涵蓋裝置安裝、簽署或發布。Developer 依 `DEC-P0-005` 確認最終 Human Review **PASS**、Phase 0 **COMPLETE**；Phase 1 尚未開始。
 
 ## 交付範圍與變更層
 
@@ -56,7 +71,7 @@ Migration 測試刻意製造缺表、降版與 history 不一致，因此 sqflit
 
 Phase 0 前沒有可執行 Vertical Slice，因此前階段回歸不適用；本次建立的 Shell／migration／原生 smoke test 是後續階段的基線。
 
-本節是 2026-09-26 的歷史待辦快照。後續 `4d8f435` 的正式 commit 乾淨 checkout 驗證已由 Developer 完成並透過 `DEC-P0-001` 接受。`DEC-P0-002` 確認 §38.2 的 CI 基本工作可執行是 Phase 0 mandatory gate，目前仍缺 GitHub Actions 實際執行證據；§40 的最終 Human review 也待完成。Android 裝置操作與 iOS macOS build 仍為 **BLOCKED／未執行** 的待補平台驗證與已知限制，但不是 §38.2 mandatory gate，不能單獨阻止 Phase 0 完成，也不能宣稱已驗證。正式 application/bundle ID、簽署、Phase 1 Entity ID／時區／nullable，以及後續 Knowledge／Readiness 等政策仍需按登錄表於適用階段決策。Python／uv 已選策略，未安裝或執行，也未宣稱套件相容。
+本節保留 2026-09-26 的歷史待辦快照。後續 `4d8f435` 的正式 commit 乾淨 checkout 驗證已由 Developer 完成並透過 `DEC-P0-001` 接受；`1ca4db0` 的 CI 基本工作與 iOS macOS build 也已有上述成功 run evidence。§40 的最終 Human Review 已由 Developer 依 `DEC-P0-005` 確認 **PASS**，Phase 0 **COMPLETE**。Android 裝置操作仍 **BLOCKED／未執行**，但依 `DEC-P0-002` 不是 §38.2 mandatory gate；CI Android build PASS 不代表裝置 smoke PASS。正式 application/bundle ID、簽署、Phase 1 Entity ID／時區／nullable，以及後續 Knowledge／Readiness 等政策仍需按登錄表於適用階段決策。Python／uv 已選策略，未安裝或執行，也未宣稱套件相容。
 
 ## Git 狀態
 
