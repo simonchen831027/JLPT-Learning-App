@@ -709,7 +709,10 @@ evidence / CODEX_DECISION、未重跑原因與未執行項目。
 建立或覆寫 `local_data/codex-review/CODEX_REVIEW_PACKET.md`。產生前確認
 `local_data/` 確實受 `.gitignore` 忽略；若未忽略，先回報是否需要一次性的
 `.gitignore` governance adjustment，不得自行假設。每個新的 Review-ready task
-可覆寫前一次 packet；packet 不應 commit。
+可覆寫或重建前一次 packet；packet 不應 commit。此路徑是固定的當前 Review
+slot，不是永久 Review archive；除非 Task Packet 明確要求，不建立編號或日期版
+Review Packet 歷史。正式 Review／commit／integration 結束後，舊 packet 內容不需
+作為歷史證據保存，可由下一次 Review 取代。
 
 Review Packet 是供 Developer / 01 Chat 閱讀的 convenience artifact，承載本節
 交付報告內容與實際 diff，不另設一套完成標準。它不是 Source of Truth、正式
@@ -804,6 +807,11 @@ Yes
 2. `Diff Review` 對一般小型 source、test、documentation 變更提供足以 Review
    的實際 diff，不只摘要；generated、binary 或 extremely large diff 可省略完整
    內容，但須列出 omitted file、理由及驗證方式。區分本 task 修改與其他既存變更。
+   對已通過 Developer Review 的大型檔案，後續若僅審查狀態或 Repository
+   integration，且核准時的 baseline 可識別並驗證，可記錄 baseline 識別與 hash、
+   目前檔案 hash、相對 baseline 的實際差異、變更範圍核對及已核准本文未變的
+   證據，不重複嵌入整份未變本文。無法驗證 baseline 時，仍須提供足夠的完整證據，
+   不得隱藏或概括未知差異。
 3. 不放入 secrets、credentials、token、個人資料或不必要的敏感內容；若 diff
    含此類資料，遮蔽並註明遮蔽範圍，不得以 packet 擴散。
 4. Validation 沿用 §12 的 evidence 分類；記錄 command / CI run、result、
@@ -816,10 +824,14 @@ Yes
 7. 若檔案產生失敗，在終端輸出相同格式並明確說明檔案未建立。
 8. 檔案建立後，Codex 最終回覆提供 packet path、branch / HEAD、是否有未提交
    修改，以及下一步需要 Developer Review；不需重複輸出完整報告。
+9. Packet 只保留本次 Review 所需的實際 diff、適用 hash、validation command／
+   result、Git 狀態、scope、未解問題及建議 commit 範圍；避免重複已核准的大型
+   文件本文、過期的前次 Review evidence、重複的中間報告。暫存清理依 §13.3。
 
 ## 13.2 Codex Task Packet
 
-`local_data/codex-task/CURRENT_TASK.md` 是執行前的 input transport artifact；
+`local_data/codex-task/CURRENT_TASK.md` 是固定的當前任務 handoff slot 與執行前的
+input transport artifact；
 §13.1 的 `local_data/codex-review/CODEX_REVIEW_PACKET.md` 是執行後供 Developer /
 01 Chat Review 的 output artifact。大型正式任務優先使用 Task Packet，包括
 `CODEX_DECISION`、依 §1.4 已 `APPLIED` 的變更實作、Phase task / closure、多步驟
@@ -829,8 +841,11 @@ validation、帶有 constraints 的 bug fix、長 implementation instruction，�
 
 產生或使用 Task Packet 前，確認 `local_data/` 確實受 `.gitignore` 忽略；
 若未忽略，先回報 Developer 是否需要一次性的 `.gitignore` governance adjustment，
-不得自行修改 `.gitignore`。`CURRENT_TASK.md` 可依 Developer / 01 Chat 提供的
-新任務內容覆寫前一個 task，不應 commit。
+不得自行修改 `.gitignore`。每個新任務以一份完整的 `CODEX_TASK_PACKET` 覆寫
+`CURRENT_TASK.md` 原內容，不在同一檔案累積歷史 Task Packets，也不要求 Developer
+每次重建 handoff 路徑；此檔不應 commit。任務明確結束後，檔案可留在固定路徑，
+但舊內容不再是可執行任務；若使用 inactive placeholder，須明確標示
+`NO_ACTIVE_TASK`。下一任務到來前再以完整新 packet 覆寫。
 
 Task Packet 是 convenience / transport artifact，屬 §1.2 第 6 項的 Current
 Task Context。它不是 Source of Truth、正式 Requirement、Developer approval、
@@ -903,12 +918,20 @@ runtime capability；無法確認 model 名稱時不得猜測，也不得把 run
 且可能影響安全、正確性或 Developer 預期，開始受影響工作前簡短回報；不因
 Execution Profile 不完全一致就停止所有工作。
 
-當檔案已存在，且 Developer 明確輸入「執行目前任務」時，這只是 invocation
-shortcut：Codex 必須完整讀取 `CURRENT_TASK.md`，重新讀取 `AGENTS.md`，確認
-Current Approved Spec，並核對實際 branch、HEAD、upstream、working tree；
-判斷 §4 STOP Condition 後，依 packet 與正式文件執行。不得要求 Developer 重貼
-完整 packet、只憑 shortcut 猜測 scope、跳過 packet 或只依 previous session。
-Shortcut 不提升 packet 權威，也不是 Developer 對任務結果的預先批准。
+Developer 明確輸入「執行目前任務」時，這只是 invocation shortcut。Codex 須先確認：
+
+1. `CURRENT_TASK.md` 存在且包含一份完整有效的 `CODEX_TASK_PACKET`；
+2. 內容未標示 `NO_ACTIVE_TASK`；
+3. 該任務未被明確完成、Review、整合或後續任務取代；
+4. 實際 repository state 與 packet 假設相容。
+
+任一項不成立時，不修改 repository；回報沒有有效的當前可執行任務或 task state
+已過期，不因舊 packet 仍在固定路徑而靜默重跑。確認可執行後，仍須完整讀取
+`CURRENT_TASK.md`、重新讀取 `AGENTS.md`、確認 Current Approved Spec，並核對實際
+branch、HEAD、upstream、working tree；判斷 §4 STOP Condition 後，依 packet 與
+正式文件執行。不得要求 Developer 重貼完整 packet、只憑 shortcut 猜測 scope、
+跳過 packet 或只依 previous session。Shortcut 不提升 packet 權威，也不是
+Developer 對任務結果的預先批准。
 
 若 packet 與 Spec、Approved Change Request 或 Decision Record 衝突，缺少必要
 產品決策，要求超出目前 Phase，或需要修改 Spec，依 §4–6 停止受影響部分並
@@ -925,6 +948,34 @@ Shortcut 不提升 packet 權威，也不是 Developer 對任務結果的預先�
 branch / HEAD、是否有未提交修改及是否等待 Developer Review；完整決策、報告與
 diff 留在 packet 中，不重複貼回 terminal。若 Review Packet 產生失敗，依 §13.1
 第 7 項在終端回報。
+
+## 13.3 Local Task / Review artifact lifecycle
+
+`local_data/` 是 Git 忽略的本機工作區，不是正式 evidence repository。Task／Review
+Packet、snapshot、暫存副本及中間報告，不因存在於該目錄就成為 Source of Truth、
+Developer approval、Spec `APPLIED` 或 Phase 完成證據，也不能取代 Git commit、
+Decision Record、正式 Spec 或已接受的 validation evidence。
+
+每次宣告 task Review-ready 前，檢視 `local_data/codex-review/`：清除已結束的前次
+Review／integration 且不再用於重現當前 Review Packet 的明確暫存產物，保留本次
+Review 必需的檔案，最後建立或覆寫固定的 `CODEX_REVIEW_PACKET.md`。正式 Review／
+commit／integration 結束後，移除不再需要的 comparison snapshot、文件暫存副本
+與中間報告；舊 Review Packet 可由下一次取代。`CURRENT_TASK.md` 保持固定 handoff
+路徑，由下一任務覆寫，不作永久任務檔案庫。
+
+暫存產物可能包含 `*-pre-*`、`*_BEFORE_*`、`*-before-*`、snapshot、暫存 diff
+baseline、暫存 approval-source copy 或內容已由正式 Git 狀態／當前 Review Packet
+承載的一次性報告（例如 `SPEC_UPDATE_REPORT.md`）。**不得只靠檔名判定可刪除**；
+先核對 Git tracking 與 repository 治理。此規則絕不授權刪除 tracked 文件、
+Current Approved／歷史正式 Spec、Decision Record、正式 CHANGE_REQUEST、Phase
+closure／validation evidence、source code、tests、migrations、CI、repository
+configuration 或正式 architecture 文件。即使檔名含 old、previous、before、
+historical、snapshot，只要屬 tracked 或正式證據就不得依暫存規則刪除。
+無法確定本機檔案是否為暫存時，保留並在 Review Packet 列明，交由 Human Review。
+
+暫存清理不授權 commit、push、merge、Spec promotion、Change Request application、
+Phase start／completion 或產品 implementation；也不取代 Developer Review、
+正式 validation evidence 或既有 manual approval／STOP 規則。
 
 ---
 
