@@ -48,6 +48,13 @@ Codex 不得因 AGENTS.md 曾記載 V2.5，而忽略 repository 中後續正式�
 7. Previous Session / Conversation
 8. ChatGPT Memory
 
+經 Developer 核准並正式進入 Repository 的 UI/UX Guideline、Design System、
+Visual Style Guide、Content Governance Document 或其他專門治理文件，
+屬於本項的正式 Project Document。
+
+未經 Developer 核准、尚未正式進入 Repository 的 Draft、Proposal、Work output、
+Screenshot Discussion、Benchmark Report 或 Local Handoff 不屬於本項。
+
 此順序用於判定正式專案需求與狀態；Approved Change Request 的排序不代表
 可在 Spec 更新前依新版需求實作。需求套用狀態依 §1.4 判定。
 
@@ -104,6 +111,63 @@ Work 完成或產生 Candidate Spec 不等於 `APPLIED`。未 `APPLIED` 的 Chan
 
 此狀態流程用於需求變更；不改變 Spec 的 Implementation Decision 依 §7.1
 處理。Developer 明確授權的純治理文件維護，不因此取得產品需求或實作修改權限。
+
+---
+
+## 1.5 Cross-Workspace Grounding Rule
+
+本規則適用於：
+
+- Chat / Product Decision；
+- Spec 維護 Work；
+- Content / Research Chat 或 Work；
+- Visual Design / Image Work；
+- UI/UX Review / Design System Work；
+- Codex；
+- 其他未來接入本 Repository 的 Agent / Work。
+
+任何 Workspace、Conversation 或 Session 的歷史內容，都不是正式專案狀態本身。
+
+開始新的重要 Task、恢復長時間未使用的對話、切換 Session、進行 Developer Review、
+建立正式 handoff、產生 Candidate 文件，或對 Repository 狀態作實質判斷前，
+應重新 grounding 至目前可取得的正式來源。
+
+最低應確認：
+
+1. Current Approved Spec；
+2. `AGENTS.md`；
+3. 與目前 Task 直接相關的正式 Decision Record / Project Document；
+4. 適用的 Approved Change Request / `CODEX_DECISION`；
+5. 若可存取 Repository：
+   - current branch；
+   - HEAD；
+   - upstream；
+   - working tree；
+   - 相關 tracked files 的實際內容；
+6. 本次 Task 的直接 input / handoff artifact。
+
+不得因：
+
+- 對話開頭曾提供某項資訊；
+- Previous Session 曾記錄某狀態；
+- ChatGPT Memory 記得某結論；
+- Work 曾產生某份 Draft；
+- 舊 Task / Review Packet 仍存在；
+
+就推定該資訊目前仍然有效。
+
+若歷史對話、Memory、舊 Work 輸出或 Session 摘要
+與 Repository 正式來源不一致：
+
+依 §1.2 權威順序重新判定。
+
+若正式來源無法取得或不足以安全判斷：
+
+不得自行補完、猜測或用舊對話代替；
+須明確標示 limitation，並將需要正式決策的部分交回 Developer / 01。
+
+對話長度、建立時間或 Session age
+不改變任何來源的正式權威。
 
 ---
 
@@ -173,11 +237,21 @@ Codex 可以提出技術建議，但最終產品與架構決策由 Developer 決
 
 | 角色 | 職責 |
 |---|---|
-| Chat | 需求 / Product / Architecture Decision 討論，交由 Developer 決定 |
-| Spec 維護 Work | 正式 Spec 與治理文件維護；精確寫入已核准決策 |
-| Developer | 最終批准需求、決策與文件 |
-| Repository | 正式專案狀態；保存 Current Approved Spec 與正式文件，Git 反映實際程式狀態 |
-| Codex | Implementation / Test / Validation，並依規格進行 Review 與交付回報 |
+| `01 需求・架構決策` | Product / Requirement / Architecture / Governance Decision；Developer Review 的主要分析入口 |
+| `02 Spec 維護・Work` | 正式 Spec、治理文件、Decision / Change integration；只精確寫入已核准內容 |
+| `03 教材研究・編寫` | 教材研究、原創教材、來源追蹤與 Content handoff；不得自行發布正式 Content |
+| `04 教材視覺設計・圖片生成` | 教材視覺規劃、visual asset proposal、圖片生成與 QA；不得自行授權 production integration |
+| `05 UI/UX Review・Design System` | UI/UX Audit、Benchmark、Design System、Design Token、Component / Responsive / Accessibility 規則與 implementation handoff |
+| Developer | 最終批准 Requirement、Decision、Content release、Design policy、Visual integration 與文件 |
+| Repository | 正式專案狀態；保存 Current Approved Spec、正式文件、code、tests 與 approved tracked artifacts |
+| Codex | Production Implementation / Test / Validation / Repository Review；不得自行創造產品政策 |
+
+01～05 的對話名稱是目前工作分工，不改變 §1.2 的正式權威順序。
+
+任何 Work / Chat 的輸出，若尚未經 Developer 核准並進入正式 Repository，
+原則上只具有 Draft / Proposal / READY FOR DEVELOPER REVIEW 狀態，
+不得因其出自 Work 而自動升格為正式 Requirement、Design Policy、Content Release、
+Architecture Decision 或 Production Authorization。
 
 Spec 維護 Work 即使可以存取 Repository，除非有 Developer 明確授權，仍不得
 修改 application implementation、test implementation、CI implementation、
@@ -186,6 +260,97 @@ Backend 或 Python implementation。文件維護授權不隱含任何上述實�
 治理文件不得新增、刪除或改變產品 Requirement、Architecture / API Contract、
 Database Semantic、Data Lifecycle、Migration、Compatibility、Privacy / Security
 或產品範圍；若需要這類變更，依正式 Specification Decision 流程處理。
+
+---
+
+## 3.4 Specialized Work Artifact Status
+
+02～05 所產生的文件、proposal、mockup、asset、audit、guideline 或 handoff，
+不得只因檔案存在或 Work 已完成，就視為正式 Project state。
+
+預設 lifecycle：
+
+Work output
+→ DRAFT / PROPOSAL
+→ READY FOR DEVELOPER REVIEW
+→ Developer Approval
+→ Repository Integration
+→ Formal / Approved Artifact
+
+只有在：
+
+1. Developer 明確核准；
+2. 適用時完成必要 Change / Decision lifecycle；
+3. 正式 artifact 已進入 Repository；
+4. Repository 中能識別其 Approved / Current 狀態；
+
+之後，才能把該 artifact 當成後續 Task 的正式依據。
+
+例如：
+
+- Approved UI/UX Guideline；
+- Approved Design System；
+- Approved Visual Style Guide；
+- Approved Content Package；
+- Approved Architecture Document。
+
+若已正式進入 Repository，可依 §1.2 第 3 項
+「正式 Project Documents / Architecture Documents / Decision Records」
+作為正式依據。
+
+以下仍不是正式 Source of Truth：
+
+- 未核准 Work draft；
+- screenshot discussion；
+- Chat recommendation；
+- Design proposal；
+- image candidate；
+- benchmark report；
+- local-only handoff；
+- 過往 Session summary。
+
+Task-specific approved input 例外：
+
+經 Developer 明確核准，且由當前 Task Packet、CODEX_DECISION、
+Developer instruction 或其他可識別的當前 task authorization
+精確指定之 artifact，可以作為該次 Task 的 task-specific input，
+即使該 artifact 尚位於 local-only handoff 或尚未成為正式 Repository Project Document。
+
+此例外只授權該 artifact 在明確 scope 內作為輸入，不提升其正式權威。
+
+該 artifact：
+
+- 仍不是 Source of Truth；
+- 仍不屬於 §1.2 第 3 項正式 Project Document；
+- 不得覆蓋 Current Approved Spec、Approved Change Request、
+  Decision Record 或 AGENTS.md；
+- 不因被使用而自動取得 Content Release、Production Integration、
+  Design Policy、Spec APPLIED 或其他未明確授權狀態；
+- 應在可行時記錄實際 path / version / hash / approval scope，
+  以避免誤用舊 handoff。
+
+此機制允許 staged workflow，例如：
+
+- Developer-approved Content Package
+  → Codex production integration；
+- Developer-approved Visual Candidate
+  → 後續獨立 Visual Integration Task；
+- Developer-approved UI/UX handoff
+  → Codex implementation；
+
+而不把 handoff artifact 本身提升為正式 Project Source of Truth。
+
+04 的圖片 / Visual approval
+不自動等於 Production Integration Authorization。
+
+05 的 UI/UX recommendation
+不自動等於 Codex Implementation Authorization。
+
+03 的 Content recommendation
+不自動等於 Content Publication / Release Authorization。
+
+02 的 Candidate Spec
+不自動等於 Current Approved Spec。
 
 ---
 
