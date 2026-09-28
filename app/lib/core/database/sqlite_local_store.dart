@@ -35,6 +35,11 @@ class SqliteLocalStore implements LocalStore {
   final Future<Database> Function() openDatabase;
   Future<Database>? _opening;
 
+  Future<Database> get database async {
+    await initialize();
+    return _opening!;
+  }
+
   @override
   Future<void> initialize() async {
     final opening = _opening ??= openDatabase();

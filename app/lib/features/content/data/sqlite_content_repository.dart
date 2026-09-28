@@ -7,8 +7,29 @@ import 'source_reference_values.dart';
 /// The narrow content write/read boundary used before learning flows exist.
 final class SqliteContentRepository {
   const SqliteContentRepository(this.database);
+  const SqliteContentRepository._scoped(this.database);
 
-  final Database database;
+  final DatabaseExecutor database;
+
+  /// Keeps a multi-item release atomic while reusing the same review methods.
+  Future<T> transaction<T>(
+    Future<T> Function(SqliteContentRepository repository) action,
+  ) {
+    final root = database;
+    if (root is! Database) {
+      throw StateError('A scoped repository cannot start a transaction.');
+    }
+    return root.transaction(
+      (tx) => action(SqliteContentRepository._scoped(tx)),
+    );
+  }
+
+  Future<T> _write<T>(Future<T> Function(DatabaseExecutor tx) action) {
+    final executor = database;
+    return executor is Database
+        ? executor.transaction(action)
+        : action(executor);
+  }
 
   Future<void> insertVersion(ContentVersion version) =>
       database.insert('content_versions', {
@@ -34,7 +55,7 @@ final class SqliteContentRepository {
     );
   }
 
-  Future<void> setCurrentVersion(String id) => database.transaction((tx) async {
+  Future<void> setCurrentVersion(String id) => _write((tx) async {
     await tx.update('content_versions', {'is_current': 0});
     final changed = await tx.update(
       'content_versions',
@@ -44,6 +65,16 @@ final class SqliteContentRepository {
     );
     if (changed != 1) throw StateError('Content version does not exist.');
   });
+
+  Future<ContentVersion?> currentVersion() async {
+    final rows = await database.query(
+      'content_versions',
+      columns: ['id'],
+      where: 'is_current = 1',
+    );
+    if (rows.isEmpty) return null;
+    return getVersion(rows.single['id']! as String);
+  }
 
   Future<void> insertSource(SourceReference source) =>
       database.insert('source_references', {
@@ -140,7 +171,7 @@ final class SqliteContentRepository {
       throw ArgumentError('Single-choice answer must identify one option.');
     }
 
-    return database.transaction((tx) async {
+    return _write((tx) async {
       final existing = await tx.query(
         'content_items',
         where: 'id = ?',
@@ -189,7 +220,7 @@ final class SqliteContentRepository {
 
   Future<void> publish(String revisionId, String actor, DateTime at) {
     if (actor.trim().isEmpty) throw ArgumentError('Actor is required.');
-    return database.transaction((tx) async {
+    return _write((tx) async {
       final revisions = await tx.query(
         'content_revisions',
         columns: ['review_status'],
@@ -228,7 +259,7 @@ final class SqliteContentRepository {
   }
 
   Future<void> attachSourceToDraft(String revisionId, String sourceId) =>
-      database.transaction((tx) async {
+      _write((tx) async {
         final rows = await tx.query(
           'content_revisions',
           columns: ['review_status'],
@@ -246,7 +277,7 @@ final class SqliteContentRepository {
       });
 
   Future<void> detachSourceBeforePublish(String revisionId, String sourceId) =>
-      database.transaction((tx) async {
+      _write((tx) async {
         final rows = await tx.query(
           'content_revisions',
           columns: ['review_status'],
@@ -292,6 +323,27 @@ final class SqliteContentRepository {
       if (body != null) result.add(body);
     }
     return result;
+  }
+
+  Future<ContentBody?> currentPublishedByContentId(String contentId) async {
+    final rows = await database.rawQuery(
+      '''SELECT r.id FROM content_revisions r
+         JOIN content_versions v ON v.id = r.content_version_id
+         WHERE r.content_id = ? AND r.review_status = 'published'
+           AND v.is_current = 1''',
+      [contentId],
+    );
+    if (rows.isEmpty) return null;
+    return getRevision(rows.single['id']! as String);
+  }
+
+  Future<int> publishedCountByVersion(String versionId) async {
+    final rows = await database.rawQuery(
+      '''SELECT COUNT(*) AS total FROM content_revisions
+         WHERE content_version_id = ? AND review_status = 'published' ''',
+      [versionId],
+    );
+    return rows.single['total']! as int;
   }
 
   Future<ContentBody?> getRevision(String id) async {

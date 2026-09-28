@@ -5,11 +5,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jlpt_learning_app/app/app.dart';
 import 'package:jlpt_learning_app/features/home/domain/initialize_app.dart';
 import 'package:jlpt_learning_app/features/home/domain/startup_repository.dart';
+import 'package:jlpt_learning_app/features/learning/domain/n5_lesson_repository.dart';
+import 'package:jlpt_learning_app/features/learning/domain/n5_lesson_use_cases.dart';
 
 class TestRepository implements StartupRepository {
   Future<void> Function() action = () async {};
   @override
   Future<void> initialize() => action();
+}
+
+class EmptyLessons implements N5LessonRepository {
+  @override
+  Future<List<N5LessonSummary>> listLessons() async => const [];
+  @override
+  Future<N5LessonDetail?> getLesson(String contentId) async => null;
+}
+
+JlptLearningApp testApp(StartupRepository repository) {
+  final lessons = EmptyLessons();
+  return JlptLearningApp(
+    initializeApp: InitializeApp(repository),
+    listN5Lessons: ListN5Lessons(lessons),
+    getN5Lesson: GetN5Lesson(lessons),
+  );
 }
 
 void main() {
@@ -22,9 +40,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     final pending = Completer<void>();
     final repository = TestRepository()..action = () => pending.future;
-    await tester.pumpWidget(
-      JlptLearningApp(initializeApp: InitializeApp(repository)),
-    );
+    await tester.pumpWidget(testApp(repository));
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     pending.complete();
     await tester.pumpAndSettle();
@@ -46,9 +62,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-    await tester.pumpWidget(
-      JlptLearningApp(initializeApp: InitializeApp(TestRepository())),
-    );
+    await tester.pumpWidget(testApp(TestRepository()));
     await tester.pumpAndSettle();
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
@@ -63,9 +77,7 @@ void main() {
   ) async {
     final repository = TestRepository()
       ..action = () async => throw StateError('private SQL');
-    await tester.pumpWidget(
-      JlptLearningApp(initializeApp: InitializeApp(repository)),
-    );
+    await tester.pumpWidget(testApp(repository));
     await tester.pumpAndSettle();
     expect(find.text('暫時無法開啟'), findsOneWidget);
     expect(find.textContaining('private SQL'), findsNothing);

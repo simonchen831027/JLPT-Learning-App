@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../../learning/domain/n5_lesson_use_cases.dart';
+import '../../learning/presentation/n5_lesson_pages.dart';
 import 'home_view_model.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({required this.viewModel, super.key});
+  const HomePage({
+    required this.viewModel,
+    required this.listN5Lessons,
+    required this.getN5Lesson,
+    super.key,
+  });
   final HomeViewModel viewModel;
+  final ListN5Lessons listN5Lessons;
+  final GetN5Lesson getN5Lesson;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -96,7 +105,19 @@ class _HomePageState extends State<HomePage> {
         context,
         icon: Icons.menu_book_outlined,
         title: '從 N5 開始，一步一步學習',
-        description: '目前尚未提供教材。\n課程加入後，你可以在這裡離線學習。',
+        description: '從第一課認識簡單的身分與自我介紹。',
+        action: FilledButton.icon(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => N5LessonListPage(
+                listLessons: widget.listN5Lessons,
+                getLesson: widget.getN5Lesson,
+              ),
+            ),
+          ),
+          icon: const Icon(Icons.arrow_forward),
+          label: const Text('N5 課程'),
+        ),
       ),
       1 => _message(
         context,
