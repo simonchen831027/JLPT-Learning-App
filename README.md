@@ -1,8 +1,8 @@
 # JLPT Learning App
 
-以 [V2.5 技術規格](JLPT_Learning_App_Technical_Spec_V2.5.md) 為主要產品規格，採 Local-first、Offline-capable 與 Feature-first／MVVM／Use Case／Repository／Service 分層。
+以 [V2.6 技術規格](JLPT_Learning_App_Technical_Spec_V2.6.md) 為主要產品規格，採 Local-first、Offline-capable 與 Feature-first／MVVM／Use Case／Repository／Service 分層。
 
-目前交付為 **Phase 0 App Shell 與基礎建設**；學習教材、測驗與 Reset 尚未實作。最新階段閘門及驗證結果見 [Phase 0 Closure](docs/phase-0-closure.md)；[初次交付紀錄](docs/phase-0-validation.md) 保留歷史結果。
+目前狀態為 **Phase 0 COMPLETE；Phase 1 STARTED / NOT YET COMPLETE**。[Phase 0 Closure](docs/phase-0-closure.md) 記錄 Phase 0 完成閘門；[Phase 1 internal work package closure](docs/phase-1-slice-closure.md) 記錄 Slice 1A、1B、1C 均已 COMPLETE（限各自核准範圍）。這些內部 work package 完成不等於 Phase 1 整體 gate 完成。[初次交付紀錄](docs/phase-0-validation.md) 保留歷史結果。
 
 ## 開發入口
 

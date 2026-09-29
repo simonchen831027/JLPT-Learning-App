@@ -17,9 +17,9 @@
 
 目前開發 Baseline：
 
-`JLPT_Learning_App_Technical_Spec_V2.5.md`
+`JLPT_Learning_App_Technical_Spec_V2.6.md`
 
-V2.5 是目前的 Current Approved Spec；V2.4、V2.3 保留為被取代的歷史 Spec。
+V2.6 是目前的 Current Approved Spec；V2.5、V2.4、V2.3 保留為被取代的歷史 Spec。
 版本未來可以經正式 Change Request 流程升級為後續版本。
 
 一旦新版 Spec：
@@ -31,7 +31,7 @@ V2.5 是目前的 Current Approved Spec；V2.4、V2.3 保留為被取代的歷�
 
 則新版 Spec 成為新的 Current Approved Spec。
 
-Codex 不得因 AGENTS.md 曾記載 V2.5，而忽略 repository 中後續正式核准的新版本。
+Codex 不得因 AGENTS.md 曾記載 V2.6，而忽略 repository 中後續正式核准的新版本。
 
 ---
 
