@@ -42,17 +42,18 @@ void main() {
     'fresh database and repeated open retain one migration record',
     () async {
       var database = await open(appMigrations);
-      expect(await database.getVersion(), 2);
+      expect(await database.getVersion(), 3);
       expect(await database.query('schema_migrations'), [
         {'version': 1, 'name': 'initialize_migration_history'},
         {'version': 2, 'name': 'phase_1_content_data'},
+        {'version': 3, 'name': 'phase_1_practice_user_state'},
       ]);
       expect(await database.rawQuery('PRAGMA foreign_keys'), [
         {'foreign_keys': 1},
       ]);
       await database.close();
       database = await open(appMigrations);
-      expect(await database.query('schema_migrations'), hasLength(2));
+      expect(await database.query('schema_migrations'), hasLength(3));
       await database.close();
     },
   );
