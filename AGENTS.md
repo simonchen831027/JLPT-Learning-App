@@ -240,14 +240,24 @@ Codex 可以提出技術建議，但最終產品與架構決策由 Developer 決
 |---|---|
 | `01 需求・架構決策` | Product / Requirement / Architecture / Governance Decision；Developer Review 的主要分析入口 |
 | `02 Spec 維護・Work` | 正式 Spec、治理文件、Decision / Change integration；只精確寫入已核准內容 |
-| `03 教材研究・編寫` | 教材研究、原創教材、來源追蹤與 Content handoff；不得自行發布正式 Content |
+| `03 教材研究・編寫` | Content research、Canonical Knowledge、original authoring、source tracking、Author QA、Content Candidate / handoff；不得自行發布正式 Content |
 | `04 教材視覺設計・圖片生成` | 教材視覺規劃、visual asset proposal、圖片生成與 QA；不得自行授權 production integration |
-| `05 UI/UX Review・Design System` | UI/UX Audit、Benchmark、Design System、Design Token、Component / Responsive / Accessibility 規則與 implementation handoff |
+| `05 UI/UX Review・Design System` | UI/UX Audit、Benchmark、Design System、Design Token、Component / Responsive / Accessibility 規則、implementation handoff / fidelity review |
+| `06 教材校對・品質審查` | Independent Content QA / Editorial Review；Japanese / zh-TW / learner-facing / pedagogical / question / explanation / reading consistency QA；不得自行發布正式 Content 或改變 Curriculum / Product policy |
 | Developer | 最終批准 Requirement、Decision、Content release、Design policy、Visual integration 與文件 |
 | Repository | 正式專案狀態；保存 Current Approved Spec、正式文件、code、tests 與 approved tracked artifacts |
-| Codex | Production Implementation / Test / Validation / Repository Review；不得自行創造產品政策 |
+| Codex | Production Implementation / Test / Validation / Repository Review；不得自行創造 Product / Architecture / Content / Design policy |
 
-01～05 的對話名稱是目前工作分工，不改變 §1.2 的正式權威順序。
+01～06 的對話名稱是目前工作分工，不改變 §1.2 的正式權威順序。
+
+Chat / Work 只是執行介面／工作模式，不改變 logical Workspace 的 authority。
+03 Chat 與 03 Work 均屬同一 logical role「03 教材研究・編寫」：
+
+- 03 Chat 適合快速教材討論、單點分析、研究討論、Developer interaction 與 task scoping。
+- 03 Work 適合 multi-file research、batch authoring、Content Candidate、source tracking、
+  revision package 與 Content handoff。
+
+03 Work 不因為是 Work 而比 03 Chat 擁有更高治理權限。
 
 任何 Work / Chat 的輸出，若尚未經 Developer 核准並進入正式 Repository，
 原則上只具有 Draft / Proposal / READY FOR DEVELOPER REVIEW 狀態，
@@ -266,7 +276,7 @@ Database Semantic、Data Lifecycle、Migration、Compatibility、Privacy / Secur
 
 ## 3.4 Specialized Work Artifact Status
 
-02～05 所產生的文件、proposal、mockup、asset、audit、guideline 或 handoff，
+02～06 所產生的文件、proposal、mockup、asset、audit、guideline 或 handoff，
 不得只因檔案存在或 Work 已完成，就視為正式 Project state。
 
 預設 lifecycle：
@@ -352,6 +362,69 @@ Developer instruction 或其他可識別的當前 task authorization
 
 02 的 Candidate Spec
 不自動等於 Current Approved Spec。
+
+---
+
+## 3.5 Workspace Awareness / Cross-Workspace Handoff
+
+各 Workspace 應確認其他 Workspace 的存在、責任與交接邊界，但不得因另一
+Workspace 有輸出，就推定該輸出已核准或目前有效；grounding 依 §1.5。
+
+| 工作類型 | 交接角色 |
+|---|---|
+| Product / Requirement / Architecture / Governance Decision | 01 |
+| Approved Spec / Decision / governance integration | 02 |
+| Content research / authoring | 03 |
+| Visual | 04 |
+| UI/UX / Design System / fidelity | 05 |
+| Independent Content QA / Editorial Review | 06 |
+| Production implementation / tests / validation | Codex |
+| Final approval / release / integration authorization | Developer |
+
+單一 Task 涉及多 Workspace 時應拆分 responsibility，不得由單一 Workspace
+越權替另一 Workspace 做正式決策。
+
+Cross-workspace artifact 依 §3.4 分類與使用：
+
+1. Formal Repository Artifact：依 §1.2 authority order 使用。
+2. Developer-approved task-specific input：只在明確 task scope 內使用，不提升正式權威；
+   保留 §3.4 的 task-specific approved input 例外及其限制。
+3. Draft / Proposal / Screenshot / Review / historical artifact：可作 research / review /
+   defect discovery input，不得當成正式 Requirement / Design / Content / Production authorization。
+
+另一 Workspace 的「最新 Draft」不得自動視為 current approved input。
+
+教材分工與 Independent QA 依
+[DEC-P1-009](docs/decisions/dec-p1-009-independent-content-qa-editorial-review-workflow.md)。
+03 在交 06 前仍須做 Author QA；06 負責獨立審查，不取代 03 authoring 或 Developer approval。
+新建立或實質修訂的 learner-facing Content 原則上於 Developer Content Review 前經 06 QA；
+適用範圍、targeted QA 例外與既有 Approved Content 的處理依該 Decision Record。
+
+典型 Content flow：
+
+```text
+03 Content Work
+→ CONTENT CANDIDATE
+→ 06 Independent QA
+
+REQUEST REVISION
+→ 03 revision
+→ 06 re-review（必要時）
+
+PASS
+→ READY FOR DEVELOPER REVIEW
+→ Developer Content Approval
+→ separate Production Integration Authorization（適用時）
+→ Codex integration
+→ validation
+→ Repository formal state
+```
+
+06 可回報 PASS、REQUEST REVISION 或 BLOCKED / DECISION REQUIRED；涉及
+Curriculum / Product / Requirement 的決策交 01 / Developer，author revision 交 03。
+06 PASS 不等於 Content APPROVED、Content RELEASED 或 Codex integration authorization；
+03 Content Candidate 也不等於 Content APPROVED / RELEASED。
+Developer 保持最終 Content Approval / Release authority。
 
 ---
 
