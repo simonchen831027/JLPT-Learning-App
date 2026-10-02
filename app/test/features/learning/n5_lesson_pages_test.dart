@@ -85,6 +85,20 @@ void main() {
     final detailList = tester.widget<ListView>(find.byType(ListView).last);
     final children =
         (detailList.childrenDelegate as SliverChildListDelegate).children;
+    final bodyLines = children.whereType<ReadingLine>().toList();
+    expect(
+      bodyLines.map((line) => line.value),
+      orderedEquals(detail.lesson.sections.map((section) => section.body)),
+    );
+    expect(bodyLines.every((line) => line.showReadings), isTrue);
+    for (final section in detail.lesson.sections) {
+      expect(
+        children.whereType<Text>().where(
+          (text) => text.data == section.body.surface,
+        ),
+        isEmpty,
+      );
+    }
     int titleIndex(String title) =>
         children.indexWhere((child) => child is Text && child.data == title);
     const sectionTitles = [
@@ -122,18 +136,55 @@ void main() {
     expect(exampleIndex('ミオさんは学生です。'), lessThan(exampleIndex('レンさんは日本人です。')));
     expect(exampleIndex('レンさんは日本人です。'), lessThan(titleIndex('加上か，變成問句')));
     expect(titleIndex('加上か，變成問句'), lessThan(exampleIndex('ミオさんは学生ですか。')));
+    final vocabularyBody = find.byWidgetPredicate(
+      (widget) =>
+          widget is ReadingLine &&
+          widget.value.id == detail.lesson.sections[1].body.id,
+    );
     await tester.scrollUntilVisible(
-      find.textContaining('人物卡\n名前：ミオ'),
+      vocabularyBody,
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    for (final reading in ['ひと', 'なまえ', 'がくせい', 'にほんじん', 'にほんご']) {
+      expect(
+        find.descendant(of: vocabularyBody, matching: find.text(reading)),
+        findsWidgets,
+      );
+    }
+    final cardBody = find.byWidgetPredicate(
+      (widget) =>
+          widget is ReadingLine &&
+          widget.value.id == detail.lesson.sections[7].body.id,
+    );
+    await tester.scrollUntilVisible(
+      cardBody,
       400,
       scrollable: find.byType(Scrollable).last,
     );
-    expect(find.textContaining('人物卡\n名前：ミオ'), findsOneWidget);
+    expect(cardBody, findsOneWidget);
+    expect(
+      tester.widget<ReadingLine>(cardBody).value.surface,
+      detail.lesson.sections[7].body.surface,
+    );
+    final studentVocabulary = find.byWidgetPredicate(
+      (widget) =>
+          widget is ReadingLine &&
+          widget.value.id ==
+              detail.vocabulary
+                  .singleWhere((item) => item.written.surface == '学生')
+                  .written
+                  .id,
+    );
     await tester.scrollUntilVisible(
-      find.text('がくせい'),
+      studentVocabulary,
       400,
       scrollable: find.byType(Scrollable).last,
     );
-    expect(find.text('がくせい'), findsWidgets);
+    expect(
+      find.descendant(of: studentVocabulary, matching: find.text('がくせい')),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 }

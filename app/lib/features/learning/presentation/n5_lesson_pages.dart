@@ -138,7 +138,7 @@ class _N5LessonDetailPageState extends State<N5LessonDetailPage> {
         for (final section in detail.lesson.sections) ...[
           Text(section.title.surface, style: theme.textTheme.titleLarge),
           const SizedBox(height: 8),
-          Text(section.body.surface),
+          ReadingLine(section.body, style: theme.textTheme.bodyMedium),
           for (final item in detail.examplesAfterSection[section.ordinal] ?? [])
             Card(
               child: ListTile(
