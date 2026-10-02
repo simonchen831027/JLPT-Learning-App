@@ -3,8 +3,9 @@
 abstract final class B0ContentIds {
   static const g01ExamplesSectionOrdinal = 4;
   static const g02ExamplesSectionOrdinal = 5;
-  static const previousVersion = '01a0e831-72b8-701a-bbd7-f30092a6be3c';
-  static const version = '01a0e86d-e662-7aca-9931-1d2527768b43';
+  static const legacyVersion = '01a0e831-72b8-701a-bbd7-f30092a6be3c';
+  static const previousVersion = '01a0e86d-e662-7aca-9931-1d2527768b43';
+  static const version = '01a0fbf6-2ffe-72c2-aab3-00cd733ea8ec';
   static const lesson = '01a0e831-72b8-79e2-9331-0496be402d48';
   static const vocabulary = [
     '01a0e831-72b8-7013-b4f9-6f963ecac47c', // V-B0-01 わたし
@@ -34,7 +35,7 @@ abstract final class B0ContentIds {
     '01a0e831-72b8-7101-bb73-6cf8868d0cd4',
     '01a0e831-72b8-7084-92a1-1e75eadcb29d',
   ];
-  static const questionOptions = [
+  static const previousQuestionOptions = [
     [
       '01a0e875-6c4b-7e19-b1b5-14ce66246cf8', // Q-B0-01-A
       '01a0e875-6c4e-7704-bd67-7d16ab6a7939', // Q-B0-01-B
@@ -52,6 +53,28 @@ abstract final class B0ContentIds {
       '01a0e875-6c4e-70e2-85b6-4803c5442cd2', // Q-B0-03-B
       '01a0e875-6c4e-7e51-8da5-87e2edf48079', // Q-B0-03-C
       '01a0e875-6c4e-7c74-8e35-d40001c53a2f', // Q-B0-03-D
+    ],
+  ];
+
+  // 新 revision 的 option row identities，依核准的 display order。
+  static const questionOptions = [
+    [
+      '01a0fbf6-2ffe-71be-9275-65973f54cc1c', // Q-B0-01-B
+      '01a0fbf6-2ffe-77f0-ada8-10a58aeecd3a', // Q-B0-01-A
+      '01a0fbf6-2ffe-752b-92fa-a9b6f1550bc3', // Q-B0-01-D
+      '01a0fbf6-2ffe-7a6e-b57d-e53cbb7e0b2c', // Q-B0-01-C
+    ],
+    [
+      '01a0fbf6-2ffe-7f40-a3f7-d90a767c06fb', // Q-B0-02-B
+      '01a0fbf6-2ffe-729a-ad6c-7d46952d958f', // Q-B0-02-C
+      '01a0fbf6-2ffe-7cbe-890d-a4cfffb88b2d', // Q-B0-02-A
+      '01a0fbf6-2ffe-75d9-8370-1b0bb012ae79', // Q-B0-02-D
+    ],
+    [
+      '01a0fbf6-2ffe-7fc6-a57a-7ae0d19cbffe', // Q-B0-03-B
+      '01a0fbf6-2ffe-7719-b809-4df0add4caa2', // Q-B0-03-D
+      '01a0fbf6-2ffe-7bf4-a2d1-3af639d4f674', // Q-B0-03-C
+      '01a0fbf6-2ffe-72fb-b88c-42e21d71c722', // Q-B0-03-A
     ],
   ];
 

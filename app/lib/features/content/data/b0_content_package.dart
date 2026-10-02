@@ -4,18 +4,17 @@ import '../domain/content_models.dart';
 import 'b0_content_ids.dart';
 import 'sqlite_content_repository.dart';
 
-/// Compiled import of N5_L01_B0_CONTENT_PACKAGE_APPROVED.md.
-///
-/// Source IDs and revision IDs are created once, within the atomic import.
-/// Logical content and option IDs remain stable across installations.
+/// 核准 Candidate 02 的靜態 Content import（不在 runtime 解析 handoff）。
+/// SHA-256: 8B698FDDE858B6BFEF76CC39F23412ADAD621B2BB5A53E0CD98DD8DF25744C8B
+/// 保留 logical contentId 與舊 release；新 revisions/options 使用獨立 identity。
 final class B0ContentPackage {
   const B0ContentPackage(this._ids);
 
   final EntityIdGenerator _ids;
 
-  static const releaseLabel = 'n5-l01-b0-v2';
+  static const releaseLabel = 'n5-l01-b0-v3';
   static const _creator = 'jlpt-app-03-approved-b0';
-  static const _publisher = 'slice-1c-canonical-import';
+  static const _publisher = 'approved-b0-learner-facing-integration';
 
   Future<void> install(SqliteContentRepository repository) =>
       repository.transaction((tx) async {
@@ -41,7 +40,8 @@ final class B0ContentPackage {
             ? <String>[]
             : await _previousSourceIds(tx, previous);
         if (previous == null &&
-            await tx.getVersion(B0ContentIds.previousVersion) != null) {
+            (await tx.getVersion(B0ContentIds.previousVersion) != null ||
+                await tx.getVersion(B0ContentIds.legacyVersion) != null)) {
           throw StateError('Previous B0 release is not current.');
         }
 
@@ -92,7 +92,8 @@ final class B0ContentPackage {
     SqliteContentRepository repository,
     ContentVersion previous,
   ) async {
-    if (previous.id != B0ContentIds.previousVersion ||
+    if ((previous.id != B0ContentIds.previousVersion &&
+            previous.id != B0ContentIds.legacyVersion) ||
         await repository.publishedCountByVersion(previous.id) !=
             B0ContentIds.allContent.length) {
       throw StateError('Another content release is already current.');
@@ -111,8 +112,7 @@ final class B0ContentPackage {
     for (final id in ids) {
       final source = await repository.getSource(id);
       if (source == null ||
-          source.reviewStatus != SourceReviewStatus.approved ||
-          source.contentUsageStatus != ContentUsageStatus.referenceOnly ||
+          !source.isPublicationEligible ||
           source.sourceUrl == null) {
         throw StateError('Previous B0 source is ineligible.');
       }
@@ -129,250 +129,385 @@ final class B0ContentPackage {
     yield _Entry(
       LessonContent(
         revision: _revision(B0ContentIds.lesson, ContentKind.lesson, now),
-        title: _plain('L01 — 身分／自我介紹'),
+        title: _reading([("自我介紹：姓名與身分", null)]),
         sections: [
-          _section(0, 'Learning Goal', '''完成本課後，學習者應能：
-看懂非常簡單的人物姓名與身分資訊。
-理解 N1 は N2 です 是對 N1 做基本身分／分類描述。
-理解句尾 か 可以把這類丁寧句變成問句。
-辨識 学生、日本人、日本語 等本課核心詞。
-回答非常簡單的 singleChoice Practice。'''),
-          _section(1, 'Step 1 — Vocabulary', '''本課先學：
-わたし
-人（ひと）
-名前（なまえ）
-学生（がくせい）
-日本人（にほんじん）
-日本語（にほんご）
-
-其中：
-学生、日本人 很適合描述一個人的身分。
-名前、日本語 本課也會出現在人物資料中。
-不需要一次記住每個漢字的所有讀法。'''),
-          _section(2, 'Support Expression Note — さん', '''さん：
-接在別人的名字後面的一種基本敬稱。
-本課只需要看懂即可：
-不列為正式 Vocabulary target。
-不建立完整敬稱教材。
-自己的名字後通常不加 さん。'''),
-          _section(3, 'Step 2 — G01', '''N1 は N2 です
-先看：
-ミオさんは学生です。
-意思是：
-Mio 是學生。
-但句子的理解方式不要只背成中文「是」。
-可以想成：
-現在談的是「ミオさん」 → 關於 Mio，我們說明這個人是「学生」。
-所以：
-ミオさん：現在談的人
-は：告訴我們「現在談這個人」
-学生：對這個人的身分描述
-です：丁寧的句尾'''),
-          _section(4, 'Step 3 — Original G01 Examples', '''參見 §8：
-EX-B0-01
-EX-B0-02
-EX-B0-03'''),
-          _section(5, 'Step 4 — G02', '''か
-如果原本是：
-ミオさんは学生です。
-在最後加入：
-か
-就得到：
-ミオさんは学生ですか。
-也就是：
-Mio 是學生嗎？
-日文不需要把前面的詞重新排列。'''),
-          _section(6, 'Step 5 — Very Basic Response', '''問：
-ミオさんは学生ですか。
-如果答案符合：
-はい。
-或：
-はい、学生です。
-如果不符合，目前先學：
-いいえ。
-完整否定句留到後續已核准的文法批次，不在 B0 提前加入。'''),
           _sectionReading(
-            7,
-            'Step 6 — Mini Comprehension',
+            0,
+            _reading([("學習目標", null)]),
             _reading([
-              ('人物卡\n姓名　', null),
-              ('名前', 'なまえ'),
-              ('：', null),
-              ('ミオ', null),
-              ('\n身分　', null),
-              ('学生', 'がくせい'),
-              ('\n國籍　', null),
-              ('日本人', 'にほんじん'),
-              ('\n語言　', null),
-              ('日本語', 'にほんご'),
-              ('\n\n', null),
-              ('ミオ', null),
-              ('的身分是什麼？ → ', null),
-              ('学生', 'がくせい'),
-              ('\n人物卡中表示「日語」的是哪個詞？ → ', null),
-              ('日本語', 'にほんご'),
-              ('\n這裡只要求辨識資訊，不新增「國籍是～」「會說～」等後續句型。', null),
+              (
+                "學完這一課，你可以：\n用簡單的日文介紹姓名與身分。\n分辨「是學生」與「是學生嗎？」的說法。\n看懂人物資料中的名字、學生身分與語言資訊。\n\n例句中的ミオ（Mio）與レン（Ren）是兩個人的名字。",
+                null,
+              ),
             ]),
           ),
-          _section(8, 'Step 7 — Summary / Review Point', '''今天最重要的兩個形式：
-N1 は N2 です。
-→ 對 N1 做最基本的身分／類別描述。
-N1 は N2 ですか。
-→ 詢問這個描述是否正確。
-記住：
-助詞 は 在這裡讀 わ。
-不要把 は 直接背成「是」。
-不要把任何中文「是」都機械換成 です。
-か 本課只負責最基本句尾問句。'''),
+          _sectionReading(
+            1,
+            _reading([("先認識六個單字", null)]),
+            _reading([
+              ("わたし：我。\n", null),
+              ("人", "ひと"),
+              ("：人。\n", null),
+              ("名前", "なまえ"),
+              ("：名字。\n", null),
+              ("学生", "がくせい"),
+              ("：學生。\n", null),
+              ("日本人", "にほんじん"),
+              ("：日本人。\n", null),
+              ("日本語", "にほんご"),
+              ("：日語、日文。\n\n", null),
+              ("学生", "がくせい"),
+              ("和", null),
+              ("日本人", "にほんじん"),
+              ("可以用來介紹一個人的身分；", null),
+              ("名前", "なまえ"),
+              ("和", null),
+              ("日本語", "にほんご"),
+              ("則分別表示名字與語言。\n先記住這些詞在本課中的讀音與意思，再看它們如何出現在句子裡。", null),
+            ]),
+          ),
+          _sectionReading(
+            2,
+            _reading([("稱呼別人時的さん", null)]),
+            _reading([
+              (
+                "さん接在別人的名字後面，是一種有禮貌的稱呼。\n例如，稱呼ミオ可以說ミオさん。\n介紹自己的名字時，通常不在名字後面加さん。",
+                null,
+              ),
+            ]),
+          ),
+          _sectionReading(
+            3,
+            _reading([("用名詞介紹姓名與身分", null)]),
+            _reading([
+              ("名詞① は 名詞② です。\n\n名詞①放要談的人，名詞②放這個人的名字或身分。\nミオさんは", null),
+              ("学生", "がくせい"),
+              ("です。\n意思是「Mio是學生」。\n\nミオさん：現在要談的人。\nは：提示接下來要談的是ミオさん。\n", null),
+              ("学生", "がくせい"),
+              (
+                "：說明Mio的學生身分。\nです：讓這個名詞描述成為禮貌的說法。\n\n這裡的は讀作わ。它的作用是提示談論的對象，不是中文「是」的逐字對應。",
+                null,
+              ),
+            ]),
+          ),
+          _sectionReading(
+            4,
+            _reading([("讀讀姓名與身分的例句", null)]),
+            _reading([
+              ("閱讀下方三個例句，找出「現在談的是誰」以及「後面介紹的是名字還是身分」。\n讀到は時，記得念わ。", null),
+            ]),
+          ),
+          _sectionReading(
+            5,
+            _reading([("加上か，變成問句", null)]),
+            _reading([
+              ("想確認對方的姓名或身分，可以在剛才的です後面加か。\n\nミオさんは", null),
+              ("学生", "がくせい"),
+              ("です。\nMio是學生。\n\nミオさんは", null),
+              ("学生", "がくせい"),
+              (
+                "ですか。\nMio是學生嗎？\n\n前面的詞順序相同，句尾的か讓這個陳述變成詢問。\n讀讀下方兩個問句，留意它們在問誰、確認哪一種身分。",
+                null,
+              ),
+            ]),
+          ),
+          _sectionReading(
+            6,
+            _reading([("用はい與いいえ回答", null)]),
+            _reading([
+              ("有人問：\nミオさんは", null),
+              ("学生", "がくせい"),
+              (
+                "ですか。\nMio是學生嗎？\n\n如果Mio是學生，可以回答：\nはい。\n是的。\n\n也可以說得更完整：\nはい、",
+                null,
+              ),
+              ("学生", "がくせい"),
+              ("です。\n是的，是學生。\n\n如果Mio不是學生，可以先簡短回答：\nいいえ。\n不是。", null),
+            ]),
+          ),
+          _sectionReading(
+            7,
+            _reading([("看懂一張人物卡", null)]),
+            _reading([
+              ("人物卡\n", null),
+              ("名前", "なまえ"),
+              ("：ミオ\n", null),
+              ("学生", "がくせい"),
+              ("\n", null),
+              ("日本人", "にほんじん"),
+              ("\n", null),
+              ("日本語", "にほんご"),
+              (
+                "\n\n先在卡片中找出答案，再閱讀下方說明：\n哪個詞表示Mio的學生身分？\n哪個詞表示日語？\n\n答案與說明\n",
+                null,
+              ),
+              ("学生", "がくせい"),
+              ("表示學生，讓我們知道Mio的學生身分。\n", null),
+              ("日本語", "にほんご"),
+              ("表示日語，是語言的名稱。\n", null),
+              ("名前", "なまえ"),
+              ("表示名字；", null),
+              ("日本人", "にほんじん"),
+              ("表示日本人。它們與學生、語言提供的是不同資訊。", null),
+            ]),
+          ),
+          _sectionReading(
+            8,
+            _reading([("重點複習", null)]),
+            _reading([
+              (
+                "介紹姓名與身分：\n名詞① は 名詞② です。\n\n確認姓名或身分：\n名詞① は 名詞② ですか。\n\n記住三個重點：\nは提示現在談論的對象，在這些句子裡讀作わ。\nです是這類名詞描述的禮貌句尾。\n句尾加上か，就能詢問這個描述是否正確。\n\n讀句子時，先找出談的是誰，再看名字或身分，最後留意句尾是在陳述還是詢問。",
+                null,
+              ),
+            ]),
+          ),
         ],
       ),
-      List.generate(17, (index) => index + 1),
+      const [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
     );
-
-    final words = [
-      (_reading([('わたし', null)]), '我；說話者自己', [1, 2, 3, 10]),
-      (_reading([('人', 'ひと')]), '人；人物', [1, 2, 11, 16]),
-      (_reading([('名前', 'なまえ')]), '姓名／名字', [1, 2, 12]),
-      (_reading([('学生', 'がくせい')]), '學生', [1, 2, 13, 17]),
-      (_reading([('日本人', 'にほんじん')]), '日本人', [1, 2, 14, 16]),
-      (_reading([('日本語', 'にほんご')]), '日語；日本語言', [1, 2, 15]),
-    ];
-    for (var index = 0; index < words.length; index++) {
-      final (written, meaning, sources) = words[index];
-      yield _Entry(
-        VocabularyContent(
-          revision: _revision(
-            B0ContentIds.vocabulary[index],
-            ContentKind.vocabulary,
-            now,
-          ),
-          written: written,
-          meaning: meaning,
+    yield _Entry(
+      VocabularyContent(
+        revision: _revision(
+          B0ContentIds.vocabulary[0],
+          ContentKind.vocabulary,
+          now,
         ),
-        sources,
-      );
-    }
-
+        written: _reading([("わたし", null)]),
+        meaning: "我；說話的人用來稱呼自己。",
+      ),
+      const [1, 2, 3, 10],
+    );
+    yield _Entry(
+      VocabularyContent(
+        revision: _revision(
+          B0ContentIds.vocabulary[1],
+          ContentKind.vocabulary,
+          now,
+        ),
+        written: _reading([("人", "ひと")]),
+        meaning: "人；指一個人。",
+      ),
+      const [1, 2, 11, 16],
+    );
+    yield _Entry(
+      VocabularyContent(
+        revision: _revision(
+          B0ContentIds.vocabulary[2],
+          ContentKind.vocabulary,
+          now,
+        ),
+        written: _reading([("名前", "なまえ")]),
+        meaning: "名字；人物資料中表示姓名。",
+      ),
+      const [1, 2, 12],
+    );
+    yield _Entry(
+      VocabularyContent(
+        revision: _revision(
+          B0ContentIds.vocabulary[3],
+          ContentKind.vocabulary,
+          now,
+        ),
+        written: _reading([("学生", "がくせい")]),
+        meaning: "學生。",
+      ),
+      const [1, 2, 13, 17],
+    );
+    yield _Entry(
+      VocabularyContent(
+        revision: _revision(
+          B0ContentIds.vocabulary[4],
+          ContentKind.vocabulary,
+          now,
+        ),
+        written: _reading([("日本人", "にほんじん")]),
+        meaning: "日本人。",
+      ),
+      const [1, 2, 14, 16],
+    );
+    yield _Entry(
+      VocabularyContent(
+        revision: _revision(
+          B0ContentIds.vocabulary[5],
+          ContentKind.vocabulary,
+          now,
+        ),
+        written: _reading([("日本語", "にほんご")]),
+        meaning: "日語；日文。",
+      ),
+      const [1, 2, 15],
+    );
     yield _Entry(
       GrammarContent(
         revision: _revision(B0ContentIds.grammar[0], ContentKind.grammar, now),
-        pattern: _plain('N1 は N2 です。'),
-        explanation: '''先提出 N1 是我們現在要談的人或事物，再用 N2 說明 N1 是什麼、屬於什麼身分或類別。
-
-中文常會翻成「N1 是 N2」，但這只是方便理解的翻譯。
-不要學成：は = 是；或 です = 是。
-
-N1：現在正在談的人／事物
-は：告訴聽者「現在要說的是 N1」
-N2：對 N1 提供的身分、名稱或分類
-です：讓名詞描述形成丁寧、完整的句尾
-
-本批主要使用：
-人名 → 身分
-人 → 國籍／身分類別
-自己 → 名字
-自己／人物 → 學生
-
-わたし 很適合做 N1；学生、日本人 很適合做 N2。
-名前 本批主要當人物資訊 label，不導入 の。
-日本語 本批主要當語言 label；不能拿來把「人」判定成「語言」。
-人 是人物辨識詞；不強迫進入 G01 例句。
-
-助詞 は 在本句發音為 わ，不要念成 は / ha。
-は 的工作不是等號，而是提示「現在談 N1」。
-B0 只教「名詞對名詞」的肯定描述；不能由此推導動詞或形容詞規則。
-若想用「わたしは日本語です。」表達「我會日文」，語意不成立。
-さん 可接在別人的名字後作敬稱，但自己的名字後通常不加。
-
-B0 G01 不教：
-否定 ではありません、過去 でした、だ、も、の、形容詞述語、動詞述語、は／が 完整比較。''',
+        pattern: _reading([("名詞① は 名詞② です。", null)]),
+        explanation: "這個句型可以用來介紹姓名與身分。「名詞①」與「名詞②」表示句型中兩個名詞的位置。\n\n先提出要談的人，再介紹名字或身分。\nミオさんは学生（がくせい）です。\n意思是「Mio是學生」。ミオさん是談論的對象，学生是對這個人的身分說明。\n\n助詞は在這裡讀作わ，提示「現在要談的是……」。在表示姓名或身分的名詞後面加上です，就形成禮貌的說法。中文常翻成「是」，但不要把は或です各自當成中文「是」的逐字替換。\n\n介紹自己的姓名也可以說「わたしはミオです。」：我是Mio。自己的名字後通常不加さん；稱呼他人時可以說ミオさん。\n\n選詞時也要注意意思。日本人（にほんじん）可以介紹人的身分；日本語（にほんご）是語言的名稱。「わたしは日本語です。」不能用來表達「我會說日文」。",
       ),
       const [1, 2, 3, 4, 5, 7, 8],
     );
     yield _Entry(
       GrammarContent(
         revision: _revision(B0ContentIds.grammar[1], ContentKind.grammar, now),
-        pattern: _plain('N1 は N2 ですか。'),
-        explanation: '''在丁寧句的句尾加入 か，形成最基本的問句。
-
-N1 は N2 です。
-↓
-N1 は N2 ですか。
-
-不需要像英文一樣把語序重新排列。
-改變重點是句尾增加 か。
-
-本批採最小回答：
-はい。
-いいえ。
-若為肯定，可再重複已知內容：はい、学生です。
-完整否定句不在 B0 scope。
-
-か 位於句尾。本批只理解為「問句標記」。
-不改變前面的基本語序。
-ですか 可作為基本問句結尾熟悉。
-本批不教授其他 か 用法。''',
+        pattern: _reading([("名詞① は 名詞② ですか。", null)]),
+        explanation: "想確認姓名或身分，在這個名詞句的です後面加か，就能形成禮貌的問句。\n\nミオさんは学生（がくせい）です。\nMio是學生。\n\nミオさんは学生（がくせい）ですか。\nMio是學生嗎？\n\n兩句前面的詞順序相同。句尾的か讓陳述變成詢問，所以讀句子時要留意結尾。\n\n回答「ミオさんは学生ですか。」時，如果Mio是學生，可以說「はい。」或「はい、学生です。」；如果Mio不是學生，可以先說「いいえ。」。這裡的はい與いいえ是在回答這個肯定形式的問句。",
       ),
       const [1, 2, 6, 7, 9],
     );
-
     yield _Entry(
       KanjiContent(
         revision: _revision(B0ContentIds.kanji[0], ContentKind.kanji, now),
-        character: '人',
-        context: _reading([('人', 'ひと'), ('／', null), ('日本人', 'にほんじん')]),
-        meaning: '人；～人 中表示某國／某類別的人。',
+        character: "人",
+        context: _reading([("人", "ひと"), ("／", null), ("日本人", "にほんじん")]),
+        meaning: "「人」表示人。單獨作為「人」這個詞時讀ひと；在日本人（にほんじん）裡，人讀じん。漢字的讀法要跟著整個詞一起記。",
       ),
       const [1, 2, 11, 14, 16],
     );
     yield _Entry(
       KanjiContent(
         revision: _revision(B0ContentIds.kanji[1], ContentKind.kanji, now),
-        character: '学',
-        context: _reading([('学生', 'がくせい')]),
-        meaning: '學習、學問；形成「學生」概念的一部分。学生（がくせい）中的 学 讀 がく。',
+        character: "学",
+        context: _reading([("学生", "がくせい")]),
+        meaning: "「学」對應中文的「學」，有學習、學問的意思。在学生（がくせい）這個詞裡，学讀がく；整個詞表示學生。",
       ),
       const [1, 2, 13, 17],
     );
-
-    final examples = [
-      (_sentence('わたし', 'ミオ', question: false, self: true), '我是 Mio。'),
-      (_sentence('ミオ', '学生', question: false), 'Mio 是學生。'),
-      (_sentence('レン', '日本人', question: false), 'Ren 是日本人。'),
-      (_sentence('ミオ', '学生', question: true), 'Mio 是學生嗎？'),
-      (_sentence('レン', '日本人', question: true), 'Ren 是日本人嗎？'),
-    ];
-    for (var index = 0; index < examples.length; index++) {
-      final (sentence, translation) = examples[index];
-      yield _Entry(
-        ExampleSentenceContent(
-          revision: _revision(
-            B0ContentIds.examples[index],
-            ContentKind.exampleSentence,
-            now,
-          ),
-          sentence: sentence,
-          translation: translation,
+    yield _Entry(
+      ExampleSentenceContent(
+        revision: _revision(
+          B0ContentIds.examples[0],
+          ContentKind.exampleSentence,
+          now,
         ),
-        index < 3 ? const [1, 2, 4, 5, 7] : const [1, 2, 6, 7, 9],
-      );
-    }
-
+        sentence: _reading([
+          ("わたし", null),
+          ("は", null),
+          ("ミオ", null),
+          ("です", null),
+          ("。", null),
+        ]),
+        translation: "我是 Mio。",
+      ),
+      const [1, 2, 4, 5, 7],
+    );
+    yield _Entry(
+      ExampleSentenceContent(
+        revision: _revision(
+          B0ContentIds.examples[1],
+          ContentKind.exampleSentence,
+          now,
+        ),
+        sentence: _reading([
+          ("ミオ", null),
+          ("さん", null),
+          ("は", null),
+          ("学生", "がくせい"),
+          ("です", null),
+          ("。", null),
+        ]),
+        translation: "Mio 是學生。",
+      ),
+      const [1, 2, 4, 5, 7],
+    );
+    yield _Entry(
+      ExampleSentenceContent(
+        revision: _revision(
+          B0ContentIds.examples[2],
+          ContentKind.exampleSentence,
+          now,
+        ),
+        sentence: _reading([
+          ("レン", null),
+          ("さん", null),
+          ("は", null),
+          ("日本人", "にほんじん"),
+          ("です", null),
+          ("。", null),
+        ]),
+        translation: "Ren 是日本人。",
+      ),
+      const [1, 2, 4, 5, 7],
+    );
+    yield _Entry(
+      ExampleSentenceContent(
+        revision: _revision(
+          B0ContentIds.examples[3],
+          ContentKind.exampleSentence,
+          now,
+        ),
+        sentence: _reading([
+          ("ミオ", null),
+          ("さん", null),
+          ("は", null),
+          ("学生", "がくせい"),
+          ("です", null),
+          ("か", null),
+          ("。", null),
+        ]),
+        translation: "Mio 是學生嗎？",
+      ),
+      const [1, 2, 6, 7, 9],
+    );
+    yield _Entry(
+      ExampleSentenceContent(
+        revision: _revision(
+          B0ContentIds.examples[4],
+          ContentKind.exampleSentence,
+          now,
+        ),
+        sentence: _reading([
+          ("レン", null),
+          ("さん", null),
+          ("は", null),
+          ("日本人", "にほんじん"),
+          ("です", null),
+          ("か", null),
+          ("。", null),
+        ]),
+        translation: "Ren 是日本人嗎？",
+      ),
+      const [1, 2, 6, 7, 9],
+    );
     yield _Entry(
       _question(
         now: now,
         index: 0,
-        prompt: _plain('哪一句表示「Mio 是學生」？'),
+        prompt: _reading([("哪一句是在描述「Mio是學生」？", null)]),
         options: [
-          _sentence('ミオ', '学生', question: false),
-          _sentence('ミオ', '学生', question: true),
-          _sentence('レン', '学生', question: false),
-          _sentence('ミオ', '日本人', question: false),
+          _reading([
+            ("ミオ", null),
+            ("さん", null),
+            ("は", null),
+            ("学生", "がくせい"),
+            ("です", null),
+            ("か", null),
+            ("。", null),
+          ]),
+          _reading([
+            ("ミオ", null),
+            ("さん", null),
+            ("は", null),
+            ("学生", "がくせい"),
+            ("です", null),
+            ("。", null),
+          ]),
+          _reading([
+            ("ミオ", null),
+            ("さん", null),
+            ("は", null),
+            ("日本人", "にほんじん"),
+            ("です", null),
+            ("。", null),
+          ]),
+          _reading([
+            ("レン", null),
+            ("さん", null),
+            ("は", null),
+            ("学生", "がくせい"),
+            ("です", null),
+            ("。", null),
+          ]),
         ],
-        explanation: '''ミオさんは学生です。 的主題是 Mio，学生です 是對 Mio 的身分描述，因此完整意思是「Mio 是學生」。
-Q-B0-01-B 錯在句尾有 か，變成「Mio 是學生嗎？」而不是陳述。
-Q-B0-01-C 描述的是 Ren，不是 Mio。
-Q-B0-01-D 描述 Mio 是 日本人，不是 学生。''',
+        explanation: "正解是「ミオさんは学生です。」：Mio是學生。ミオさん是談論的對象，学生（がくせい）表示學生，句尾です是在作禮貌的陳述。\n\n「ミオさんは学生ですか。」多了句尾か，意思是「Mio是學生嗎？」；它在詢問，沒有直接陳述Mio是學生。\n「ミオさんは日本人です。」說的是Mio是日本人，並未說明Mio是不是學生。\n「レンさんは学生です。」說的是Ren，而題目要描述的是Mio。\n\n判斷時要同時看談論的人、後面的身分，以及句尾是在陳述還是詢問。",
       ),
       const [1, 2, 4, 5, 6, 7, 8, 9, 13, 14],
     );
@@ -380,21 +515,45 @@ Q-B0-01-D 描述 Mio 是 日本人，不是 学生。''',
       _question(
         now: now,
         index: 1,
-        prompt: _plain('如果要確認「Ren 是不是日本人」，哪一句最合適？'),
+        prompt: _reading([("想確認「Ren是不是日本人」，哪一句最合適？", null)]),
         options: [
-          _sentence('レン', '日本人', question: true),
-          _sentence('レン', '日本人', question: false),
-          _sentence('ミオ', '日本人', question: true),
-          _sentence('レン', '学生', question: true),
+          _reading([
+            ("レン", null),
+            ("さん", null),
+            ("は", null),
+            ("日本人", "にほんじん"),
+            ("です", null),
+            ("。", null),
+          ]),
+          _reading([
+            ("ミオ", null),
+            ("さん", null),
+            ("は", null),
+            ("日本人", "にほんじん"),
+            ("です", null),
+            ("か", null),
+            ("。", null),
+          ]),
+          _reading([
+            ("レン", null),
+            ("さん", null),
+            ("は", null),
+            ("日本人", "にほんじん"),
+            ("です", null),
+            ("か", null),
+            ("。", null),
+          ]),
+          _reading([
+            ("レン", null),
+            ("さん", null),
+            ("は", null),
+            ("学生", "がくせい"),
+            ("です", null),
+            ("か", null),
+            ("。", null),
+          ]),
         ],
-        explanation: '''要確認某個判斷，在本課的丁寧名詞句中可把：
-レンさんは日本人です。
-改成：
-レンさんは日本人ですか。
-因此 Q-B0-02-A 正確。
-Q-B0-02-B 沒有 か，是陳述句。
-Q-B0-02-C 問的是 Mio。
-Q-B0-02-D 問的是 Ren 是否為學生，而不是是否為日本人。''',
+        explanation: "正解是「レンさんは日本人ですか。」：Ren是日本人嗎？レンさん是要確認的人，日本人（にほんじん）是要確認的身分，句尾か表示詢問。\n\n「レンさんは日本人です。」是「Ren是日本人」的陳述，沒有提出問題。\n「ミオさんは日本人ですか。」問的是Mio，談論的對象不符合題目。\n「レンさんは学生ですか。」問Ren是不是學生，確認的是另一種身分。\n\n要問對問題，談論的人、要確認的身分與問句結尾都必須符合。",
       ),
       const [1, 2, 4, 5, 6, 7, 9, 13, 14],
     );
@@ -402,33 +561,24 @@ Q-B0-02-D 問的是 Ren 是否為學生，而不是是否為日本人。''',
       _question(
         now: now,
         index: 2,
-        // The approved card and prompt are one normalized prompt ReadingText.
-        // Japanese word segments retain their approved whole-word readings.
         prompt: _reading([
-          ('姓名　', null),
-          ('名前', 'なまえ'),
-          ('：', null),
-          ('ミオ', null),
-          ('\n身分　', null),
-          ('学生', 'がくせい'),
-          ('\n國籍　', null),
-          ('日本人', 'にほんじん'),
-          ('\n語言　', null),
-          ('日本語', 'にほんご'),
-          ('\n\n根據人物卡，哪一項是 Mio 的「身分」？', null),
+          ("人物卡\n", null),
+          ("名前", "なまえ"),
+          ("：ミオ\n", null),
+          ("学生", "がくせい"),
+          ("\n", null),
+          ("日本人", "にほんじん"),
+          ("\n", null),
+          ("日本語", "にほんご"),
+          ("\n\n人物卡中，哪個詞表示Mio的學生身分？", null),
         ]),
         options: [
-          _reading([('学生', 'がくせい')]),
-          _reading([('日本人', 'にほんじん')]),
-          _reading([('日本語', 'にほんご')]),
-          _reading([('名前', 'なまえ')]),
+          _reading([("日本人", "にほんじん")]),
+          _reading([("名前", "なまえ")]),
+          _reading([("日本語", "にほんご")]),
+          _reading([("学生", "がくせい")]),
         ],
-        explanation: '''人物卡中：
-学生 = 學生，是身分。
-日本人 = 日本人，這裡表示國籍／人物身分類別。
-日本語 = 日語，是語言。
-名前 = 姓名／名字，是資料欄位。
-所以唯一正確答案是 Q-B0-03-A。''',
+        explanation: "正解是「学生（がくせい）」，意思是學生，表示Mio的學生身分。\n\n「日本人（にほんじん）」表示日本人，也可以介紹一個人的身分；但題目明確要找的是學生身分，因此不是這一題的答案。\n「名前（なまえ）」表示名字。人物卡的「名前：ミオ」告訴我們名字是Mio，沒有說明學生身分。\n「日本語（にほんご）」表示日語，是語言的名稱。\n\n先看題目要找哪一種資訊，再用單字的意思判斷，才能分辨名字、學生身分與語言。",
       ),
       const [1, 2, 3, 12, 13, 14, 15],
     );
@@ -457,7 +607,7 @@ Q-B0-02-D 問的是 Ren 是否為學生，而不是是否為日本人。''',
           content: options[ordinal],
         ),
     ],
-    correctOptionId: B0ContentIds.questionOptions[index][0],
+    correctOptionId: B0ContentIds.questionOptions[index][index + 1],
   );
 
   ContentRevision _revision(String contentId, ContentKind kind, DateTime now) =>
@@ -473,18 +623,16 @@ Q-B0-02-D 問的是 Ren 是否為學生，而不是是否為日本人。''',
         updatedAt: now,
       );
 
-  LessonSection _section(int ordinal, String title, String body) =>
-      _sectionReading(ordinal, title, _plain(body));
-
-  LessonSection _sectionReading(int ordinal, String title, ReadingText body) =>
-      LessonSection(
-        id: _ids.generate(),
-        ordinal: ordinal,
-        title: _plain(title),
-        body: body,
-      );
-
-  ReadingText _plain(String surface) => _reading([(surface, null)]);
+  LessonSection _sectionReading(
+    int ordinal,
+    ReadingText title,
+    ReadingText body,
+  ) => LessonSection(
+    id: _ids.generate(),
+    ordinal: ordinal,
+    title: title,
+    body: body,
+  );
 
   ReadingText _reading(List<(String, String?)> parts) => ReadingText(
     id: _ids.generate(),
@@ -499,28 +647,6 @@ Q-B0-02-D 問的是 Ren 是否為學生，而不是是否為日本人。''',
         ),
     ],
   );
-
-  ReadingText _sentence(
-    String person,
-    String noun, {
-    required bool question,
-    bool self = false,
-  }) => _reading([
-    (person, null),
-    if (!self) ('さん', null),
-    ('は', null),
-    (
-      noun,
-      switch (noun) {
-        '学生' => 'がくせい',
-        '日本人' => 'にほんじん',
-        _ => null,
-      },
-    ),
-    ('です', null),
-    if (question) ('か', null),
-    ('。', null),
-  ]);
 }
 
 final class _Entry {

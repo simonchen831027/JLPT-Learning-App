@@ -1,0 +1,1270 @@
+{
+  "candidateSha256": "8B698FDDE858B6BFEF76CC39F23412ADAD621B2BB5A53E0CD98DD8DF25744C8B",
+  "fields": {
+    "lesson.title": "自我介紹：姓名與身分",
+    "lesson.sections.0.title": "學習目標",
+    "lesson.sections.0.body": "學完這一課，你可以：\n用簡單的日文介紹姓名與身分。\n分辨「是學生」與「是學生嗎？」的說法。\n看懂人物資料中的名字、學生身分與語言資訊。\n\n例句中的ミオ（Mio）與レン（Ren）是兩個人的名字。",
+    "lesson.sections.1.title": "先認識六個單字",
+    "lesson.sections.1.body": "わたし：我。\n人：人。\n名前：名字。\n学生：學生。\n日本人：日本人。\n日本語：日語、日文。\n\n学生和日本人可以用來介紹一個人的身分；名前和日本語則分別表示名字與語言。\n先記住這些詞在本課中的讀音與意思，再看它們如何出現在句子裡。",
+    "lesson.sections.2.title": "稱呼別人時的さん",
+    "lesson.sections.2.body": "さん接在別人的名字後面，是一種有禮貌的稱呼。\n例如，稱呼ミオ可以說ミオさん。\n介紹自己的名字時，通常不在名字後面加さん。",
+    "lesson.sections.3.title": "用名詞介紹姓名與身分",
+    "lesson.sections.3.body": "名詞① は 名詞② です。\n\n名詞①放要談的人，名詞②放這個人的名字或身分。\nミオさんは学生です。\n意思是「Mio是學生」。\n\nミオさん：現在要談的人。\nは：提示接下來要談的是ミオさん。\n学生：說明Mio的學生身分。\nです：讓這個名詞描述成為禮貌的說法。\n\n這裡的は讀作わ。它的作用是提示談論的對象，不是中文「是」的逐字對應。",
+    "lesson.sections.4.title": "讀讀姓名與身分的例句",
+    "lesson.sections.4.body": "閱讀下方三個例句，找出「現在談的是誰」以及「後面介紹的是名字還是身分」。\n讀到は時，記得念わ。",
+    "lesson.sections.5.title": "加上か，變成問句",
+    "lesson.sections.5.body": "想確認對方的姓名或身分，可以在剛才的です後面加か。\n\nミオさんは学生です。\nMio是學生。\n\nミオさんは学生ですか。\nMio是學生嗎？\n\n前面的詞順序相同，句尾的か讓這個陳述變成詢問。\n讀讀下方兩個問句，留意它們在問誰、確認哪一種身分。",
+    "lesson.sections.6.title": "用はい與いいえ回答",
+    "lesson.sections.6.body": "有人問：\nミオさんは学生ですか。\nMio是學生嗎？\n\n如果Mio是學生，可以回答：\nはい。\n是的。\n\n也可以說得更完整：\nはい、学生です。\n是的，是學生。\n\n如果Mio不是學生，可以先簡短回答：\nいいえ。\n不是。",
+    "lesson.sections.7.title": "看懂一張人物卡",
+    "lesson.sections.7.body": "人物卡\n名前：ミオ\n学生\n日本人\n日本語\n\n先在卡片中找出答案，再閱讀下方說明：\n哪個詞表示Mio的學生身分？\n哪個詞表示日語？\n\n答案與說明\n学生表示學生，讓我們知道Mio的學生身分。\n日本語表示日語，是語言的名稱。\n名前表示名字；日本人表示日本人。它們與學生、語言提供的是不同資訊。",
+    "lesson.sections.8.title": "重點複習",
+    "lesson.sections.8.body": "介紹姓名與身分：\n名詞① は 名詞② です。\n\n確認姓名或身分：\n名詞① は 名詞② ですか。\n\n記住三個重點：\nは提示現在談論的對象，在這些句子裡讀作わ。\nです是這類名詞描述的禮貌句尾。\n句尾加上か，就能詢問這個描述是否正確。\n\n讀句子時，先找出談的是誰，再看名字或身分，最後留意句尾是在陳述還是詢問。",
+    "vocabulary.0.written": "わたし",
+    "vocabulary.0.meaning": "我；說話的人用來稱呼自己。",
+    "vocabulary.1.written": "人",
+    "vocabulary.1.meaning": "人；指一個人。",
+    "vocabulary.2.written": "名前",
+    "vocabulary.2.meaning": "名字；人物資料中表示姓名。",
+    "vocabulary.3.written": "学生",
+    "vocabulary.3.meaning": "學生。",
+    "vocabulary.4.written": "日本人",
+    "vocabulary.4.meaning": "日本人。",
+    "vocabulary.5.written": "日本語",
+    "vocabulary.5.meaning": "日語；日文。",
+    "grammar.0.pattern": "名詞① は 名詞② です。",
+    "grammar.0.explanation": "這個句型可以用來介紹姓名與身分。「名詞①」與「名詞②」表示句型中兩個名詞的位置。\n\n先提出要談的人，再介紹名字或身分。\nミオさんは学生（がくせい）です。\n意思是「Mio是學生」。ミオさん是談論的對象，学生是對這個人的身分說明。\n\n助詞は在這裡讀作わ，提示「現在要談的是……」。在表示姓名或身分的名詞後面加上です，就形成禮貌的說法。中文常翻成「是」，但不要把は或です各自當成中文「是」的逐字替換。\n\n介紹自己的姓名也可以說「わたしはミオです。」：我是Mio。自己的名字後通常不加さん；稱呼他人時可以說ミオさん。\n\n選詞時也要注意意思。日本人（にほんじん）可以介紹人的身分；日本語（にほんご）是語言的名稱。「わたしは日本語です。」不能用來表達「我會說日文」。",
+    "grammar.1.pattern": "名詞① は 名詞② ですか。",
+    "grammar.1.explanation": "想確認姓名或身分，在這個名詞句的です後面加か，就能形成禮貌的問句。\n\nミオさんは学生（がくせい）です。\nMio是學生。\n\nミオさんは学生（がくせい）ですか。\nMio是學生嗎？\n\n兩句前面的詞順序相同。句尾的か讓陳述變成詢問，所以讀句子時要留意結尾。\n\n回答「ミオさんは学生ですか。」時，如果Mio是學生，可以說「はい。」或「はい、学生です。」；如果Mio不是學生，可以先說「いいえ。」。這裡的はい與いいえ是在回答這個肯定形式的問句。",
+    "kanji.0.character": "人",
+    "kanji.0.context": "人／日本人",
+    "kanji.0.meaning": "「人」表示人。單獨作為「人」這個詞時讀ひと；在日本人（にほんじん）裡，人讀じん。漢字的讀法要跟著整個詞一起記。",
+    "kanji.1.character": "学",
+    "kanji.1.context": "学生",
+    "kanji.1.meaning": "「学」對應中文的「學」，有學習、學問的意思。在学生（がくせい）這個詞裡，学讀がく；整個詞表示學生。",
+    "examples.0.sentence": "わたしはミオです。",
+    "examples.0.translation": "我是 Mio。",
+    "examples.1.sentence": "ミオさんは学生です。",
+    "examples.1.translation": "Mio 是學生。",
+    "examples.2.sentence": "レンさんは日本人です。",
+    "examples.2.translation": "Ren 是日本人。",
+    "examples.3.sentence": "ミオさんは学生ですか。",
+    "examples.3.translation": "Mio 是學生嗎？",
+    "examples.4.sentence": "レンさんは日本人ですか。",
+    "examples.4.translation": "Ren 是日本人嗎？",
+    "questions.0.prompt": "哪一句是在描述「Mio是學生」？",
+    "questions.0.options.0.content": "ミオさんは学生ですか。",
+    "questions.0.options.1.content": "ミオさんは学生です。",
+    "questions.0.options.2.content": "ミオさんは日本人です。",
+    "questions.0.options.3.content": "レンさんは学生です。",
+    "questions.0.explanation": "正解是「ミオさんは学生です。」：Mio是學生。ミオさん是談論的對象，学生（がくせい）表示學生，句尾です是在作禮貌的陳述。\n\n「ミオさんは学生ですか。」多了句尾か，意思是「Mio是學生嗎？」；它在詢問，沒有直接陳述Mio是學生。\n「ミオさんは日本人です。」說的是Mio是日本人，並未說明Mio是不是學生。\n「レンさんは学生です。」說的是Ren，而題目要描述的是Mio。\n\n判斷時要同時看談論的人、後面的身分，以及句尾是在陳述還是詢問。",
+    "questions.1.prompt": "想確認「Ren是不是日本人」，哪一句最合適？",
+    "questions.1.options.0.content": "レンさんは日本人です。",
+    "questions.1.options.1.content": "ミオさんは日本人ですか。",
+    "questions.1.options.2.content": "レンさんは日本人ですか。",
+    "questions.1.options.3.content": "レンさんは学生ですか。",
+    "questions.1.explanation": "正解是「レンさんは日本人ですか。」：Ren是日本人嗎？レンさん是要確認的人，日本人（にほんじん）是要確認的身分，句尾か表示詢問。\n\n「レンさんは日本人です。」是「Ren是日本人」的陳述，沒有提出問題。\n「ミオさんは日本人ですか。」問的是Mio，談論的對象不符合題目。\n「レンさんは学生ですか。」問Ren是不是學生，確認的是另一種身分。\n\n要問對問題，談論的人、要確認的身分與問句結尾都必須符合。",
+    "questions.2.prompt": "人物卡\n名前：ミオ\n学生\n日本人\n日本語\n\n人物卡中，哪個詞表示Mio的學生身分？",
+    "questions.2.options.0.content": "日本人",
+    "questions.2.options.1.content": "名前",
+    "questions.2.options.2.content": "日本語",
+    "questions.2.options.3.content": "学生",
+    "questions.2.explanation": "正解是「学生（がくせい）」，意思是學生，表示Mio的學生身分。\n\n「日本人（にほんじん）」表示日本人，也可以介紹一個人的身分；但題目明確要找的是學生身分，因此不是這一題的答案。\n「名前（なまえ）」表示名字。人物卡的「名前：ミオ」告訴我們名字是Mio，沒有說明學生身分。\n「日本語（にほんご）」表示日語，是語言的名稱。\n\n先看題目要找哪一種資訊，再用單字的意思判斷，才能分辨名字、學生身分與語言。"
+  },
+  "readingTexts": [
+    {
+      "field": "lesson.title",
+      "surface": "自我介紹：姓名與身分",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "自我介紹：姓名與身分",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.0.title",
+      "surface": "學習目標",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "學習目標",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.0.body",
+      "surface": "學完這一課，你可以：\n用簡單的日文介紹姓名與身分。\n分辨「是學生」與「是學生嗎？」的說法。\n看懂人物資料中的名字、學生身分與語言資訊。\n\n例句中的ミオ（Mio）與レン（Ren）是兩個人的名字。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "學完這一課，你可以：\n用簡單的日文介紹姓名與身分。\n分辨「是學生」與「是學生嗎？」的說法。\n看懂人物資料中的名字、學生身分與語言資訊。\n\n例句中的ミオ（Mio）與レン（Ren）是兩個人的名字。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.1.title",
+      "surface": "先認識六個單字",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "先認識六個單字",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.1.body",
+      "surface": "わたし：我。\n人：人。\n名前：名字。\n学生：學生。\n日本人：日本人。\n日本語：日語、日文。\n\n学生和日本人可以用來介紹一個人的身分；名前和日本語則分別表示名字與語言。\n先記住這些詞在本課中的讀音與意思，再看它們如何出現在句子裡。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "わたし：我。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "人",
+          "reading": "ひと"
+        },
+        {
+          "ordinal": 2,
+          "surface": "：人。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "名前",
+          "reading": "なまえ"
+        },
+        {
+          "ordinal": 4,
+          "surface": "：名字。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 6,
+          "surface": "：學生。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 7,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 8,
+          "surface": "：日本人。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 9,
+          "surface": "日本語",
+          "reading": "にほんご"
+        },
+        {
+          "ordinal": 10,
+          "surface": "：日語、日文。\n\n",
+          "reading": null
+        },
+        {
+          "ordinal": 11,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 12,
+          "surface": "和",
+          "reading": null
+        },
+        {
+          "ordinal": 13,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 14,
+          "surface": "可以用來介紹一個人的身分；",
+          "reading": null
+        },
+        {
+          "ordinal": 15,
+          "surface": "名前",
+          "reading": "なまえ"
+        },
+        {
+          "ordinal": 16,
+          "surface": "和",
+          "reading": null
+        },
+        {
+          "ordinal": 17,
+          "surface": "日本語",
+          "reading": "にほんご"
+        },
+        {
+          "ordinal": 18,
+          "surface": "則分別表示名字與語言。\n先記住這些詞在本課中的讀音與意思，再看它們如何出現在句子裡。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.2.title",
+      "surface": "稱呼別人時的さん",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "稱呼別人時的さん",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.2.body",
+      "surface": "さん接在別人的名字後面，是一種有禮貌的稱呼。\n例如，稱呼ミオ可以說ミオさん。\n介紹自己的名字時，通常不在名字後面加さん。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "さん接在別人的名字後面，是一種有禮貌的稱呼。\n例如，稱呼ミオ可以說ミオさん。\n介紹自己的名字時，通常不在名字後面加さん。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.3.title",
+      "surface": "用名詞介紹姓名與身分",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "用名詞介紹姓名與身分",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.3.body",
+      "surface": "名詞① は 名詞② です。\n\n名詞①放要談的人，名詞②放這個人的名字或身分。\nミオさんは学生です。\n意思是「Mio是學生」。\n\nミオさん：現在要談的人。\nは：提示接下來要談的是ミオさん。\n学生：說明Mio的學生身分。\nです：讓這個名詞描述成為禮貌的說法。\n\n這裡的は讀作わ。它的作用是提示談論的對象，不是中文「是」的逐字對應。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "名詞① は 名詞② です。\n\n名詞①放要談的人，名詞②放這個人的名字或身分。\nミオさんは",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 2,
+          "surface": "です。\n意思是「Mio是學生」。\n\nミオさん：現在要談的人。\nは：提示接下來要談的是ミオさん。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "：說明Mio的學生身分。\nです：讓這個名詞描述成為禮貌的說法。\n\n這裡的は讀作わ。它的作用是提示談論的對象，不是中文「是」的逐字對應。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.4.title",
+      "surface": "讀讀姓名與身分的例句",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "讀讀姓名與身分的例句",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.4.body",
+      "surface": "閱讀下方三個例句，找出「現在談的是誰」以及「後面介紹的是名字還是身分」。\n讀到は時，記得念わ。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "閱讀下方三個例句，找出「現在談的是誰」以及「後面介紹的是名字還是身分」。\n讀到は時，記得念わ。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.5.title",
+      "surface": "加上か，變成問句",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "加上か，變成問句",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.5.body",
+      "surface": "想確認對方的姓名或身分，可以在剛才的です後面加か。\n\nミオさんは学生です。\nMio是學生。\n\nミオさんは学生ですか。\nMio是學生嗎？\n\n前面的詞順序相同，句尾的か讓這個陳述變成詢問。\n讀讀下方兩個問句，留意它們在問誰、確認哪一種身分。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "想確認對方的姓名或身分，可以在剛才的です後面加か。\n\nミオさんは",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 2,
+          "surface": "です。\nMio是學生。\n\nミオさんは",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "ですか。\nMio是學生嗎？\n\n前面的詞順序相同，句尾的か讓這個陳述變成詢問。\n讀讀下方兩個問句，留意它們在問誰、確認哪一種身分。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.6.title",
+      "surface": "用はい與いいえ回答",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "用はい與いいえ回答",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.6.body",
+      "surface": "有人問：\nミオさんは学生ですか。\nMio是學生嗎？\n\n如果Mio是學生，可以回答：\nはい。\n是的。\n\n也可以說得更完整：\nはい、学生です。\n是的，是學生。\n\n如果Mio不是學生，可以先簡短回答：\nいいえ。\n不是。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "有人問：\nミオさんは",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 2,
+          "surface": "ですか。\nMio是學生嗎？\n\n如果Mio是學生，可以回答：\nはい。\n是的。\n\n也可以說得更完整：\nはい、",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です。\n是的，是學生。\n\n如果Mio不是學生，可以先簡短回答：\nいいえ。\n不是。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.7.title",
+      "surface": "看懂一張人物卡",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "看懂一張人物卡",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.7.body",
+      "surface": "人物卡\n名前：ミオ\n学生\n日本人\n日本語\n\n先在卡片中找出答案，再閱讀下方說明：\n哪個詞表示Mio的學生身分？\n哪個詞表示日語？\n\n答案與說明\n学生表示學生，讓我們知道Mio的學生身分。\n日本語表示日語，是語言的名稱。\n名前表示名字；日本人表示日本人。它們與學生、語言提供的是不同資訊。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "人物卡\n",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "名前",
+          "reading": "なまえ"
+        },
+        {
+          "ordinal": 2,
+          "surface": "：ミオ\n",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "\n",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 6,
+          "surface": "\n",
+          "reading": null
+        },
+        {
+          "ordinal": 7,
+          "surface": "日本語",
+          "reading": "にほんご"
+        },
+        {
+          "ordinal": 8,
+          "surface": "\n\n先在卡片中找出答案，再閱讀下方說明：\n哪個詞表示Mio的學生身分？\n哪個詞表示日語？\n\n答案與說明\n",
+          "reading": null
+        },
+        {
+          "ordinal": 9,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 10,
+          "surface": "表示學生，讓我們知道Mio的學生身分。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 11,
+          "surface": "日本語",
+          "reading": "にほんご"
+        },
+        {
+          "ordinal": 12,
+          "surface": "表示日語，是語言的名稱。\n",
+          "reading": null
+        },
+        {
+          "ordinal": 13,
+          "surface": "名前",
+          "reading": "なまえ"
+        },
+        {
+          "ordinal": 14,
+          "surface": "表示名字；",
+          "reading": null
+        },
+        {
+          "ordinal": 15,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 16,
+          "surface": "表示日本人。它們與學生、語言提供的是不同資訊。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.8.title",
+      "surface": "重點複習",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "重點複習",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "lesson.sections.8.body",
+      "surface": "介紹姓名與身分：\n名詞① は 名詞② です。\n\n確認姓名或身分：\n名詞① は 名詞② ですか。\n\n記住三個重點：\nは提示現在談論的對象，在這些句子裡讀作わ。\nです是這類名詞描述的禮貌句尾。\n句尾加上か，就能詢問這個描述是否正確。\n\n讀句子時，先找出談的是誰，再看名字或身分，最後留意句尾是在陳述還是詢問。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "介紹姓名與身分：\n名詞① は 名詞② です。\n\n確認姓名或身分：\n名詞① は 名詞② ですか。\n\n記住三個重點：\nは提示現在談論的對象，在這些句子裡讀作わ。\nです是這類名詞描述的禮貌句尾。\n句尾加上か，就能詢問這個描述是否正確。\n\n讀句子時，先找出談的是誰，再看名字或身分，最後留意句尾是在陳述還是詢問。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "vocabulary.0.written",
+      "surface": "わたし",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "わたし",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "vocabulary.1.written",
+      "surface": "人",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "人",
+          "reading": "ひと"
+        }
+      ]
+    },
+    {
+      "field": "vocabulary.2.written",
+      "surface": "名前",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "名前",
+          "reading": "なまえ"
+        }
+      ]
+    },
+    {
+      "field": "vocabulary.3.written",
+      "surface": "学生",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "学生",
+          "reading": "がくせい"
+        }
+      ]
+    },
+    {
+      "field": "vocabulary.4.written",
+      "surface": "日本人",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        }
+      ]
+    },
+    {
+      "field": "vocabulary.5.written",
+      "surface": "日本語",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "日本語",
+          "reading": "にほんご"
+        }
+      ]
+    },
+    {
+      "field": "grammar.0.pattern",
+      "surface": "名詞① は 名詞② です。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "名詞① は 名詞② です。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "grammar.1.pattern",
+      "surface": "名詞① は 名詞② ですか。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "名詞① は 名詞② ですか。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "kanji.0.context",
+      "surface": "人／日本人",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "人",
+          "reading": "ひと"
+        },
+        {
+          "ordinal": 1,
+          "surface": "／",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        }
+      ]
+    },
+    {
+      "field": "kanji.1.context",
+      "surface": "学生",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "学生",
+          "reading": "がくせい"
+        }
+      ]
+    },
+    {
+      "field": "examples.0.sentence",
+      "surface": "わたしはミオです。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "わたし",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "ミオ",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 4,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "examples.1.sentence",
+      "surface": "ミオさんは学生です。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "ミオ",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "examples.2.sentence",
+      "surface": "レンさんは日本人です。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "レン",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "examples.3.sentence",
+      "surface": "ミオさんは学生ですか。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "ミオ",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "か",
+          "reading": null
+        },
+        {
+          "ordinal": 6,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "examples.4.sentence",
+      "surface": "レンさんは日本人ですか。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "レン",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "か",
+          "reading": null
+        },
+        {
+          "ordinal": 6,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.0.prompt",
+      "surface": "哪一句是在描述「Mio是學生」？",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "哪一句是在描述「Mio是學生」？",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.0.options.0.content",
+      "surface": "ミオさんは学生ですか。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "ミオ",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "か",
+          "reading": null
+        },
+        {
+          "ordinal": 6,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.0.options.1.content",
+      "surface": "ミオさんは学生です。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "ミオ",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.0.options.2.content",
+      "surface": "ミオさんは日本人です。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "ミオ",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.0.options.3.content",
+      "surface": "レンさんは学生です。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "レン",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.1.prompt",
+      "surface": "想確認「Ren是不是日本人」，哪一句最合適？",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "想確認「Ren是不是日本人」，哪一句最合適？",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.1.options.0.content",
+      "surface": "レンさんは日本人です。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "レン",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.1.options.1.content",
+      "surface": "ミオさんは日本人ですか。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "ミオ",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "か",
+          "reading": null
+        },
+        {
+          "ordinal": 6,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.1.options.2.content",
+      "surface": "レンさんは日本人ですか。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "レン",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "か",
+          "reading": null
+        },
+        {
+          "ordinal": 6,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.1.options.3.content",
+      "surface": "レンさんは学生ですか。",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "レン",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "さん",
+          "reading": null
+        },
+        {
+          "ordinal": 2,
+          "surface": "は",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "です",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "か",
+          "reading": null
+        },
+        {
+          "ordinal": 6,
+          "surface": "。",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.2.prompt",
+      "surface": "人物卡\n名前：ミオ\n学生\n日本人\n日本語\n\n人物卡中，哪個詞表示Mio的學生身分？",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "人物卡\n",
+          "reading": null
+        },
+        {
+          "ordinal": 1,
+          "surface": "名前",
+          "reading": "なまえ"
+        },
+        {
+          "ordinal": 2,
+          "surface": "：ミオ\n",
+          "reading": null
+        },
+        {
+          "ordinal": 3,
+          "surface": "学生",
+          "reading": "がくせい"
+        },
+        {
+          "ordinal": 4,
+          "surface": "\n",
+          "reading": null
+        },
+        {
+          "ordinal": 5,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        },
+        {
+          "ordinal": 6,
+          "surface": "\n",
+          "reading": null
+        },
+        {
+          "ordinal": 7,
+          "surface": "日本語",
+          "reading": "にほんご"
+        },
+        {
+          "ordinal": 8,
+          "surface": "\n\n人物卡中，哪個詞表示Mio的學生身分？",
+          "reading": null
+        }
+      ]
+    },
+    {
+      "field": "questions.2.options.0.content",
+      "surface": "日本人",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "日本人",
+          "reading": "にほんじん"
+        }
+      ]
+    },
+    {
+      "field": "questions.2.options.1.content",
+      "surface": "名前",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "名前",
+          "reading": "なまえ"
+        }
+      ]
+    },
+    {
+      "field": "questions.2.options.2.content",
+      "surface": "日本語",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "日本語",
+          "reading": "にほんご"
+        }
+      ]
+    },
+    {
+      "field": "questions.2.options.3.content",
+      "surface": "学生",
+      "segments": [
+        {
+          "ordinal": 0,
+          "surface": "学生",
+          "reading": "がくせい"
+        }
+      ]
+    }
+  ],
+  "originalOptionOrder": [
+    [
+      "B",
+      "A",
+      "D",
+      "C"
+    ],
+    [
+      "B",
+      "C",
+      "A",
+      "D"
+    ],
+    [
+      "B",
+      "D",
+      "C",
+      "A"
+    ]
+  ],
+  "correctOrdinals": [
+    1,
+    2,
+    3
+  ]
+}

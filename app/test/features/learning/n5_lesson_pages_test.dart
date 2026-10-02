@@ -76,43 +76,58 @@ void main() {
 
     await tester.tap(find.text('N5 課程'));
     await tester.pumpAndSettle();
-    expect(find.text('L01 — 身分／自我介紹'), findsOneWidget);
+    expect(find.text('自我介紹：姓名與身分'), findsOneWidget);
 
-    await tester.tap(find.text('L01 — 身分／自我介紹'));
+    await tester.tap(find.text('自我介紹：姓名與身分'));
     await tester.pumpAndSettle();
-    expect(find.text('L01 — 身分／自我介紹'), findsOneWidget);
-    expect(
-      find.text('Support Expression Note — さん', skipOffstage: false),
-      findsOneWidget,
-    );
+    expect(find.text('自我介紹：姓名與身分'), findsOneWidget);
+    expect(find.text('稱呼別人時的さん', skipOffstage: false), findsOneWidget);
     final detailList = tester.widget<ListView>(find.byType(ListView).last);
     final children =
         (detailList.childrenDelegate as SliverChildListDelegate).children;
     int titleIndex(String title) =>
         children.indexWhere((child) => child is Text && child.data == title);
+    const sectionTitles = [
+      '學習目標',
+      '先認識六個單字',
+      '稱呼別人時的さん',
+      '用名詞介紹姓名與身分',
+      '讀讀姓名與身分的例句',
+      '加上か，變成問句',
+      '用はい與いいえ回答',
+      '看懂一張人物卡',
+      '重點複習',
+    ];
+    expect(
+      detail.lesson.sections.map((section) => section.title.surface),
+      sectionTitles,
+    );
+    for (var index = 0; index < sectionTitles.length; index++) {
+      expect(titleIndex(sectionTitles[index]), greaterThanOrEqualTo(0));
+      if (index > 0) {
+        expect(
+          titleIndex(sectionTitles[index - 1]),
+          lessThan(titleIndex(sectionTitles[index])),
+        );
+      }
+    }
     int exampleIndex(String sentence) => children.indexWhere((child) {
       if (child is! Card || child.child is! ListTile) return false;
       final title = (child.child! as ListTile).title;
       return title is ReadingLine && title.value.surface == sentence;
     });
-    expect(
-      titleIndex('Step 2 — G01'),
-      lessThan(titleIndex('Step 3 — Original G01 Examples')),
-    );
-    expect(
-      titleIndex('Step 3 — Original G01 Examples'),
-      lessThan(exampleIndex('わたしはミオです。')),
-    );
+    expect(titleIndex('用名詞介紹姓名與身分'), lessThan(titleIndex('讀讀姓名與身分的例句')));
+    expect(titleIndex('讀讀姓名與身分的例句'), lessThan(exampleIndex('わたしはミオです。')));
     expect(exampleIndex('わたしはミオです。'), lessThan(exampleIndex('ミオさんは学生です。')));
     expect(exampleIndex('ミオさんは学生です。'), lessThan(exampleIndex('レンさんは日本人です。')));
-    expect(exampleIndex('レンさんは日本人です。'), lessThan(titleIndex('Step 4 — G02')));
-    expect(titleIndex('Step 4 — G02'), lessThan(exampleIndex('ミオさんは学生ですか。')));
+    expect(exampleIndex('レンさんは日本人です。'), lessThan(titleIndex('加上か，變成問句')));
+    expect(titleIndex('加上か，變成問句'), lessThan(exampleIndex('ミオさんは学生ですか。')));
     await tester.scrollUntilVisible(
-      find.textContaining('人物卡'),
+      find.textContaining('人物卡\n名前：ミオ'),
       400,
       scrollable: find.byType(Scrollable).last,
     );
-    expect(find.textContaining('人物卡'), findsWidgets);
+    expect(find.textContaining('人物卡\n名前：ミオ'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('がくせい'),
       400,
