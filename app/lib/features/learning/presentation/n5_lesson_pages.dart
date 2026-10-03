@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/n5_lesson_use_cases.dart';
 import 'n5_lesson_view_models.dart';
-import 'reading_line.dart';
+import 'lesson_reading_content.dart';
 
 class N5LessonListPage extends StatefulWidget {
   const N5LessonListPage({
@@ -124,70 +124,8 @@ class _N5LessonDetailPageState extends State<N5LessonDetailPage> {
     ),
   );
 
-  Widget _content(BuildContext context) {
-    final detail = _model.detail!;
-    final theme = Theme.of(context);
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        Text(
-          detail.lesson.title.surface,
-          style: theme.textTheme.headlineMedium,
-        ),
-        const SizedBox(height: 20),
-        for (final section in detail.lesson.sections) ...[
-          Text(section.title.surface, style: theme.textTheme.titleLarge),
-          const SizedBox(height: 8),
-          ReadingLine(section.body, style: theme.textTheme.bodyMedium),
-          for (final item in detail.examplesAfterSection[section.ordinal] ?? [])
-            Card(
-              child: ListTile(
-                title: ReadingLine(item.sentence),
-                subtitle: Text(item.translation),
-              ),
-            ),
-          const SizedBox(height: 24),
-        ],
-        Text('Vocabulary', style: theme.textTheme.titleLarge),
-        for (final item in detail.vocabulary)
-          Card(
-            child: ListTile(
-              title: ReadingLine(item.written),
-              subtitle: Text(item.meaning),
-            ),
-          ),
-        const SizedBox(height: 20),
-        Text('Grammar', style: theme.textTheme.titleLarge),
-        for (final item in detail.grammar)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ReadingLine(item.pattern),
-                  const SizedBox(height: 8),
-                  Text(item.explanation),
-                ],
-              ),
-            ),
-          ),
-        const SizedBox(height: 20),
-        Text('Kanji', style: theme.textTheme.titleLarge),
-        for (final item in detail.kanji)
-          Card(
-            child: ListTile(
-              leading: Text(
-                item.character,
-                style: theme.textTheme.headlineSmall,
-              ),
-              title: ReadingLine(item.context),
-              subtitle: Text(item.meaning),
-            ),
-          ),
-      ],
-    );
-  }
+  Widget _content(BuildContext context) =>
+      LessonReadingContent(detail: _model.detail!);
 }
 
 class _Retry extends StatelessWidget {
