@@ -1,6 +1,6 @@
 # JLPT Learning App
 
-以 [V2.13 技術規格](JLPT_Learning_App_Technical_Spec_V2.13.md) 為 Current Approved Spec 與主要產品規格；CR-0010 已 APPLIED。架構維持 Local-first、Offline-capable 與 Feature-first／MVVM／Use Case／Repository／Service 分層。
+以 [V2.14 技術規格](JLPT_Learning_App_Technical_Spec_V2.14.md) 為 Current Approved Spec 與主要產品規格；CR-0011 已 APPLIED。架構維持 Local-first、Offline-capable 與 Feature-first／MVVM／Use Case／Repository／Service 分層。
 
 目前狀態為 **Phase 0 COMPLETE；Phase 1 STARTED / NOT YET COMPLETE**。[Phase 0 Closure](docs/phase-0-closure.md) 記錄 Phase 0 完成閘門；[Phase 1 internal work package closure](docs/phase-1-slice-closure.md) 記錄 Slice 1A、1B、1C 均已 COMPLETE（限各自核准範圍）。這些內部 work package 完成不等於 Phase 1 整體 gate 完成。[初次交付紀錄](docs/phase-0-validation.md) 保留歷史結果。
 

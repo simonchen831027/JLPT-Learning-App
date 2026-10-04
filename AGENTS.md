@@ -17,9 +17,9 @@
 
 目前開發 Baseline：
 
-`JLPT_Learning_App_Technical_Spec_V2.13.md`
+`JLPT_Learning_App_Technical_Spec_V2.14.md`
 
-V2.13 是目前的 Current Approved Spec；CR-0010 已 APPLIED；V2.12、V2.11、V2.10、V2.9、V2.8、V2.7、V2.6、V2.5、V2.4、V2.3
+V2.14 是目前的 Current Approved Spec；CR-0011 已 APPLIED；V2.13、V2.12、V2.11、V2.10、V2.9、V2.8、V2.7、V2.6、V2.5、V2.4、V2.3
 保留為被取代的歷史 Spec。
 版本未來可以經正式 Change Request 流程升級為後續版本。
 
@@ -821,19 +821,15 @@ Backend、Python data pipeline 與測試依元件分組。
 - Codex review
 - Human review
 
-AI 功能另需確認：
-
-- Schema / Rule Validation
-- Duplicate Detection
-- Version metadata
-- Cost / Usage limit
-- Sensitive data check
-- Readiness policy version
-- Knowledge mapping completeness
+AI 功能的共同與專屬檢查依 Current Approved Spec §40 的適用分組：
+共同 AI、AI 題庫 / 生成題目、Assessment、Readiness、Knowledge Mapping 與
+CR-0011 Tutor。各功能須完成其適用的既有 Requirement / DoD；不得因功能
+使用 AI 而將題庫、Assessment、Readiness 或 Knowledge Mapping 的專屬要求
+無條件套用 Tutor，也不得降低任何功能的既有要求。
 
 ## 11.1 Phase gate 與階段完成宣告
 
-Phase 順序、範圍與完成閘門依 Current Approved Spec；V2.13 對應 §38，
+Phase 順序、範圍與完成閘門依 Current Approved Spec；V2.14 對應 §38，
 既有 Vertical Slice 回歸依 §42.3，Definition of Done 依 §40。
 
 Phase gate 尚未完成，不得宣稱 `Phase Complete`，也不得提前開始下一 Phase
@@ -890,7 +886,7 @@ Developer 手動執行並提供完整 command/result 的驗證可以作為有效
 僅因切換 session 或執行者不同，不構成重跑理由。
 
 接受 evidence 不降低 Spec 的測試、CI、平台、乾淨 checkout 與回歸要求。
-V2.13 §42.3 要求的階段回歸仍須針對該交付執行；符合該交付範圍的 Developer
+V2.14 §42.3 要求的階段回歸仍須針對該交付執行；符合該交付範圍的 Developer
 evidence 可以作為執行證據，舊階段結果不能自動替代本階段回歸。
 
 ## 12.3 慢速下載 / 長時間 build
@@ -1226,7 +1222,7 @@ Git 狀態，保留既有修改。
 
 分支名稱依 Current Approved Spec 所定義流程。
 
-目前 V2.13 §21 定義：
+目前 V2.14 §21 定義：
 
 - `main`
 - `develop`
