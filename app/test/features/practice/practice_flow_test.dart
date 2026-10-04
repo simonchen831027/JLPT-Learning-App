@@ -291,8 +291,10 @@ void main() {
   test(
     'resume 5: repeated and cross-connection racing start share one active',
     () async {
-      final second = await MigrationRunner(appMigrations)
-          .open(databaseFactoryFfi, fixture.databasePath);
+      // 第二個 connection 沿用 fixture 的 schema，避免此競態測試隱含升級。
+      final second = await MigrationRunner(
+        appMigrations.take(await fixture.database.getVersion()).toList(),
+      ).open(databaseFactoryFfi, fixture.databasePath);
       try {
         final other = SqlitePracticeRepository(second);
         final states = await Future.wait([

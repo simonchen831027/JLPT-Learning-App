@@ -48,8 +48,8 @@ void main() {
     addTearDown(() => directory.delete(recursive: true));
     final database = await MigrationRunner(appMigrations)
         .open(factory, path.join(directory.path, 'fresh.sqlite3'));
-    expect(await database.getVersion(), 3);
-    expect(await database.query('schema_migrations'), hasLength(3));
+    expect(await database.getVersion(), 4);
+    expect(await database.query('schema_migrations'), hasLength(4));
     await database.close();
   });
 }

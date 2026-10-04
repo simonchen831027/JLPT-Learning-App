@@ -18,6 +18,8 @@ import 'package:jlpt_learning_app/features/home/data/local_startup_repository.da
 import 'package:jlpt_learning_app/features/home/domain/initialize_app.dart';
 import 'package:jlpt_learning_app/features/learning/data/sqlite_n5_lesson_repository.dart';
 import 'package:jlpt_learning_app/features/learning/domain/n5_lesson_use_cases.dart';
+import 'package:jlpt_learning_app/features/settings/data/sqlite_app_setting_repository.dart';
+import 'package:jlpt_learning_app/features/settings/domain/app_setting_use_cases.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +69,11 @@ void main() {
     final lessons = SqliteN5LessonRepository(openContent);
     // 完成 native bootstrap 後才對 canonical release 作資料庫斷言。
     await store.initialize();
+    expect(await (await store.database).getVersion(), 4);
+    final settingsRepository = SqliteAppSettingRepository(await store.database);
+    final defaults = await GetAppSettings(settingsRepository)();
+    expect(defaults.showFurigana, isTrue);
+    expect(defaults.feedbackSound, isTrue);
     await B0ContentPackage(const EntityIdGenerator())
         .install(await openContent());
     final app = JlptLearningApp(
@@ -112,12 +119,19 @@ void main() {
     await tester.tap(find.text('設定'));
     await tester.pumpAndSettle();
     expect(find.text('你的學習空間'), findsOneWidget);
+    await SetShowFurigana(settingsRepository)(false);
+    await SetFeedbackSound(settingsRepository)(false);
     await tester.pumpWidget(const SizedBox.shrink());
     await store.close();
     await tester.pumpWidget(app);
     await store.initialize();
     await tester.pumpAndSettle();
     expect(find.text('從 N5 開始，一步一步學習'), findsOneWidget);
+    final savedSettings = await GetAppSettings(
+      SqliteAppSettingRepository(await store.database),
+    )();
+    expect(savedSettings.showFurigana, isFalse);
+    expect(savedSettings.feedbackSound, isFalse);
     expect(
       await (await store.database).query('source_references'),
       hasLength(17),

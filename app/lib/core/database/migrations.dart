@@ -1,3 +1,4 @@
+import 'app_setting_schema_migration.dart';
 import 'content_schema_migration.dart';
 import 'practice_schema_migration.dart';
 import 'schema_migration.dart';
@@ -16,4 +17,5 @@ final appMigrations = List<SchemaMigration>.unmodifiable([
   ),
   contentSchemaMigration,
   practiceSchemaMigration,
+  appSettingSchemaMigration,
 ]);
