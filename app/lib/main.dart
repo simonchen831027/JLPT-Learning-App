@@ -9,6 +9,9 @@ import 'features/home/data/local_startup_repository.dart';
 import 'features/home/domain/initialize_app.dart';
 import 'features/learning/data/sqlite_n5_lesson_repository.dart';
 import 'features/learning/domain/n5_lesson_use_cases.dart';
+import 'features/practice/data/deferred_practice_repository.dart';
+import 'features/practice/data/sqlite_practice_repository.dart';
+import 'features/practice/presentation/practice_view_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +30,11 @@ void main() {
       initializeApp: InitializeApp(repository),
       listN5Lessons: ListN5Lessons(lessons),
       getN5Lesson: GetN5Lesson(lessons),
+      practiceActions: PracticeActions.fromRepository(
+        DeferredPracticeRepository(
+          () async => SqlitePracticeRepository(await store.database),
+        ),
+      ),
     ),
   );
 }

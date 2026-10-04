@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:path/path.dart' as path;
+import 'package:sqflite/sqflite.dart' as mobile;
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:jlpt_learning_app/app/app.dart';
+import 'package:jlpt_learning_app/core/database/migration_runner.dart';
+import 'package:jlpt_learning_app/core/database/migrations.dart';
 import 'package:jlpt_learning_app/core/database/sqlite_local_store.dart';
 import 'package:jlpt_learning_app/core/identity/entity_id_generator.dart';
 import 'package:jlpt_learning_app/features/content/data/b0_content_package.dart';
@@ -18,8 +25,35 @@ void main() {
   testWidgets('native storage opens and reopens with an offline shell', (
     tester,
   ) async {
-    final store = SqliteLocalStore.platform();
-    addTearDown(store.close);
+    final directory = await Directory.systemTemp.createTemp(
+      'jlpt_shell_smoke_',
+    );
+    debugPrint('Isolated shell smoke database: ${directory.path}');
+    final DatabaseFactory factory;
+    if (Platform.isWindows) {
+      sqfliteFfiInit();
+      factory = databaseFactoryFfi;
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      factory = mobile.databaseFactory;
+    } else {
+      throw UnsupportedError('Unsupported application platform.');
+    }
+    final store = SqliteLocalStore(
+      openDatabase: () =>
+          MigrationRunner(appMigrations)
+              .open(factory, path.join(directory.path, 'shell.sqlite3')),
+    );
+    addTearDown(() async {
+      await store.close();
+      expect(
+        path.isWithin(
+          Directory.systemTemp.absolute.path,
+          directory.absolute.path,
+        ),
+        isTrue,
+      );
+      await directory.delete(recursive: true);
+    });
     Future<SqliteContentRepository> openContent() async =>
         SqliteContentRepository(await store.database);
     final useCase = InitializeApp(
@@ -54,16 +88,17 @@ void main() {
     expect(find.text('從 N5 開始，一步一步學習'), findsOneWidget);
     await tester.tap(find.text('N5 課程'));
     await tester.pumpAndSettle();
-    expect(find.text('L01 — 身分／自我介紹'), findsOneWidget);
-    await tester.tap(find.text('L01 — 身分／自我介紹'));
+    final lesson = (await lessons.listLessons()).single;
+    expect(find.text(lesson.title.surface), findsOneWidget);
+    await tester.tap(find.text(lesson.title.surface));
     await tester.pumpAndSettle();
-    expect(find.text('Support Expression Note — さん'), findsOneWidget);
+    expect(find.text('稱呼別人時的さん', findRichText: true), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('Step 3 — Original G01 Examples'),
+      find.text('讀讀姓名與身分的例句', findRichText: true),
       300,
       scrollable: find.byType(Scrollable).last,
     );
-    expect(find.text('Step 3 — Original G01 Examples'), findsOneWidget);
+    expect(find.text('讀讀姓名與身分的例句', findRichText: true), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('我是 Mio。'),
       300,

@@ -17,31 +17,47 @@ class ReadingLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = style ?? Theme.of(context).textTheme.bodyLarge;
-    return Text.rich(
-      TextSpan(
-        children: [
-          for (final segment in value.segments)
-            if (!showReadings || segment.reading == null)
-              TextSpan(text: segment.surface)
-            else
-              WidgetSpan(
-                alignment: PlaceholderAlignment.bottom,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SelectionContainer.disabled(
-                      child: Text(
-                        segment.reading!,
-                        style: Theme.of(context).textTheme.labelSmall,
+    return Semantics(
+      label: value.surface,
+      excludeSemantics: true,
+      child: Text.rich(
+        TextSpan(
+          children: [
+            for (final segment in value.segments)
+              if (!showReadings || segment.reading == null)
+                TextSpan(text: segment.surface)
+              else
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.bottom,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SelectionContainer.disabled(
+                        child: Text(
+                          segment.reading!,
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                fontSize: (textStyle?.fontSize ?? 0) >= 24
+                                    ? 13
+                                    : 12,
+                                height: 1.25,
+                              ),
+                          locale: const Locale('ja'),
+                        ),
                       ),
-                    ),
-                    Text(segment.surface, style: textStyle),
-                  ],
+                      Text(
+                        segment.surface,
+                        style: textStyle,
+                        locale: const Locale('ja'),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-        ],
+          ],
+        ),
+        style: textStyle,
+        locale: const Locale('ja'),
       ),
-      style: textStyle,
     );
   }
 }

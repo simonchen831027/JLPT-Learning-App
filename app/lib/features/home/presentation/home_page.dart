@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../learning/domain/n5_lesson_use_cases.dart';
 import '../../learning/presentation/n5_lesson_pages.dart';
+import '../../practice/presentation/practice_view_model.dart';
 import 'home_view_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,11 +10,13 @@ class HomePage extends StatefulWidget {
     required this.viewModel,
     required this.listN5Lessons,
     required this.getN5Lesson,
+    this.practiceActions,
     super.key,
   });
   final HomeViewModel viewModel;
   final ListN5Lessons listN5Lessons;
   final GetN5Lesson getN5Lesson;
+  final PracticeActions? practiceActions;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -112,6 +115,7 @@ class _HomePageState extends State<HomePage> {
               builder: (_) => N5LessonListPage(
                 listLessons: widget.listN5Lessons,
                 getLesson: widget.getN5Lesson,
+                practiceActions: widget.practiceActions,
               ),
             ),
           ),

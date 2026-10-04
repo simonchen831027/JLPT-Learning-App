@@ -12,8 +12,9 @@ import 'package:path/path.dart' as path;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 final class PracticeFixture {
-  PracticeFixture._(this.directory, this.database);
+  PracticeFixture._(this.directory, this.database, this.factory);
   final Directory directory;
+  final DatabaseFactory factory;
   Database database;
   DateTime now = DateTime.utc(2026, 10, 1, 1, 2, 3);
   String get databasePath => path.join(directory.path, 'practice.sqlite3');
@@ -21,13 +22,16 @@ final class PracticeFixture {
   SqlitePracticeRepository get practice =>
       SqlitePracticeRepository(database, now: () => now);
 
-  static Future<PracticeFixture> create({int version = 3}) async {
+  static Future<PracticeFixture> create({
+    int version = 3,
+    DatabaseFactory? factory,
+  }) async {
     sqfliteFfiInit();
     final directory = await Directory.systemTemp.createTemp('jlpt_practice_');
-    final database = await MigrationRunner(
-      appMigrations.take(version).toList(),
-    ).open(databaseFactoryFfi, path.join(directory.path, 'practice.sqlite3'));
-    final fixture = PracticeFixture._(directory, database);
+    final selectedFactory = factory ?? databaseFactoryFfi;
+    final database = await MigrationRunner(appMigrations.take(version).toList())
+        .open(selectedFactory, path.join(directory.path, 'practice.sqlite3'));
+    final fixture = PracticeFixture._(directory, database, selectedFactory);
     await const B0ContentPackage(EntityIdGenerator()).install(fixture.content);
     return fixture;
   }
@@ -35,7 +39,7 @@ final class PracticeFixture {
   Future<void> reopen({int version = 3}) async {
     await database.close();
     database = await MigrationRunner(appMigrations.take(version).toList())
-        .open(databaseFactoryFfi, databasePath);
+        .open(factory, databasePath);
   }
 
   Future<void> dispose() async {

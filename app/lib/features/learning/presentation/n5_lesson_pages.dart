@@ -5,15 +5,20 @@ import 'package:flutter/material.dart';
 import '../domain/n5_lesson_use_cases.dart';
 import 'n5_lesson_view_models.dart';
 import 'lesson_reading_content.dart';
+import '../../content/data/b0_content_ids.dart';
+import '../../practice/presentation/practice_page.dart';
+import '../../practice/presentation/practice_view_model.dart';
 
 class N5LessonListPage extends StatefulWidget {
   const N5LessonListPage({
     required this.listLessons,
     required this.getLesson,
+    this.practiceActions,
     super.key,
   });
   final ListN5Lessons listLessons;
   final GetN5Lesson getLesson;
+  final PracticeActions? practiceActions;
 
   @override
   State<N5LessonListPage> createState() => _N5LessonListPageState();
@@ -64,6 +69,7 @@ class _N5LessonListPageState extends State<N5LessonListPage> {
                     builder: (_) => N5LessonDetailPage(
                       contentId: lesson.contentId,
                       getLesson: widget.getLesson,
+                      practiceActions: widget.practiceActions,
                     ),
                   ),
                 ),
@@ -80,10 +86,12 @@ class N5LessonDetailPage extends StatefulWidget {
   const N5LessonDetailPage({
     required this.contentId,
     required this.getLesson,
+    this.practiceActions,
     super.key,
   });
   final String contentId;
   final GetN5Lesson getLesson;
+  final PracticeActions? practiceActions;
 
   @override
   State<N5LessonDetailPage> createState() => _N5LessonDetailPageState();
@@ -91,6 +99,7 @@ class N5LessonDetailPage extends StatefulWidget {
 
 class _N5LessonDetailPageState extends State<N5LessonDetailPage> {
   late final N5LessonDetailViewModel _model;
+  final _practiceFocus = FocusNode(debugLabel: 'Lesson Practice entry');
 
   @override
   void initState() {
@@ -102,6 +111,7 @@ class _N5LessonDetailPageState extends State<N5LessonDetailPage> {
   @override
   void dispose() {
     _model.dispose();
+    _practiceFocus.dispose();
     super.dispose();
   }
 
@@ -124,8 +134,30 @@ class _N5LessonDetailPageState extends State<N5LessonDetailPage> {
     ),
   );
 
-  Widget _content(BuildContext context) =>
-      LessonReadingContent(detail: _model.detail!);
+  Widget _content(BuildContext context) => LessonReadingContent(
+    detail: _model.detail!,
+    trailing: [
+      if (widget.practiceActions != null &&
+          widget.contentId == B0ContentIds.lesson) ...[
+        const SizedBox(height: 24),
+        FilledButton(
+          focusNode: _practiceFocus,
+          onPressed: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => PracticePage(
+                  actions: widget.practiceActions!,
+                  contextId: widget.contentId,
+                ),
+              ),
+            );
+            if (mounted) _practiceFocus.requestFocus();
+          },
+          child: const Text('開始練習'),
+        ),
+      ],
+    ],
+  );
 }
 
 class _Retry extends StatelessWidget {

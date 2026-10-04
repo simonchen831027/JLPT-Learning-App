@@ -34,6 +34,13 @@ void main() {
         await tester.pump();
         expect(selected, text.surface);
         expect(find.text('わたし'), show ? findsOneWidget : findsNothing);
+        final semantics = tester.ensureSemantics();
+        try {
+          expect(find.bySemanticsLabel(text.surface), findsOneWidget);
+          expect(find.bySemanticsLabel('わたし'), findsNothing);
+        } finally {
+          semantics.dispose();
+        }
       },
     );
   }
