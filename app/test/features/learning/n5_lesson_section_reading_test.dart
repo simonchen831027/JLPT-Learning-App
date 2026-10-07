@@ -100,10 +100,17 @@ void main() {
               final span = spans[index];
               if (showReadings && segment.reading != null) {
                 expect(span, isA<WidgetSpan>());
-                final ruby = (span as WidgetSpan).child as Column;
-                final reading =
-                    (ruby.children.first as SelectionContainer).child as Text;
-                final surface = ruby.children.last as Text;
+                final ruby = (span as WidgetSpan).child;
+                final texts = tester
+                    .widgetList<Text>(
+                      find.descendant(
+                        of: find.byWidget(ruby),
+                        matching: find.byType(Text),
+                      ),
+                    )
+                    .toList();
+                final reading = texts.first;
+                final surface = texts.last;
                 expect(reading.data, segment.reading);
                 expect(surface.data, segment.surface);
                 renderedSurfaces.add(surface.data!);
