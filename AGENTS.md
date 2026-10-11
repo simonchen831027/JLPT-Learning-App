@@ -428,6 +428,50 @@ Developer 保持最終 Content Approval / Release authority。
 
 ---
 
+## 3.6 Task-scoped Minor Repair
+
+§3.1 已涵蓋的 implementation-level decision，在原 Task 授權內仍可自行處理，
+不因本節而逐項要求新的批准。本節只規範 Task 額外預授權的 Minor Repair
+Envelope；只有 Developer 在 Task Packet 或明確 Task Authorization 中預先
+核准該 Envelope，Codex 才能依它修正原 Task 未包含的低風險實作問題。
+Envelope 不提升 §1.2 的權威，也不改變 §3.2～3.5 的角色或修改權限。
+
+Envelope 應明確列出 File Allowlist、Diagnostic Categories、禁止修改項目、
+修正／重驗證預算、適用 Validation Gates 與 STOP / Escalation 條件（§13.2）。
+可核准的類型包括 Dart Formatter、missing / unnecessary imports、不改行為的
+型別／Lint 修正、等價 private helper，以及核准範圍內的 test wiring / mock /
+fixture 或非正式 Contract 的局部 implementation 修正。列出類型不是自動授權；
+每次仍須符合實際 Task 的 allowlist、診斷與限制。
+
+使用 Envelope 時必須：
+
+- 只修改核准 allowlist，不新增或改變 Product Behavior、Architecture / API、
+  Database Semantic / Lifecycle、Migration、Privacy / Security、Content / Design
+  policy；不得以「minor」名義代決 §3.2 或豁免 §4 STOP Conditions。
+- 不為取得 PASS 而放寬、刪除或繞過 assertions；test helper / mock / fixture
+  調整須保留原測試意圖與驗證範圍，不掩蓋原始 failure。
+- 保留原始 failure logs、修正 diff、修正前後 source hashes，依 §12 記錄診斷、
+  command / result、環境與受測 identity，依 §13 交付；保存證據仍受 §9 / §14
+  與 Spec 的資料最小化、敏感資訊及 retention 規則約束，不增加蒐集權限。
+- 修正後執行適用且已授權的 targeted validation；這不替代 Spec 的 DoD、
+  regression、platform 或其他必要 gate。重試須有新的 diagnostic evidence
+  與可辨識的修正目的，沿用 §12.3，不無限重跑相同失敗。
+- 達到核准的修正／重驗證預算、超出 scope、缺少必要授權或觸發正式治理
+  衝突時停止受影響工作；依 §4–7 回報，必要時使用 CHAT_HANDOFF /
+  CODEX_DECISION，不自行提高預算或擴張 allowlist。預算不明時不推定無上限，
+  先釐清依賴該 Envelope 的部分；§3.1 原已授權且獨立的工作不因此停止。
+
+Read-only、Source-immutable、Execution-only Task 不自動包含 Minor Repair。
+Envelope 不隱含 Git stage / commit / push / merge、Native / OS execution、
+資料清理或資料庫操作授權；conditional execution 仍須另有明確授權並滿足 gate，
+不能只因 formatter / analyzer PASS 就自行開始。
+
+本節只對明確核准使用該 Envelope 的 Task 生效，不追溯改寫既有 Task
+Authorization、已接受 evidence 或已存在的 STOP。接手／切換 session 依 §15；
+既有受限 Task 的恢復仍依其原批准及 §7，不由新治理自動解除限制。
+
+---
+
 # 4. STOP Conditions
 
 遇到以下任一情況時，Codex 必須停止「受影響部分」的實作：
@@ -1145,6 +1189,20 @@ Developer Approval State:
 # END_CODEX_TASK_PACKET
 ```
 
+以下為可選補充欄位，可置於上述 Validation 之後；不改既有必填結構與固定
+Task Slot。簡單 Task 不要求填寫，不適用可省略或填 None。未填不新增 Minor
+Repair 授權，亦不收回 §3.1 原 Task 已包含的 implementation authority。
+
+| 可選欄位 | 應描述的範圍 |
+|---|---|
+| Allowed Minor Repairs | 是否獲 Developer 預先核准；精確 File Allowlist、Diagnostic Categories、禁止修改項目、修正／重驗證預算及 STOP / Escalation 條件（§3.6） |
+| Validation Gates | 適用檢查、成功條件、執行順序與 Conditional Execution Gate；後續操作的獨立授權及失敗／阻擋時行為，不以修正授權代替 Native / Git / 資料操作授權 |
+| Evidence Reuse | 已接受 evidence 的 identity / path / hash 或 commit / run、command / result、環境、接受來源與範圍，以及必須重驗證的觸發條件（§12.1–12.2） |
+
+修正／重驗證預算由 Developer 依 Task 明確核准，本文件不設定通用次數或
+無限重試預設。Evidence Reuse 沿用 §12，不因填寫此欄位而自動接受新證據、
+豁免 Spec gate，或把 CI / build PASS 當成 device / platform validation 完成。
+
 `Execution Profile` 是 Developer / Chat 的執行建議，並非產品 Requirement 或
 Codex 實際 runtime state。`AGENTS.md` 與 Task Packet 不能保證實際 model、
 reasoning effort、approval mode 或 execution environment。Codex 使用目前實際
@@ -1259,6 +1317,22 @@ AI 請求一律經 Backend Gateway。
 # 15. Codex Session Continuity
 
 ## 15.1 Resume 與正式狀態
+
+Codex CLI 是目前 Windows 本機開發與驗證的主要執行介面；Codex Local
+可作替代介面，但須依 §1.5 核對實際 repository、branch、HEAD、dirty state、
+Task 與權限。Codex Cloud 按隔離環境處理，不預設擁有本機 dirty changes 或
+ignored local_data；所需 input / evidence 必須另行確認可取得且 identity 相符。
+
+下列 resume 指令只適用 Codex CLI，不直接套用其他介面；其他介面依其實際
+session 能力續接，仍遵守 §15.2。更換 Session、Model 或 Execution Interface
+不增加治理權限、不重置 Task 預算或解除 STOP，也不表示可接管另一個執行中
+Task。同一 checkout 有其他進行中工作時，保留其 Task / Review Slot、source
+與 evidence，不因切換介面而覆寫或重跑。
+
+已接受且仍適用的 evidence 依 §12.2 使用，不因換 session 無條件重跑高成本
+驗證。若目前環境不支援所需 Windows Native / OS operation，明確回報限制與
+未執行項目，不宣稱已完成。以上是 Task Execution Guidance，不是產品需求，
+不固定所有 Task 的 model，也不豁免 Spec 的環境／平台驗證要求。
 
 - 預設建議使用 `codex resume`，由 Developer 從 session picker 選擇正確 session。
 - 僅在能明確確認最近 session 就是本次要延續的 session 時，使用 `codex resume --last`。
