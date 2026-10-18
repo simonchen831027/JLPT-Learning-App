@@ -470,6 +470,55 @@ Envelope 不隱含 Git stage / commit / push / merge、Native / OS execution、
 Authorization、已接受 evidence 或已存在的 STOP。接手／切換 session 依 §15；
 既有受限 Task 的恢復仍依其原批准及 §7，不由新治理自動解除限制。
 
+## 3.7 Parallel Task Coordination
+
+多個 Codex Task 可在各自已授權範圍內並行。並行安排不增加產品、
+架構、Content、Design、Git 或 execution authority，不解除既有 STOP、
+Phase gate 或 task-specific ownership。02～06 的角色仍依 §3.3～3.5。
+
+有 source 寫入的獨立 Task，優先使用分離的 worktree／branch。
+各 Task 應能識別 Owner、工作目錄、來源基準、修改範圍、相依工作與交付位置。
+worktree 不自動包含其他 checkout 的 dirty changes 或 ignored artifacts；
+所需輸入須依 §3.4 確認 identity 與使用授權。
+
+同一 checkout 採單一 Source Writer；其他工程師可讀取固定來源或進行
+不寫入該 source 的分析。Formatter、code generation、tests／build 等若會
+寫入 source 或共用產物，也須納入寫入協調。單純劃分檔案 allowlist
+不代表相依檔案、index、build outputs 或 evidence 已隔離。
+
+Source Checkpoint 是可識別的 source 基準：使用 commit，或對必要的
+dirty／untracked source、相依設定與核准輸入記錄 path、diff／hash 及狀態。
+它不是新的 Source of Truth，也不代表批准、commit 或驗證通過。
+依風險選取必要範圍，不因並行而要求每次複製整個 repository 或歷史 archive。
+
+Reader 需要對可變工作樹作一致性判斷或驗證時，應使用固定 checkpoint；
+若使用 Read Lease，由相關 Writer 與 Reader 明確確認保護的來源範圍、
+用途、開始及釋放條件，期間不得修改該範圍。Read Lease 是協調承諾，
+不是工具自動提供的 lock，也不授權寫入。來源漂移或 ownership 不明時，
+停止依賴該來源的判定並重新核對；不得只以事後 hash 相同推定全程穩定。
+
+各 Task 使用獨立 evidence 輸出與可識別的 writer，依 §12 綁定實際
+worktree、source identity、環境及 command/result。不得覆寫、清理或
+冒用其他 Task 的 Slots、evidence、fixture 或資料。固定 Slots 的並行
+交付依 §13.1；不建立第二套報告格式。
+
+Git 操作仍依明確授權。同一 checkout 的 index／Git mutation 不得競爭；
+對同一共同整合目標的操作由指定 Git Integration Owner 序列執行。
+分支或 worktree 管理及其他會影響共享 Git 狀態的操作須確認沒有衝突。
+整合前核對來源、目的地及相依變更，整合後依實際變更完成適用驗證；
+各分支的既有 evidence 不自動證明整合結果。涉及未決 Contract／policy
+的衝突依 §4～7 處理，不以 Git conflict resolution 代決。
+
+worktree 不隔離共用 Host、desktop session、foreground window、輸入、
+clipboard、capture、device 或外部資料。使用相同且會互相干擾的 Native
+資源時，須明確指定 Operator、互斥範圍、必要 process／window identity、
+執行額度及釋放條件。已證明互不干擾且各自獲授權的工作可繼續；
+不能因 worktree 分離就自動啟動 Native execution。
+
+上述資訊可記於現有 Task Authorization、Task Packet、Review Packet
+或 SESSION_HANDOFF，不要求另建永久協調文件、中央 lock service 或新流程。
+Owner 交接須可識別；切換 session／介面或產生 checkpoint 不自動移轉 ownership。
+
 ---
 
 # 4. STOP Conditions
@@ -993,6 +1042,13 @@ slot，不是永久 Review archive；除非 Task Packet 明確要求，不建立
 Review Packet 歷史。正式 Review／commit／integration 結束後，舊 packet 內容不需
 作為歷史證據保存，可由下一次 Review 取代。
 
+並行 Task 的協調依 §3.7。每個 worktree 內仍使用本節既有固定相對路徑；
+這些 Slots 不預設由多個 Task 共用。若同一 checkout 的固定 Slot 由其他
+Task 使用，依明確 Task Authorization 指定的 scoped 路徑交付相同格式，
+並在回覆提供實際位置，不覆寫他人的 Slot，也不自動回填。此為交付位置
+例外，不建立第二套 report system；未指定安全位置時先交付於當前對話並
+回報 Slot 衝突。§13.3 不授權清理其他 Task 仍使用的產物。
+
 Review Packet 是供 Developer / 01 Chat 閱讀的 convenience artifact，承載本節
 交付報告內容與實際 diff，不另設一套完成標準。它不是 Source of Truth、正式
 Requirement、`CHANGE_REQUEST`、`CODEX_DECISION`、Developer approval 或新的
@@ -1198,6 +1254,7 @@ Repair 授權，亦不收回 §3.1 原 Task 已包含的 implementation authorit
 | Allowed Minor Repairs | 是否獲 Developer 預先核准；精確 File Allowlist、Diagnostic Categories、禁止修改項目、修正／重驗證預算及 STOP / Escalation 條件（§3.6） |
 | Validation Gates | 適用檢查、成功條件、執行順序與 Conditional Execution Gate；後續操作的獨立授權及失敗／阻擋時行為，不以修正授權代替 Native / Git / 資料操作授權 |
 | Evidence Reuse | 已接受 evidence 的 identity / path / hash 或 commit / run、command / result、環境、接受來源與範圍，以及必須重驗證的觸發條件（§12.1–12.2） |
+| Parallel Coordination | 僅在並行或共享資源時適用；列明 Task Owner、worktree／branch、Source Writer、checkpoint／Read Lease（需要時）、修改範圍、Task／Review／Evidence 位置、Git Integration Owner 與 Native 共用資源協調（§3.7）；欄位本身不授權任何操作 |
 
 修正／重驗證預算由 Developer 依 Task 明確核准，本文件不設定通用次數或
 無限重試預設。Evidence Reuse 沿用 §12，不因填寫此欄位而自動接受新證據、
@@ -1322,6 +1379,12 @@ Codex CLI 是目前 Windows 本機開發與驗證的主要執行介面；Codex L
 可作替代介面，但須依 §1.5 核對實際 repository、branch、HEAD、dirty state、
 Task 與權限。Codex Cloud 按隔離環境處理，不預設擁有本機 dirty changes 或
 ignored local_data；所需 input / evidence 必須另行確認可取得且 identity 相符。
+
+「主要執行介面」不表示該介面永久獨占 repository，也不表示另一介面可接管
+既有 Task。Task／Source／Git Integration／Native 資源的 ownership 依明確
+Task Authorization 及 §3.7 判定；使用 CLI、Local 或 Cloud 本身不增加權限。
+既有 Task 的唯一 Owner、read-only、source-immutable、預算與 STOP 限制，
+不因新增並行工程師而失效。
 
 下列 resume 指令只適用 Codex CLI，不直接套用其他介面；其他介面依其實際
 session 能力續接，仍遵守 §15.2。更換 Session、Model 或 Execution Interface
