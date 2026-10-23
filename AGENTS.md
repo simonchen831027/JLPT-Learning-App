@@ -239,6 +239,7 @@ Codex 可以提出技術建議，但最終產品與架構決策由 Developer 決
 | 角色 | 職責 |
 |---|---|
 | `01 需求・架構決策` | Product / Requirement / Architecture / Governance Decision；Developer Review 的主要分析入口 |
+| `01 Work（限明確授權）` | Task Packet 配置／派發、Inbox／Outbox 協調與 Evidence 彙整；不批准 Task、不決定產品架構，不自行啟動未核准工程 |
 | `02 Spec 維護・Work` | 正式 Spec、治理文件、Decision / Change integration；只精確寫入已核准內容 |
 | `03 教材研究・編寫` | Content research、Canonical Knowledge、original authoring、source tracking、Author QA、Content Candidate / handoff；不得自行發布正式 Content |
 | `04 教材視覺設計・圖片生成` | 教材視覺規劃、visual asset proposal、圖片生成與 QA；不得自行授權 production integration |
@@ -465,6 +466,16 @@ Read-only、Source-immutable、Execution-only Task 不自動包含 Minor Repair�
 Envelope 不隱含 Git stage / commit / push / merge、Native / OS execution、
 資料清理或資料庫操作授權；conditional execution 仍須另有明確授權並滿足 gate，
 不能只因 formatter / analyzer PASS 就自行開始。
+
+正常工具執行可能寫入環境或產物；例如 `--no-pub` 不表示零副作用。
+Task 可明確授權已安裝 SDK 正常啟動所需的可恢復 lock / stamp、Task-owned
+temp、合成 DB / sidecar、generated output 與正常 fixture teardown；須界定
+範圍、ownership、共享資源協調及清理方式，符合平台權限與 §3.7 / §13.3。
+此授權不擴大 source allowlist，不等於整個 SDK / cache 可任意寫入；
+Read-only Task 不因此取得 Tests / Build 或其他寫入授權。SDK 升級／下載、
+全域 cache 修復、安全標記／憑證／安全設定修改、網路／安裝／費用、真實
+learner data 刪除或不可逆清理，須另有適用授權並符合安全政策，否則停止
+受影響操作。共享 runner / writer 衝突未解除不得執行；Native / Git 仍須獨立授權。
 
 本節只對明確核准使用該 Envelope 的 Task 生效，不追溯改寫既有 Task
 Authorization、已接受 evidence 或已存在的 STOP。接手／切換 session 依 §15；
@@ -1044,7 +1055,8 @@ Review Packet 歷史。正式 Review／commit／integration 結束後，舊 pack
 
 並行 Task 的協調依 §3.7。每個 worktree 內仍使用本節既有固定相對路徑；
 這些 Slots 不預設由多個 Task 共用。若同一 checkout 的固定 Slot 由其他
-Task 使用，依明確 Task Authorization 指定的 scoped 路徑交付相同格式，
+Task 使用，或 Task 明確核准 Workspace Outbox 作交付位置，依該授權指定的
+scoped 路徑交付相同格式，
 並在回覆提供實際位置，不覆寫他人的 Slot，也不自動回填。此為交付位置
 例外，不建立第二套 report system；未指定安全位置時先交付於當前對話並
 回報 Slot 衝突。§13.3 不授權清理其他 Task 仍使用的產物。
@@ -1191,6 +1203,35 @@ Condition、構成 Phase Complete，或授權自動 commit / push / merge。Pack
 Execution Profile；其正式性只來自原有 Developer approval / governance lifecycle。
 若內容衝突，依 §1.2、§1.4、§4–8 處理，不得自行改寫 packet 以繼續受影響工作。
 
+經明確 Task / Delegation 授權，可採 01 Chat 規劃 → Developer 批准 →
+01 Work 配置／派發 → Developer 啟動指定 Workspace → Workspace 執行 →
+01 Work 彙整 Evidence → 01 Chat Review → Developer Acceptance。
+派送者不因此取得批准或工程啟動權；訊息若會觸發執行，不得再以 Inbox 重複啟動。
+不預設具備跨 Thread、遠端或本機檔案能力；未核實能力或權限時停止受影響派送。
+
+獲精確授權後，可使用 `local_data/workspaces/<workspace>/inbox/`、
+`outbox/`、`history/`；不因路徑存在或此規則而取得建立／寫入／搬移權限。
+01 Work 的 Inbox 配置及執行者自身 Outbox 寫入均限當次獲准範圍；
+History 處置依 §13.3。
+Workspace 路徑不取代既有 Task / Review / UI/UX Slots；Outbox 例外依 §13.1。
+Inbox 以完整單一 canonical packet 承載任務，沿用本節格式及 §3.4 的 input 邊界，
+不另建報告系統、永久 ledger / lock 或無人值守背景派工。
+
+重大 Task 應識別 Task ID、Version、原文位置／source identity、原始批准、
+唯一有效 Sender、Target / Host、Owner、Attempt 與交付位置；hash / 長度
+僅實際核對後標 VERIFIED，否則標 UNVERIFIED。配置獲准 Inbox 時，每個
+Workspace 只保留一個有效 READY Task；READY 是可待啟動，不是執行批准。
+Task 狀態與 §1.4 Requirement lifecycle 分開；COMPLETED、REVIEWED、
+ACCEPTED / CLOSED 不互相代替。BLOCKED / UNKNOWN 不推定失敗或安全可重試。
+啟動／恢復前核對版本、批准、Target、Attempt、撤回／取代／結果及 Writer 競爭；
+已 ACCEPTED / CLOSED 不重跑，CANCELED / REVOKED 不復活，SUPERSEDED
+不沿用舊批准。UNKNOWN 先在授權內唯讀核對原 Target，不自動重派或改派；
+沒有原子 claim 不宣稱全域 Exactly-once。
+
+若全文截斷或 context 遺失，可在明確授權內於原 Thread、同一 Attempt 或
+已指定 Inbox 有限恢復完整原文並核對 identity；傳輸恢復與工程預算分開，
+不重置 Repair / Native / Git 額度。無法恢復標 INPUT UNKNOWN，停止依賴該輸入的工作。
+
 標準格式；不適用的欄位填 `None` 或 `Not Applicable`，不得猜測：
 
 ```text
@@ -1268,6 +1309,15 @@ runtime capability；無法確認 model 名稱時不得猜測，也不得把 run
 且可能影響安全、正確性或 Developer 預期，開始受影響工作前簡短回報；不因
 Execution Profile 不完全一致就停止所有工作。
 
+Task Approval、Packet Delivery、Runtime Permission、Execution Completion、
+Independent Review 與 Developer Acceptance 分別判定，不互相代替。平台自動審查
+拒絕時回報被拒操作與理由並停止該操作；只有 Developer 可選擇平台正式支援的
+人工審查途徑，Agent 不自行換 Host / Tool Channel、Full Access 或安全設定繞過。
+
+本次明確指定 Workspace Inbox 時，下列 `CURRENT_TASK.md` 指該入口；
+未指定時使用既有固定 Task Slot。多個入口的有效性不明時先核對，不選最新檔案、
+不雙重啟動；Developer 的 shortcut 只觸發 G0，不另授予 Task Approval 或 Runtime Permission。
+
 Developer 明確輸入「執行目前任務」時，這只是 invocation shortcut。Codex 須先確認：
 
 1. `CURRENT_TASK.md` 存在且包含一份完整有效的 `CODEX_TASK_PACKET`；
@@ -1306,12 +1356,13 @@ Packet、snapshot、暫存副本及中間報告，不因存在於該目錄就成
 Developer approval、Spec `APPLIED` 或 Phase 完成證據，也不能取代 Git commit、
 Decision Record、正式 Spec 或已接受的 validation evidence。
 
-每次宣告 task Review-ready 前，檢視 `local_data/codex-review/`：清除已結束的前次
-Review／integration 且不再用於重現當前 Review Packet 的明確暫存產物，保留本次
-Review 必需的檔案，最後建立或覆寫固定的 `CODEX_REVIEW_PACKET.md`。正式 Review／
-commit／integration 結束後，移除不再需要的 comparison snapshot、文件暫存副本
-與中間報告；舊 Review Packet 可由下一次取代。`CURRENT_TASK.md` 保持固定 handoff
-路徑，由下一任務覆寫，不作永久任務檔案庫。
+需要整理 `local_data/` 產物時，只在任務必要範圍先唯讀分類
+KEEP / ARCHIVE / DELETE CANDIDATE；分類本身不授權處置。建立、覆寫、搬移、
+封存或刪除須有可識別 ownership 與精確批准，可於 Task 中一併界定範圍及方式；
+不得僅因 Review-ready、任務結束或放入 History 而自動處置。保護仍需重現的
+historical / accepted evidence、dirty / untracked source、learner data 與其他 Task
+產物；未知時 KEEP 並回報。Task / Review Slots 仍依 §13.1–13.2 在獲准範圍覆寫，
+不改為永久任務檔案庫；File Write Allowlist 為 NONE 時在原對話交付，不寫入或清理 Slots。
 
 暫存產物可能包含 `*-pre-*`、`*_BEFORE_*`、`*-before-*`、snapshot、暫存 diff
 baseline、暫存 approval-source copy 或內容已由正式 Git 狀態／當前 Review Packet
@@ -1334,6 +1385,14 @@ Phase start／completion 或產品 implementation；也不取代 Developer Revie
 Current branch、HEAD、工作樹是否乾淨及未提交修改，必須由 Git repository
 實際狀態判定，不得由本文件或 previous session 推定。開始工作與交付時確認
 Git 狀態，保留既有修改。
+
+Source 修改、validation、Git stage / commit 與 push 分別確認明確授權；
+修改或驗證通過不自動授權 stage / commit，commit 不包含 push。
+依 Spec 完成適用 Review 並形成 commit 後，push 須另有 Developer 批准的完整
+Commit SHA、Remote URL、Destination Ref、Integration Owner、非 force 方式、
+Push Invocation 預算、前後核對與 STOP；不能用預先籠統授權代替。
+push 不包含 PR / merge / release；Git HTTPS 唯讀成功不證明 push 能力。
+同一整合目標的 Git 操作仍依 §3.7 序列執行，不改變 Review / Acceptance 或 Phase gate。
 
 分支名稱依 Current Approved Spec 所定義流程。
 
