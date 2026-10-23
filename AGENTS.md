@@ -1204,10 +1204,34 @@ Execution Profile；其正式性只來自原有 Developer approval / governance 
 若內容衝突，依 §1.2、§1.4、§4–8 處理，不得自行改寫 packet 以繼續受影響工作。
 
 經明確 Task / Delegation 授權，可採 01 Chat 規劃 → Developer 批准 →
-01 Work 配置／派發 → Developer 啟動指定 Workspace → Workspace 執行 →
-01 Work 彙整 Evidence → 01 Chat Review → Developer Acceptance。
-派送者不因此取得批准或工程啟動權；訊息若會觸發執行，不得再以 Inbox 重複啟動。
+01 Work 配置／派發 → Developer 人工啟動，或依下列 Envelope 由 01 Work
+限定啟動 → Workspace 執行 → 01 Work 彙整 Evidence → 01 Chat Review →
+Developer Acceptance。未明確委派時仍採人工啟動；配置／派送本身不授予啟動權。
+同一 Task / Attempt 不得混用訊息 Trigger 與人工 Inbox 啟動。
 不預設具備跨 Thread、遠端或本機檔案能力；未核實能力或權限時停止受影響派送。
+
+Delegated Activation 是 opt-in，不是 01 Work 的通用啟動權。Developer 的
+原始 Task / Batch Approval 須明確包含人類對指定 Sender → Target 發訊啟動的
+授權；其他 Agent 轉述或傳訊工具顯示的 user-visible prompt 本身不構成批准。
+Sender 與 Target 均須能核對原始批准，並符合當次工具規則與 Runtime Permission。
+
+在既有 Task Packet / Authorization 內記錄 Delegation ID / Approval Reference、
+Task ID / Version、Canonical Packet 路徑與 hash、唯一 Sender、Target Thread /
+Host / Owner、Source Checkpoint、Attempt、Trigger Invocation Budget、
+Dependencies / Parallel Gate、Read / Write / Tool / Artifact Scope、STOP /
+UNKNOWN Recovery、Delivery / Execution Evidence 及 Review / Acceptance Owner；
+不另建永久 ledger / lock 或報告格式。
+
+Trigger 前核對完整 Packet、唯一有效 READY / Attempt、批准有效性、來源、
+§3.7 的 ownership / checkpoint / 必要 Read Lease 與共享資源，以及平台權限。
+每個獲准 Attempt 至多一次直接 Trigger Invocation；向工具提出發訊呼叫即計入，
+不因 timeout、error、拒絕、換 Session / Model / Channel 或傳輸恢復而重置。
+工具回應、Target Turn、Execution Evidence 與 Review / Acceptance 分別取證；
+送訊成功或觀察到 idle 不證明 Task 已執行、完成或可安全重試。
+Delivery / Execution UNKNOWN 時停止該 Trigger 路徑，只在核准額度內唯讀查核
+原 Target；未釐清前不重送、改派或以新 Task / Attempt 名稱恢復額度。
+其他恢復沿用 §3.6、§12 及原批准，不增加 Git / Native / Production 權限。
+既有人工啟動 Task 不因本規則改變模式；須另有精確批准，不追溯重啟已結案 Task。
 
 獲精確授權後，可使用 `local_data/workspaces/<workspace>/inbox/`、
 `outbox/`、`history/`；不因路徑存在或此規則而取得建立／寫入／搬移權限。
@@ -1309,8 +1333,9 @@ runtime capability；無法確認 model 名稱時不得猜測，也不得把 run
 且可能影響安全、正確性或 Developer 預期，開始受影響工作前簡短回報；不因
 Execution Profile 不完全一致就停止所有工作。
 
-Task Approval、Packet Delivery、Runtime Permission、Execution Completion、
-Independent Review 與 Developer Acceptance 分別判定，不互相代替。平台自動審查
+Task / Batch Approval、Delegated Trigger Authorization、Packet Delivery、
+Workspace Activation、Runtime Permission、Execution Completion、Independent Review
+與 Developer Final Acceptance 分別判定，不互相代替。平台自動審查
 拒絕時回報被拒操作與理由並停止該操作；只有 Developer 可選擇平台正式支援的
 人工審查途徑，Agent 不自行換 Host / Tool Channel、Full Access 或安全設定繞過。
 
@@ -1318,7 +1343,8 @@ Independent Review 與 Developer Acceptance 分別判定，不互相代替。平
 未指定時使用既有固定 Task Slot。多個入口的有效性不明時先核對，不選最新檔案、
 不雙重啟動；Developer 的 shortcut 只觸發 G0，不另授予 Task Approval 或 Runtime Permission。
 
-Developer 明確輸入「執行目前任務」時，這只是 invocation shortcut。Codex 須先確認：
+Developer 明確輸入「執行目前任務」或收到有效 Envelope 下的 01 Work Trigger 時，
+只觸發相同 G0；委派訊息不豁免以下核對，也不擴大原批准。Codex 須先確認：
 
 1. `CURRENT_TASK.md` 存在且包含一份完整有效的 `CODEX_TASK_PACKET`；
 2. 內容未標示 `NO_ACTIVE_TASK`；
