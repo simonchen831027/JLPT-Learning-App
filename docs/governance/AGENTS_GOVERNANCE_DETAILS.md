@@ -1,0 +1,1470 @@
+# AGENTS Governance Details
+Applicability: 生效依 Root §0 完整 Bundle 條件及 Developer 對本 revision／全文的精確批准、正式整合、適用驗證與最終 Acceptance 判定；候選產出、Source Write 或 Review PASS 均不單獨使其生效。
+Governance Revision: AGENTS-THINROOT-V270-R01
+正式目的地：docs/governance/AGENTS_GOVERNANCE_DETAILS.md。
+
+## 0. Authority／Effective Revision／Required G0 Read
+
+本檔是 Root AGENTS §0 登錄的第 4 層同級附錄，不是第 3 層 Project Document；不因 docs/ 路徑升權。Root／本檔／T 必須由 Developer 精確批准全文、一起正式 Repository Integration，明確指定同一生效 revision／三檔 bytes／hash；僅相同 Bundle 字樣不足以證明相同批准。未完整生效、缺件、身份漂移或彼此衝突即停止依賴工作，交 01／Developer；不自行決定優先或宣布部分 APPLIED。批准與 source identity 記既有 Task／Review，不新增永久記錄系統。
+
+G0 按 Root §0 操作分類讀取本檔相應完整章節，模板讀 T；不在原 Read Scope 內不得猜補。本文延續原 AGENTS 16 節，以避免交叉引用失效；未改變產品、Architecture、Data、Phase 或各 Task 授權。完整程序移出 Root 不等於可略讀必要規範。全文中 § 編號指此 Bundle 同號內容；T1～T5 是模板附錄。DEC-P1-009 相對連結按本檔正式目的地 docs/governance/ 解析；Task-owned Outbox 副本不構成正式解析位置。
+
+## Language
+
+- 使用繁體中文回覆與撰寫說明文件。
+- 程式碼識別字、API 名稱、檔案名稱與必要的技術術語保留原文。
+- Codex 的實作報告、問題回報、`CHAT_HANDOFF` 與 Decision Record 原則上使用繁體中文。
+
+---
+
+# 1. Source of Truth 與規格治理
+
+## 1.1 Current Approved Spec
+
+本 repository 的正式產品需求，以目前經 Developer 核准並存放於 repository 的
+**Current Approved Spec** 為最高產品規格依據。
+
+目前開發 Baseline：
+
+`JLPT_Learning_App_Technical_Spec_V2.16.md`
+
+V2.16 是目前的 Current Approved Spec；CR-0013 已 APPLIED；V2.15、V2.14、V2.13、V2.12、V2.11、V2.10、V2.9、V2.8、V2.7、V2.6、V2.5、V2.4、V2.3
+保留為被取代的歷史 Spec。
+版本未來可以經正式 Change Request 流程升級為後續版本。
+
+一旦新版 Spec：
+
+1. 已經由 Developer 核准；
+2. 已正式放入 repository；
+3. 已明確指定取代前一版；
+4. 對應 Change Request 已正式成為 `APPLIED`。
+
+則新版 Spec 成為新的 Current Approved Spec。
+
+Codex 不得因 AGENTS.md 曾記載 V2.11，而忽略 repository 中後續正式核准的新版本。
+
+---
+
+## 1.2 權威順序
+
+若資訊互相衝突，依以下順序判定：
+
+1. Current Approved Repository Spec
+2. Approved Change Request
+3. 正式 Project Documents / Architecture Documents / Decision Records
+4. `AGENTS.md`
+5. Existing Code / Tests
+6. Current Task Packet / Current Chat / Work / Codex Task Context
+7. Previous Session / Conversation
+8. ChatGPT Memory
+
+經 Developer 核准並正式進入 Repository 的 UI/UX Guideline、Design System、
+Visual Style Guide、Content Governance Document 或其他專門治理文件，
+屬於本項的正式 Project Document。
+
+未經 Developer 核准、尚未正式進入 Repository 的 Draft、Proposal、Work output、
+Screenshot Discussion、Benchmark Report 或 Local Handoff 不屬於本項。
+
+此順序用於判定正式專案需求與狀態；Approved Change Request 的排序不代表
+可在 Spec 更新前依新版需求實作。需求套用狀態依 §1.4 判定。
+
+ChatGPT Memory、過去 Chat 討論、過去 Work 輸出、舊 Spec 草稿，以及 Codex
+歷史 session 均不得覆蓋 Current Approved Spec。
+
+若 Developer 當前指令與 Current Approved Spec 存在產品需求或架構層級衝突，
+Codex 不得直接執行衝突部分，必須依本文件的 Escalation Protocol 回報。
+
+---
+
+## 1.3 Spec 與 Code 的關係
+
+Spec 定義：
+
+> 產品應該如何運作。
+
+Code 定義：
+
+> 目前實際實作狀態。
+
+若 Code 與 Current Approved Spec 不一致，不得為了配合既有 Code 而自行修改
+Spec，也不得直接假設 Spec 已過時。
+
+必須判斷：
+
+- 是否為單純 implementation bug；
+- 是否為尚未完成的 Spec requirement；
+- 是否涉及產品或架構決策。
+
+若需要產品或架構決策，進入 STOP / CHAT_HANDOFF 流程。
+
+---
+
+## 1.4 Requirement / Change 狀態
+
+正式需求變更遵循：
+
+`DRAFT → APPROVED → APPLIED`
+
+- `DRAFT`：尚在 Chat / Product Decision 流程討論中的 Requirement / Change Proposal。
+  不得視為正式 Requirement，不得據此 implementation。
+- `APPROVED`：Developer 已明確確認方案，並產生正式 `CHANGE_REQUEST`，
+  Status 為 `APPROVED`。Spec 維護 Work 可依其修改 Candidate Spec，
+  但 Codex 尚不得依新版 Requirement implementation。
+- `APPLIED`：Candidate Spec 經 Developer Review / Approve，正式進入 Repository
+  並成為新的 Current Approved Spec。
+
+不得建立「`CHANGE_REQUEST: DRAFT`」作為必要正式 artifact。
+
+Work 完成或產生 Candidate Spec 不等於 `APPLIED`。未 `APPLIED` 的 Change Request
+不得讓 Codex 依新版需求 implementation；仍可進行不受影響的既有 Spec 工作。
+若 CR 與 Current Approved Spec 有未解決衝突，不得自行以 CR 覆蓋現行規格。
+
+此狀態流程用於需求變更；不改變 Spec 的 Implementation Decision 依 §7.1
+處理。Developer 明確授權的純治理文件維護，不因此取得產品需求或實作修改權限。
+
+---
+
+## 1.5 Cross-Workspace Grounding Rule
+
+本規則適用於：
+
+- Chat / Product Decision；
+- Spec 維護 Work；
+- Content / Research Chat 或 Work；
+- Visual Design / Image Work；
+- UI/UX Review / Design System Work；
+- Codex；
+- 其他未來接入本 Repository 的 Agent / Work。
+
+任何 Workspace、Conversation 或 Session 的歷史內容，都不是正式專案狀態本身。
+
+開始新的重要 Task、恢復長時間未使用的對話、切換 Session、進行 Developer Review、
+建立正式 handoff、產生 Candidate 文件，或對 Repository 狀態作實質判斷前，
+應重新 grounding 至目前可取得的正式來源。
+
+最低應確認：
+
+1. Current Approved Spec；
+2. `AGENTS.md`；
+3. 與目前 Task 直接相關的正式 Decision Record / Project Document；
+4. 適用的 Approved Change Request / `CODEX_DECISION`；
+5. 若可存取 Repository：
+   - current branch；
+   - HEAD；
+   - upstream；
+   - working tree；
+   - 相關 tracked files 的實際內容；
+6. 本次 Task 的直接 input / handoff artifact。
+
+不得因：
+
+- 對話開頭曾提供某項資訊；
+- Previous Session 曾記錄某狀態；
+- ChatGPT Memory 記得某結論；
+- Work 曾產生某份 Draft；
+- 舊 Task / Review Packet 仍存在；
+
+就推定該資訊目前仍然有效。
+
+若歷史對話、Memory、舊 Work 輸出或 Session 摘要
+與 Repository 正式來源不一致：
+
+依 §1.2 權威順序重新判定。
+
+若正式來源無法取得或不足以安全判斷：
+
+不得自行補完、猜測或用舊對話代替；
+須明確標示 limitation，並將需要正式決策的部分交回 Developer / 01。
+
+對話長度、建立時間或 Session age
+不改變任何來源的正式權威。
+
+對指定 Source Checkpoint 的 Hash Gate，Expected 必須取自可識別的原始批准、
+適用正式 revision 或批准明指的 canonical source block；Observed 必須由工具讀取
+指定檔案的原始 bytes 計算，不得以 Observed 自填 Expected。分別記錄來源引用、
+path / revision、bytes、Expected、Observed、格式判定及比較結果。SHA-256 須以
+完整 64 字元 Hex 驗證；僅忽略 Hex 大小寫比較，不補字、不截取或改檔修配 Hash。
+只有獨立 Expected 與 Observed 格式有效、完整相等，且指定 bytes（若有）相符，
+才能標 Verified Match。缺失、格式錯誤或不符時停止依賴該 checkpoint 的工作。
+有效 Expected 與實讀不符是 checkpoint mismatch；格式錯誤是 input defect，
+兩者均不自行判定為 typo 或以既有檔案證明批准已變更。
+Packet 生成優先引用單一 canonical Expected block；必要副本由工具產生並於發布前
+核對完整值、bytes、來源引用及一致性，不建立第二份人工 Expected 權威。
+Developer 勘誤須保留原值、原批准定位、勘誤的人類訊息與適用 scope / revision；
+不改寫原批准，重新通過受影響 Gate 後才繼續，且不恢復任何已耗用額度。
+本規則不新增原 Task 未要求的事前 Hash Gate；未提供獨立 Expected 時記
+NOT PROVIDED / UNVERIFIED，不宣稱 MATCH；原已明定的 Gate 不得豁免。
+
+---
+
+# 2. 主要產品規格
+
+Current Approved Spec 是本 repository 的主要產品規格。
+
+需求、階段順序、產品範圍、架構限制與驗收如有疑義，以 Current Approved Spec
+為準。
+
+在適用階段開始前，依規格建立必要的 Decision Record。
+
+不得：
+
+- 猜測未決產品政策；
+- 將未決政策硬編碼；
+- 將討論中的需求視為正式需求；
+- 因實作方便自行擴大產品範圍；
+- 因既有程式碼限制自行降低 Spec 要求。
+
+---
+
+# 3. Codex 職責與決策邊界
+
+## 3.1 Codex 可以自行處理
+
+當 Current Approved Spec 已清楚定義產品行為，而且不改變正式 Contract 時，
+Codex 可以自行進行 implementation-level decision。
+
+**Autonomy-First。** 各 Workspace 以在已批准 Task 的完整授權內交付可驗收成果為
+預設。依下列情況處理，保留 Task 明列的 STOP、既有角色及獨立權限。
+
+- **Routine**：依已定義的行為與驗收，直接處理一般技術問題、Bug、編譯或測試失敗。
+  在原批准的 Scope、工具及額度內選擇方法、做合理修復並補驗，無須逐項請示。
+- **Bounded Recovery**：診斷、操作或驗證遇到可恢復的技術問題時，依事前批准的
+  替代診斷、工具、Repair／Recovery Envelope 與補驗額度處理。先保留失敗及已用額度，
+  有新的診斷依據才採下一步。正式 STOP 已觸發時依 §4～6 及原批准處置。
+- **Coordination**：依賴或共享資源暫不可用時，依 §3.7 與實際 Owner 確認窗口、
+  使用權及釋放，暫停相依操作。獲准的 01 Work 可協調已批准 Batch 的資源、順序、
+  合法派工與收件，沿用 §13.2 的逐 Child Gate，保留每個 Child 的授權及啟動模式。
+- **Hard STOP**：涉及重大 Product／Architecture／Content／Data Contract 決策、
+  必要安全風險、既有正式 STOP，或確實無法在原合法授權內恢復時，停止受影響部分。
+  例如來源身分無法核實、Writer 衝突未解、必要操作遭平台拒絕、超 Scope 或額度耗盡。
+  依 §4～6 交付具體證據與需要的決策。獨立、安全且已授權的工作可繼續。
+
+普通技術失敗依 Routine 或 Bounded Recovery 判定。若原批准明列該失敗為 STOP，
+或涉及平台拒絕、未知重大副作用，沿原 STOP；不得改分類、改工具通道或重置額度來繞過。
+
+例如：
+
+- private helper function 設計；
+- local variable / private method 命名；
+- 等價演算法選擇；
+- internal refactoring；
+- test organization；
+- mock / fixture 組織；
+- Spec 已定義行為下的 error handling 實作；
+- 不改變外部行為的程式結構改善。
+
+這類問題不需要停止開發。
+
+---
+
+## 3.2 Codex 不具有的權限
+
+Codex 不得自行決定：
+
+- 新產品需求；
+- 使用者可觀察到但 Spec 未定義的產品行為；
+- 正式 API Contract 變更；
+- Database semantic / data lifecycle policy；
+- Architecture boundary 變更；
+- Privacy / retention policy；
+- Readiness policy；
+- AI Agent 的產品權限；
+- Migration policy；
+- Compatibility policy；
+- Spec scope expansion；
+- Spec requirement removal。
+
+Codex 可以提出技術建議，但最終產品與架構決策由 Developer 決定。
+
+---
+
+## 3.3 Chat / Work / Developer / Repository / Codex 分工
+
+| 角色 | 職責 |
+|---|---|
+| `01 需求・架構決策` | Product / Requirement / Architecture / Governance Decision；Developer Review 的主要分析入口 |
+| `01 Work（限明確授權）` | 依有效 Batch Approval 與適用 Delegated Activation Envelope，統一配置 Child Task、合法直接派工、核對狀態、協調 Inbox／Outbox 與共享資源、收集 Evidence。Batch 已逐項批准者免重複請示。01 Work 不批准新 Task、產品架構或正式政策。詳 §3.7、§13.2。 |
+| `02 Spec 維護・Work` | 正式 Spec、治理文件、Decision / Change integration；只精確寫入已核准內容 |
+| `03 教材研究・編寫` | Content research、Canonical Knowledge、original authoring、source tracking、Author QA、Content Candidate / handoff；不得自行發布正式 Content |
+| `04 教材視覺設計・圖片生成` | 教材視覺規劃、visual asset proposal、圖片生成與 QA；不得自行授權 production integration |
+| `05 UI/UX Review・Design System` | UI/UX Audit、Benchmark、Design System、Design Token、Component / Responsive / Accessibility 規則、implementation handoff / fidelity review |
+| `06 教材校對・品質審查` | Independent Content QA / Editorial Review；Japanese / zh-TW / learner-facing / pedagogical / question / explanation / reading consistency QA；不得自行發布正式 Content 或改變 Curriculum / Product policy |
+| Developer | 最終批准 Requirement、Decision、Content release、Design policy、Visual integration 與文件 |
+| Repository | 正式專案狀態；保存 Current Approved Spec、正式文件、code、tests 與 approved tracked artifacts |
+| Codex | Production Implementation / Test / Validation / Repository Review；不得自行創造 Product / Architecture / Content / Design policy |
+
+01～06 的對話名稱是目前工作分工，不改變 §1.2 的正式權威順序。
+
+Chat / Work 只是執行介面／工作模式，不改變 logical Workspace 的 authority。
+03 Chat 與 03 Work 均屬同一 logical role「03 教材研究・編寫」：
+
+- 03 Chat 適合快速教材討論、單點分析、研究討論、Developer interaction 與 task scoping。
+- 03 Work 適合 multi-file research、batch authoring、Content Candidate、source tracking、
+  revision package 與 Content handoff。
+
+03 Work 不因為是 Work 而比 03 Chat 擁有更高治理權限。
+
+任何 Work / Chat 的輸出，若尚未經 Developer 核准並進入正式 Repository，
+原則上只具有 Draft / Proposal / READY FOR DEVELOPER REVIEW 狀態，
+不得因其出自 Work 而自動升格為正式 Requirement、Design Policy、Content Release、
+Architecture Decision 或 Production Authorization。
+
+Spec 維護 Work 即使可以存取 Repository，除非有 Developer 明確授權，仍不得
+修改 application implementation、test implementation、CI implementation、
+Backend 或 Python implementation。文件維護授權不隱含任何上述實作授權。
+
+治理文件不得新增、刪除或改變產品 Requirement、Architecture / API Contract、
+Database Semantic、Data Lifecycle、Migration、Compatibility、Privacy / Security
+或產品範圍；若需要這類變更，依正式 Specification Decision 流程處理。
+
+---
+
+## 3.4 Specialized Work Artifact Status
+
+02～06 所產生的文件、proposal、mockup、asset、audit、guideline 或 handoff，
+不得只因檔案存在或 Work 已完成，就視為正式 Project state。
+
+預設 lifecycle：
+
+Work output
+→ DRAFT / PROPOSAL
+→ READY FOR DEVELOPER REVIEW
+→ Developer Approval
+→ Repository Integration
+→ Formal / Approved Artifact
+
+只有在：
+
+1. Developer 明確核准；
+2. 適用時完成必要 Change / Decision lifecycle；
+3. 正式 artifact 已進入 Repository；
+4. Repository 中能識別其 Approved / Current 狀態；
+
+之後，才能把該 artifact 當成後續 Task 的正式依據。
+
+例如：
+
+- Approved UI/UX Guideline；
+- Approved Design System；
+- Approved Visual Style Guide；
+- Approved Content Package；
+- Approved Architecture Document。
+
+若已正式進入 Repository，可依 §1.2 第 3 項
+「正式 Project Documents / Architecture Documents / Decision Records」
+作為正式依據。
+
+以下仍不是正式 Source of Truth：
+
+- 未核准 Work draft；
+- screenshot discussion；
+- Chat recommendation；
+- Design proposal；
+- image candidate；
+- benchmark report；
+- local-only handoff；
+- 過往 Session summary。
+
+Task-specific approved input 例外：
+
+經 Developer 明確核准，且由當前 Task Packet、CODEX_DECISION、
+Developer instruction 或其他可識別的當前 task authorization
+精確指定之 artifact，可以作為該次 Task 的 task-specific input，
+即使該 artifact 尚位於 local-only handoff 或尚未成為正式 Repository Project Document。
+
+此例外只授權該 artifact 在明確 scope 內作為輸入，不提升其正式權威。
+
+該 artifact：
+
+- 仍不是 Source of Truth；
+- 仍不屬於 §1.2 第 3 項正式 Project Document；
+- 不得覆蓋 Current Approved Spec、Approved Change Request、
+  Decision Record 或 AGENTS.md；
+- 不因被使用而自動取得 Content Release、Production Integration、
+  Design Policy、Spec APPLIED 或其他未明確授權狀態；
+- 應在可行時記錄實際 path / version / hash / approval scope，
+  以避免誤用舊 handoff。
+
+此機制允許 staged workflow，例如：
+
+- Developer-approved Content Package
+  → Codex production integration；
+- Developer-approved Visual Candidate
+  → 後續獨立 Visual Integration Task；
+- Developer-approved UI/UX handoff
+  → Codex implementation；
+
+而不把 handoff artifact 本身提升為正式 Project Source of Truth。
+
+04 的圖片 / Visual approval
+不自動等於 Production Integration Authorization。
+
+05 的 UI/UX recommendation
+不自動等於 Codex Implementation Authorization。
+
+03 的 Content recommendation
+不自動等於 Content Publication / Release Authorization。
+
+02 的 Candidate Spec
+不自動等於 Current Approved Spec。
+
+---
+
+## 3.5 Workspace Awareness / Cross-Workspace Handoff
+
+各 Workspace 應確認其他 Workspace 的存在、責任與交接邊界，但不得因另一
+Workspace 有輸出，就推定該輸出已核准或目前有效；grounding 依 §1.5。
+
+| 工作類型 | 交接角色 |
+|---|---|
+| Product / Requirement / Architecture / Governance Decision | 01 |
+| Approved Spec / Decision / governance integration | 02 |
+| Content research / authoring | 03 |
+| Visual | 04 |
+| UI/UX / Design System / fidelity | 05 |
+| Independent Content QA / Editorial Review | 06 |
+| Production implementation / tests / validation | Codex |
+| Final approval / release / integration authorization | Developer |
+
+單一 Task 涉及多 Workspace 時應拆分 responsibility，不得由單一 Workspace
+越權替另一 Workspace 做正式決策。
+
+Cross-workspace artifact 依 §3.4 分類與使用：
+
+1. Formal Repository Artifact：依 §1.2 authority order 使用。
+2. Developer-approved task-specific input：只在明確 task scope 內使用，不提升正式權威；
+   保留 §3.4 的 task-specific approved input 例外及其限制。
+3. Draft / Proposal / Screenshot / Review / historical artifact：可作 research / review /
+   defect discovery input，不得當成正式 Requirement / Design / Content / Production authorization。
+
+另一 Workspace 的「最新 Draft」不得自動視為 current approved input。
+
+教材分工與 Independent QA 依
+[DEC-P1-009](../decisions/dec-p1-009-independent-content-qa-editorial-review-workflow.md)。
+03 在交 06 前仍須做 Author QA；06 負責獨立審查，不取代 03 authoring 或 Developer approval。
+新建立或實質修訂的 learner-facing Content 原則上於 Developer Content Review 前經 06 QA；
+適用範圍、targeted QA 例外與既有 Approved Content 的處理依該 Decision Record。
+
+典型 Content flow：
+
+```text
+03 Content Work
+→ CONTENT CANDIDATE
+→ 06 Independent QA
+
+REQUEST REVISION
+→ 03 revision
+→ 06 re-review（必要時）
+
+PASS
+→ READY FOR DEVELOPER REVIEW
+→ Developer Content Approval
+→ separate Production Integration Authorization（適用時）
+→ Codex integration
+→ validation
+→ Repository formal state
+```
+
+06 可回報 PASS、REQUEST REVISION 或 BLOCKED / DECISION REQUIRED；涉及
+Curriculum / Product / Requirement 的決策交 01 / Developer，author revision 交 03。
+06 PASS 不等於 Content APPROVED、Content RELEASED 或 Codex integration authorization；
+03 Content Candidate 也不等於 Content APPROVED / RELEASED。
+Developer 保持最終 Content Approval / Release authority。
+
+---
+
+## 3.6 Task-scoped Minor Repair
+
+§3.1 已涵蓋的 implementation-level decision，在原 Task 授權內仍可自行處理，
+不因本節而逐項要求新的批准。本節只規範 Task 額外預授權的 Minor Repair
+Envelope；只有 Developer 在 Task Packet 或明確 Task Authorization 中預先
+核准該 Envelope，Codex 才能依它修正原 Task 未包含的低風險實作問題。
+Envelope 不提升 §1.2 的權威，也不改變 §3.2～3.5 的角色或修改權限。
+
+Envelope 應明確列出 File Allowlist、Diagnostic Categories、禁止修改項目、
+修正／重驗證預算、適用 Validation Gates 與 STOP / Escalation 條件（§13.2）。
+可核准的類型包括 Dart Formatter、missing / unnecessary imports、不改行為的
+型別／Lint 修正、等價 private helper，以及核准範圍內的 test wiring / mock /
+fixture 或非正式 Contract 的局部 implementation 修正。列出類型不是自動授權；
+每次仍須符合實際 Task 的 allowlist、診斷與限制。
+
+一般 Implementation／Test／Build 問題可在預先批准的 Scope、Repair Envelope 與
+Budget 內自主診斷、修復及補驗。Task Packet 應預先界定合理替代診斷、有限恢復與
+交付的觸發條件、工具、範圍、額度及 STOP。替代工具須符合核准的工具範圍及相同的
+來源、資料、權限與副作用邊界，並依適用 Gate 核對。能以核准方法恢復時由 Workspace
+自行完成。平台拒絕依 §13.2 處理，已耗額度保留。
+
+使用 Envelope 時必須：
+
+- 只修改核准 allowlist，不新增或改變 Product Behavior、Architecture / API、
+  Database Semantic / Lifecycle、Migration、Privacy / Security、Content / Design
+  policy；不得以「minor」名義代決 §3.2 或豁免 §4 STOP Conditions。
+- 不為取得 PASS 而放寬、刪除或繞過 assertions；test helper / mock / fixture
+  調整須保留原測試意圖與驗證範圍，不掩蓋原始 failure。
+- 保留原始 failure logs、修正 diff、修正前後 source hashes，依 §12 記錄診斷、
+  command / result、環境與受測 identity，依 §13 交付；保存證據仍受 §9 / §14
+  與 Spec 的資料最小化、敏感資訊及 retention 規則約束，不增加蒐集權限。
+- 修正後執行適用且已授權的 targeted validation；這不替代 Spec 的 DoD、
+  regression、platform 或其他必要 gate。重試須有新的 diagnostic evidence
+  與可辨識的修正目的，沿用 §12.3，不無限重跑相同失敗。
+- 達到核准的修正／重驗證預算、超出 scope、缺少必要授權或觸發正式治理
+  衝突時停止受影響工作；依 §4–7 回報，必要時使用 CHAT_HANDOFF /
+  CODEX_DECISION，不自行提高預算或擴張 allowlist。預算不明時不推定無上限，
+  先釐清依賴該 Envelope 的部分；§3.1 原已授權且獨立的工作不因此停止。
+
+Read-only、Source-immutable、Execution-only Task 不自動包含 Minor Repair。
+Envelope 不隱含 Git stage / commit / push / merge、Native / OS execution、
+資料清理或資料庫操作授權；conditional execution 仍須另有明確授權並滿足 gate，
+不能只因 formatter / analyzer PASS 就自行開始。
+
+正常工具執行可能寫入環境或產物；例如 `--no-pub` 不表示零副作用。
+Task 可明確授權已安裝 SDK 正常啟動所需的可恢復 lock / stamp、Task-owned
+temp、合成 DB / sidecar、generated output 與正常 fixture teardown；須界定
+範圍、ownership、共享資源協調及清理方式，符合平台權限與 §3.7 / §13.3。
+此授權不擴大 source allowlist，不等於整個 SDK / cache 可任意寫入；
+Read-only Task 不因此取得 Tests / Build 或其他寫入授權。SDK 升級／下載、
+全域 cache 修復、安全標記／憑證／安全設定修改、網路／安裝／費用、真實
+learner data 刪除或不可逆清理，須另有適用授權並符合安全政策，否則停止
+受影響操作。共享 runner / writer 衝突未解除不得執行；Native / Git 仍須獨立授權。
+
+本節只對明確核准使用該 Envelope 的 Task 生效，不追溯改寫既有 Task
+Authorization、已接受 evidence 或已存在的 STOP。接手／切換 session 依 §15；
+既有受限 Task 的恢復仍依其原批准及 §7，不由新治理自動解除限制。
+
+## 3.7 Parallel Task Coordination
+
+多個 Codex Task 可在各自已授權範圍內並行。並行安排不增加產品、
+架構、Content、Design、Git 或 execution authority，不解除既有 STOP、
+Phase gate 或 task-specific ownership。02～06 的角色仍依 §3.3～3.5。
+
+有 source 寫入的獨立 Task，優先使用分離的 worktree／branch。
+各 Task 應能識別 Owner、工作目錄、來源基準、修改範圍、相依工作與交付位置。
+worktree 不自動包含其他 checkout 的 dirty changes 或 ignored artifacts；
+所需輸入須依 §3.4 確認 identity 與使用授權。
+
+同一 checkout 採單一 Source Writer；其他工程師可讀取固定來源或進行
+不寫入該 source 的分析。Formatter、code generation、tests／build 等若會
+寫入 source 或共用產物，也須納入寫入協調。單純劃分檔案 allowlist
+不代表相依檔案、index、build outputs 或 evidence 已隔離。
+
+Source Checkpoint 是可識別的 source 基準：使用 commit，或對必要的
+dirty／untracked source、相依設定與核准輸入記錄 path、diff／hash 及狀態。
+它不是新的 Source of Truth，也不代表批准、commit 或驗證通過。
+依風險選取必要範圍，不因並行而要求每次複製整個 repository 或歷史 archive。
+
+Reader 需要對可變工作樹作一致性判斷或驗證時，應使用固定 checkpoint；
+若使用 Read Lease，由相關 Writer 與 Reader 明確確認保護的來源範圍、
+用途、開始及釋放條件，期間不得修改該範圍。Read Lease 是協調承諾，
+不是工具自動提供的 lock，也不授權寫入。來源漂移或 ownership 不明時，
+停止依賴該來源的判定並重新核對；不得只以事後 hash 相同推定全程穩定。
+
+經授權的 01 Work 可協調 checkout、Source Writer、SDK／Cache、Runner、Fixture
+及共享 Generated Artifacts。由實際 Owner 確認資源範圍、互斥窗口、釋放責任與
+釋放條件，記入既有 Task／Review。Windows 正常開發可在核准範圍內以限定程序觀察
+補充證據，無須證明完整未知程序樹。程序觀察不能代替 Owner 確認或解除已知衝突。
+
+各 Task 使用獨立 evidence 輸出與可識別的 writer，依 §12 綁定實際
+worktree、source identity、環境及 command/result。不得覆寫、清理或
+冒用其他 Task 的 Slots、evidence、fixture 或資料。固定 Slots 的並行
+交付依 §13.1；不建立第二套報告格式。
+
+Git 操作仍依明確授權。同一 checkout 的 index／Git mutation 不得競爭；
+對同一共同整合目標的操作由指定 Git Integration Owner 序列執行。
+分支或 worktree 管理及其他會影響共享 Git 狀態的操作須確認沒有衝突。
+整合前核對來源、目的地及相依變更，整合後依實際變更完成適用驗證；
+各分支的既有 evidence 不自動證明整合結果。涉及未決 Contract／policy
+的衝突依 §4～7 處理，不以 Git conflict resolution 代決。
+
+worktree 不隔離共用 Host、desktop session、foreground window、輸入、
+clipboard、capture、device 或外部資料。使用相同且會互相干擾的 Native
+資源時，須明確指定 Operator、互斥範圍、必要 process／window identity、
+執行額度及釋放條件。已證明互不干擾且各自獲授權的工作可繼續；
+不能因 worktree 分離就自動啟動 Native execution。
+
+上述資訊可記於現有 Task Authorization、Task Packet、Review Packet
+或 SESSION_HANDOFF，不要求另建永久協調文件、中央 lock service 或新流程。
+Owner 交接須可識別；切換 session／介面或產生 checkpoint 不自動移轉 ownership。
+
+---
+
+# 4. STOP Conditions
+
+遇到以下任一情況時，Codex 必須停止「受影響部分」的實作：
+
+1. Current Approved Spec 描述不明確。
+
+2. Spec 內存在互相衝突的需求。
+
+3. Developer 要求與 Current Approved Spec 發生產品需求或架構層級衝突。
+
+4. 實作需要修改 Spec 未明確授權的 public API / Contract。
+
+5. 實作需要新增或改變 Spec 未定義的 database schema semantic、
+   data ownership 或 data lifecycle policy。
+
+6. 實作需要改變既有 module / architecture boundary。
+
+7. 存在多個合理方案，而且選擇會實質影響：
+   - 未來 Architecture；
+   - Product Behavior；
+   - Compatibility；
+   - Data Model；
+   - Security / Privacy；
+   - 長期維護成本。
+
+8. 實作可能破壞既有功能或 backward compatibility，而 Spec 未明確授權。
+
+9. Existing Code 與 Current Approved Spec 不一致，且無法單純判定為 implementation bug。
+
+10. 完成需求所需的產品行為並未定義於 Spec。
+
+11. Codex 判斷必須修改 Spec 才能安全繼續。
+
+12. Previous Codex Session / Conversation 與 Current Approved Spec 發生衝突。
+
+13. 需求涉及尚未建立但 Spec 要求先建立的 Decision Record。
+
+14. 實作會超出 Current Approved Spec 所定義的 Phase 或產品範圍。
+
+15. 要依尚未 `APPLIED` 的 Change Request 實作新版需求。
+
+16. 目前 Phase gate 尚未完成，卻要求開始下一 Phase implementation。
+
+---
+
+# 5. STOP 發生後的行為
+
+遇到 STOP Condition 時，Codex：
+
+## MUST
+
+- 停止受影響部分；
+- 保留目前安全的工作狀態；
+- 清楚說明問題；
+- 產生 `CHAT_HANDOFF`；
+- 等待 Developer 決策。
+
+## MUST NOT
+
+- 猜測 Developer 想要的產品行為；
+- 靜默選擇新的產品政策；
+- 自行修改正式 Spec；
+- 為了讓 Code 能運作而改寫 Requirement；
+- 自行擴大 Scope；
+- 把 Codex 自己的 recommendation 當成 approval；
+- 把 Previous Session 當成正式授權；
+- 在尚未取得決策前完成 blocked implementation。
+
+不受該問題影響且能明確證明彼此獨立的工作，可以繼續。
+
+---
+
+# 6. CHAT_HANDOFF Protocol
+
+當 STOP Condition 發生時，Codex 必須產生以下格式。
+
+完整 CHAT_HANDOFF 格式移至本 Bundle 的 T 附錄 T3；本節觸發義務、權限、例外與規則保持。產生前須讀取原格式全文，不得以此引用代替完整交付。
+
+產生 `CHAT_HANDOFF` 後，不得繼續 blocked work，直到取得 Developer 決策。
+
+---
+
+# 7. Escalation 回復流程
+
+Developer 會將 `CHAT_HANDOFF` 帶到需求／架構討論流程。
+
+可能得到兩種結果。
+
+## 7.1 Implementation Decision
+
+如果確認：
+
+- Current Approved Spec 本身已足夠；
+- 不改變產品行為；
+- 不改變正式 Architecture / API / Data Contract；
+- 不需要修改 Spec；
+
+流程：
+
+`Implementation Decision → CODEX_DECISION → Codex Resume`
+
+Developer 以 `CODEX_DECISION` 明確記錄 implementation decision，使用以下固定正式格式：
+
+```text
+完整 CODEX_DECISION 格式移至本 Bundle 的 T 附錄 T4；本節觸發義務、權限、例外與規則保持。產生前須讀取原格式全文，不得以此引用代替完整交付。
+```
+
+若接受 validation evidence，在 `Validation` 中列出證據來源、適用版本／工作樹、
+command/result 與接受範圍（依 §12）。
+
+Codex 的建議或自行撰寫的紀錄不等於 Developer 核准。
+`CODEX_DECISION` 不得取代需要 Specification Decision 的 CHANGE_REQUEST，也不得豁免 Spec gate。
+§3.1 的一般 implementation-level decision 不需要逐項升級為 `CODEX_DECISION`。
+
+Codex 收到明確決策後：
+
+1. 確認決策不與 Current Approved Spec 衝突；
+2. 繼續 blocked work；
+3. 依 §12 確認已接受證據的適用性，執行尚需完成的相關 tests / validation；
+4. 在交付報告引用該 `CODEX_DECISION` 與驗證證據。
+
+---
+
+## 7.2 Specification Decision
+
+如果決策涉及：
+
+- Product Behavior；
+- Architecture Contract；
+- API Contract；
+- Database Semantic；
+- Data Lifecycle；
+- Compatibility；
+- Migration Policy；
+- Privacy / Security Policy；
+- 正式 Requirement；
+
+則視為 Specification Decision。
+
+此時 Codex 必須等待：
+
+Specification Decision
+→ CHANGE_REQUEST（Developer 核准為 APPROVED）
+→ Work 修改 Spec 並產生 Candidate Spec
+→ Developer Review / Approve
+→ Repository 更新並指定新的 Current Approved Spec
+→ APPLIED
+→ Codex Resume
+
+之後才能繼續 blocked work。
+
+Codex 收到新版 Spec 後必須：
+
+1. 重新讀取 Current Approved Spec；
+2. 找出修改章節；
+3. 重新評估原 CHAT_HANDOFF；
+4. 確認衝突已解決；
+5. 再繼續 implementation；
+6. 執行相關 regression tests。
+
+---
+
+# 8. Spec Modification Rule
+
+Codex 不得把修改 Current Approved Spec 當成一般 implementation task 的附帶工作。
+
+若 Codex 發現 Spec 必須修改：
+
+Codex
+→ `CHAT_HANDOFF`
+→ Developer / Chat 討論
+→ `CHANGE_REQUEST: APPROVED`
+→ Work 進行 Impact Analysis / Conflict Check
+→ Work 修改 Spec / Consistency Check / 產生 Candidate Spec
+→ Developer Review / Approve
+→ 新 Spec 正式進 Repository 並指定為 Current Approved Spec
+→ APPLIED
+→ Codex Resume
+
+除非 Developer 明確指示 Codex 執行已核准的純文件同步工作，否則 Codex
+不得自行修改產品需求內容。
+
+---
+
+# 9. 不可違反的架構限制
+
+- 採 Feature-first、MVVM、Use Case、Repository、Service 分層；UI 不直接呼叫
+  資料庫、Provider 或平台 API。
+
+- 核心學習採 Local-first、Offline-capable；Content Data、User Learning State、
+  Derived Analytics 分開管理。Derived Analytics 可由原始資料重算。
+
+- SQLite schema 變更使用版本化 migration；Reset 依明確 scope 在 transaction
+  中執行，不刪除教材 Content Data。
+
+- Flutter App 不持有 AI Provider Secret；AI 請求經 ASP.NET Core AI Gateway
+  與 Provider Adapter。
+
+- Practice、Diagnostic、Benchmark、Mock Exam 用途分開。
+
+- Readiness 是 App 內部估計，不是官方分數或通過機率；樣本不足不得顯示有效
+  準備度結論。
+
+- Speaking 不併入 JLPT Readiness。
+
+- 不記錄 secrets、完整錄音或不必要的敏感學習資料；遵守最小化蒐集及資料生命
+  週期原則。
+
+- 依 Current Approved Spec 的 Phase 順序與階段閘門工作。
+
+- 完成階段需回歸前一階段的 Vertical Slice。
+
+- 不得自行擴大產品範圍。
+
+若未來 Current Approved Spec 正式修改上述 Architecture Constraint，應以新版
+Spec 與其核准 Change Request 為準，不得由 Codex 自行推翻。
+
+---
+
+# 10. 專案結構與程式風格
+
+依 Current Approved Spec 採 feature-first 與分層組織。
+
+例如 Flutter：
+
+- `lib/features/`
+- `lib/core/`
+
+Backend、Python data pipeline 與測試依元件分組。
+
+遵循：
+
+- Dart
+- C#
+- Python
+
+各語言慣用命名及標準 formatter。
+
+不得為了單一 Task 無理由進行 repository-wide refactor。
+
+---
+
+# 11. 測試與 Definition of Done
+
+按元件使用：
+
+- `dart format`
+- `flutter analyze`
+- `flutter test`
+- `dotnet test`
+- `pytest`
+
+每個交付至少確認：
+
+- Requirement
+- UI（適用時）
+- Model / Entity
+- Use Case
+- Repository
+- 必要 Service / Gateway
+- Migration
+- Error handling
+- Loading / Empty / Error state
+- 適用 Tests
+- Privacy / Permission
+
+完成：
+
+- formatter / analyzer
+- Git diff review
+- Codex review
+- Human review
+
+AI 功能的共同與專屬檢查依 Current Approved Spec §40 的適用分組：
+共同 AI、AI 題庫 / 生成題目、Assessment、Readiness、Knowledge Mapping 與
+CR-0011 Tutor。各功能須完成其適用的既有 Requirement / DoD；不得因功能
+使用 AI 而將題庫、Assessment、Readiness 或 Knowledge Mapping 的專屬要求
+無條件套用 Tutor，也不得降低任何功能的既有要求。
+
+## 11.1 Phase gate 與階段完成宣告
+
+Phase 順序、範圍與完成閘門依 Current Approved Spec；V2.16 對應 §38，
+既有 Vertical Slice 回歸依 §42.3，Definition of Done 依 §40。
+
+Phase gate 尚未完成，不得宣稱 `Phase Complete`，也不得提前開始下一 Phase
+implementation。個別 Task 完成、部分驗證通過或文件更新，不代表整個 Phase 完成。
+缺少的 gate 證據須明列為未完成／待驗證，不得用 session 摘要或推測補足。
+
+---
+
+# 12. 測試結果回報
+
+Codex 必須回報實際執行的檢查與結果。
+
+未執行的檢查必須明確標示：
+
+`未執行`
+
+不得因推測測試應該通過而寫成已通過。
+
+Repository 尚未建立對應專案或執行環境時，不得聲稱已執行其 build、analyze
+或 test。
+
+## 12.1 Validation evidence 分類
+
+| 分類 | 可證明的範圍與限制 |
+|---|---|
+| Historical validation | 過去版本或 session 的檢查結果；須標明當時版本，不自動證明目前工作樹有效 |
+| Current working-tree validation | 目前工作樹（包含未提交修改）上的檢查；記錄 HEAD 與修改狀態，不等同乾淨 checkout |
+| Committed clean-checkout validation | 指定 commit 的乾淨 checkout 上執行的檢查；須記錄 commit、乾淨狀態與環境 |
+| CI validation | 指定 commit / CI run / job 的實際結果；CI 設定存在不等於 CI 已執行或通過 |
+| Device / platform validation | 指定裝置、模擬器或平台環境上的檢查；build 通過不等於裝置流程驗證通過 |
+| Developer manual validation | Developer 手動執行並提供完整 command/result 的檢查；可作有效證據，須標明提供者與環境 |
+
+分類可並列，例如 Developer 手動驗證也可能是 committed clean-checkout validation；
+不得只因分類名稱或 Developer 接受證據就擴張其可證明的範圍。
+
+每筆 evidence 應記錄：
+
+- 執行者、日期、工作目錄與環境／平台，必要時包含 SDK、裝置資訊；
+- 對應 commit 或 HEAD 與工作樹差異／狀態；
+- 完整 command、result、exit code（可取得時）與相關 log／產物位置；
+- 覆蓋的 requirement / gate、限制與未執行項目。
+
+未知資訊須明列未知，不得推測補齊。歷史或外部提供的證據，不得宣稱為 Codex
+本次親自執行；本次未重跑時，明列「本次未執行；採用既有 evidence」及其來源。
+
+## 12.2 Developer evidence 與重跑判斷
+
+Developer 手動執行並提供完整 command/result 的驗證可以作為有效 evidence。
+若 Developer 已透過 `CODEX_DECISION` 接受該 evidence，Codex 不應無條件重跑
+相同高成本驗證；先確認證據對應的程式、依賴、設定、環境與驗收範圍仍適用。
+
+若後續修改影響受測行為、環境或依賴改變、出現新的失敗／矛盾證據，或既有證據
+未覆蓋必要 gate，應說明具體原因並執行必要範圍的補驗證，而非全面重跑。
+僅因切換 session 或執行者不同，不構成重跑理由。
+
+接受 evidence 不降低 Spec 的測試、CI、平台、乾淨 checkout 與回歸要求。
+V2.16 §42.3 要求的階段回歸仍須針對該交付執行；符合該交付範圍的 Developer
+evidence 可以作為執行證據，舊階段結果不能自動替代本階段回歸。
+
+## 12.3 慢速下載 / 長時間 build
+
+- 無輸出不等同失敗；優先確認 process 是否仍正常執行，檢視可取得的 process
+  狀態、log、CPU / I/O 或下載進度，不能只依沉默時間判定失敗。
+- 不得無限重跑相同 restore / build / download；原 process 仍在執行時，
+  不得僅因沒有新輸出就啟動相同工作或終止重跑。
+- 重試前記錄前次結果與新的 diagnostic evidence，指出此次重試要驗證或修正什麼。
+- 無新 diagnostic evidence 時，停止重複嘗試，回報現況、已知限制與尚缺證據；
+  正常執行中的 process 可持續等待與觀察，不得把停止重試寫成驗證通過。
+- 長時間工作期間提供進度或不確定性說明；交接時記錄仍在執行的 process 與 log
+  位置，避免下一 session 重複啟動。
+
+---
+
+# 13. Phase / Task 完成交付報告
+
+交付 Phase 或重要 Task 時至少列出：
+
+## Scope
+本次實作範圍。
+
+## Changed Areas
+變更檔案及 Layer。
+
+## Spec Coverage
+對應 Current Approved Spec 章節。
+
+## Migration
+如有 schema migration，說明升級方式。
+
+## Regression
+列出既有 Vertical Slice 回歸結果。
+
+## Tests
+實際執行測試與結果、§12 的 evidence 分類與適用範圍；引用的 Developer
+evidence / CODEX_DECISION、未重跑原因與未執行項目。
+
+## Limitations
+目前限制。
+
+## Pending Decisions
+仍待 Developer 決策事項。
+
+若存在未解決的 STOP Condition，不得把受影響 Task 標記為完整完成。
+
+## Git Status
+說明目前 Git 狀態。
+
+## 13.1 Codex Review Packet
+
+當 Codex 完成 implementation、bug fix、validation、Phase closure、`CODEX_DECISION`
+相關工作，或其他需要 Developer Review 的工作，且準備停止等待 Review 時，
+建立或覆寫 `local_data/codex-review/CODEX_REVIEW_PACKET.md`。產生前確認
+`local_data/` 確實受 `.gitignore` 忽略；若未忽略，先回報是否需要一次性的
+`.gitignore` governance adjustment，不得自行假設。每個新的 Review-ready task
+可覆寫或重建前一次 packet；packet 不應 commit。此路徑是固定的當前 Review
+slot，不是永久 Review archive；除非 Task Packet 明確要求，不建立編號或日期版
+Review Packet 歷史。正式 Review／commit／integration 結束後，舊 packet 內容不需
+作為歷史證據保存，可由下一次 Review 取代。
+
+並行 Task 的協調依 §3.7。每個 worktree 內仍使用本節既有固定相對路徑；
+這些 Slots 不預設由多個 Task 共用。若同一 checkout 的固定 Slot 由其他
+Task 使用，或 Task 明確核准 Workspace Outbox 作交付位置，依該授權指定的
+scoped 路徑交付相同格式，
+並在回覆提供實際位置，不覆寫他人的 Slot，也不自動回填。此為交付位置
+例外，不建立第二套 report system；未指定安全位置時先交付於當前對話並
+回報 Slot 衝突。§13.3 不授權清理其他 Task 仍使用的產物。
+
+Review Packet 是供 Developer / 01 Chat 閱讀的 convenience artifact，承載本節
+交付報告內容與實際 diff，不另設一套完成標準。它不是 Source of Truth、正式
+Requirement、`CHANGE_REQUEST`、`CODEX_DECISION`、Developer approval 或新的
+validation result，也不能取代 Repository、Git、CI、正式文件、§12 evidence、
+§6 `CHAT_HANDOFF`、§15.2 `SESSION_HANDOFF`、STOP Condition 或 Phase gate。
+尚未達到 Developer Review 狀態就結束 session 時，仍依 §15.2 交接。
+
+Review Packet 使用以下格式；依 §12 標示 validation 來源與適用範圍，並以
+§13 的 Scope、Migration、Regression、Tests 等交付要求填入對應欄位：
+
+```text
+完整 CODEX_REVIEW_PACKET 格式移至本 Bundle 的 T 附錄 T2；本節觸發義務、權限、例外與規則保持。產生前須讀取原格式全文，不得以此引用代替完整交付。
+```
+
+產生規則：
+
+1. 內容取自實際 Repository、command、CI evidence；不得從 session memory 猜測，
+   也不得將未執行項目寫為 PASS。記錄實際 branch、HEAD、upstream 與工作樹狀態。
+2. `Diff Review` 對一般小型 source、test、documentation 變更提供足以 Review
+   的實際 diff，不只摘要；generated、binary 或 extremely large diff 可省略完整
+   內容，但須列出 omitted file、理由及驗證方式。區分本 task 修改與其他既存變更。
+   對已通過 Developer Review 的大型檔案，後續若僅審查狀態或 Repository
+   integration，且核准時的 baseline 可識別並驗證，可記錄 baseline 識別與 hash、
+   目前檔案 hash、相對 baseline 的實際差異、變更範圍核對及已核准本文未變的
+   證據，不重複嵌入整份未變本文。無法驗證 baseline 時，仍須提供足夠的完整證據，
+   不得隱藏或概括未知差異。
+3. 不放入 secrets、credentials、token、個人資料或不必要的敏感內容；若 diff
+   含此類資料，遮蔽並註明遮蔽範圍，不得以 packet 擴散。
+4. Validation 沿用 §12 的 evidence 分類；記錄 command / CI run、result、
+   commit / working tree、environment 與限制。未執行依 §12 標示；CI 未執行
+   填 `Not Run`。不因 packet 產生而新增驗證結果。
+5. 若有 unresolved STOP Condition，明列於 `Pending Decisions`、`Known Limitations`
+   或 `Phase Gate Impact`；不得宣稱受影響 Task 或 Phase 已完成。
+   交付前核對原始批准、Packet Identity、Expected / Actual Task、
+   Expected / Actual Deliverable、Task / Attempt / Target Turn、Scope、
+   已用 Budget 與 STOP；若任務或成果不符，標 TASK SELECTION MISMATCH / STOP，
+   不以歷史成果替代交付，也不將受阻工作標為完整完成。
+6. 產生 packet 不授權 commit、push、merge、改變 Phase status 或繞過既有
+   Manual approval / STOP 規則。
+7. 若檔案產生失敗，在終端輸出相同格式並明確說明檔案未建立。
+8. 檔案建立後，Codex 最終回覆提供 packet path、branch / HEAD、是否有未提交
+   修改，以及下一步需要 Developer Review；不需重複輸出完整報告。
+9. Packet 只保留本次 Review 所需的實際 diff、適用 hash、validation command／
+   result、Git 狀態、scope、未解問題及建議 commit 範圍；避免重複已核准的大型
+   文件本文、過期的前次 Review evidence、重複的中間報告。暫存清理依 §13.3。
+
+## 13.2 Codex Task Packet
+
+以下完整 CURRENT／覆寫 Slot 規則適用未啟用 §13.4 指標模式的既有入口；正式啟用後僅 CURRENT 的 representation／更新方式適用 §13.4，全文義務改指解析後 Canonical Packet。未經正式 cutover 不得使用此例外；Task-owned create-only 不授權覆寫 CURRENT 或固定 Slots。
+
+`local_data/codex-task/CURRENT_TASK.md` 是固定的當前任務 handoff slot 與執行前的
+input transport artifact；
+§13.1 的 `local_data/codex-review/CODEX_REVIEW_PACKET.md` 是執行後供 Developer /
+01 Chat Review 的 output artifact。大型正式任務優先使用 Task Packet，包括
+`CODEX_DECISION`、依 §1.4 已 `APPLIED` 的變更實作、Phase task / closure、多步驟
+validation、帶有 constraints 的 bug fix、長 implementation instruction，或包含
+大量 Must Not Change、Acceptance Criteria、repository context、commands、evidence
+的工作。短小、單一步驟且少 constraints 的任務可直接使用 Composer。
+
+產生或使用 Task Packet 前，確認 `local_data/` 確實受 `.gitignore` 忽略；
+若未忽略，先回報 Developer 是否需要一次性的 `.gitignore` governance adjustment，
+不得自行修改 `.gitignore`。每個新任務以一份完整的 `CODEX_TASK_PACKET` 覆寫
+`CURRENT_TASK.md` 原內容，不在同一檔案累積歷史 Task Packets，也不要求 Developer
+每次重建 handoff 路徑；此檔不應 commit。任務明確結束後，檔案可留在固定路徑，
+但舊內容不再是可執行任務；若使用 inactive placeholder，須明確標示
+`NO_ACTIVE_TASK`。下一任務到來前再以完整新 packet 覆寫。
+
+Task Packet 是 convenience / transport artifact，屬 §1.2 第 6 項的 Current
+Task Context。它不是 Source of Truth、正式 Requirement、Developer approval、
+`CHANGE_REQUEST` 或 `CODEX_DECISION` 本身；不能覆蓋 Current Approved Spec、
+Approved Change Request、正式 Decision Record 或 `AGENTS.md`，不能解除 STOP
+Condition、構成 Phase Complete，或授權自動 commit / push / merge。Packet 可包含
+完整 `CODEX_DECISION`、Approved Change Request、validation instructions 與
+Execution Profile；其正式性只來自原有 Developer approval / governance lifecycle。
+若內容衝突，依 §1.2、§1.4、§4–8 處理，不得自行改寫 packet 以繼續受影響工作。
+
+經明確 Task / Delegation 授權，可採 01 Chat 規劃 → Developer 批准 →
+01 Work 配置／派發 → Developer 人工啟動，或依下列 Envelope 由 01 Work
+限定啟動 → Workspace 執行 → 01 Work 彙整 Evidence → 01 Chat Review →
+Developer Acceptance。未明確委派時仍採人工啟動；配置／派送本身不授予啟動權。
+同一 Task / Attempt 不得混用訊息 Trigger 與人工 Inbox 啟動。
+不預設具備跨 Thread、遠端或本機檔案能力；未核實能力或權限時停止受影響派送。
+
+Delegated Activation 是 opt-in，不是 01 Work 的通用啟動權。Developer 的
+原始 Task / Batch Approval 須明確包含人類對指定 Sender → Target 發訊啟動的
+授權；其他 Agent 轉述或傳訊工具顯示的 user-visible prompt 本身不構成批准。
+Sender 與 Target 均須能核對原始批准，並符合當次工具規則與 Runtime Permission。
+Developer 可在同一份 Batch Approval 逐項批准多個明確 Child Task。各 Child 保有
+獨立 Task／Version／Attempt、Target／Host、Packet Identity、Scope、Budget、STOP
+與指定 Sender → Target 的 Trigger 授權。必要依賴及資源核對通過後，01 Work 可在
+有效 Envelope 內直接 Trigger 已逐項批准的 Child，無須重複請示。記錄方式見 T1.1。
+
+每個 Attempt 在首次啟動前選定唯一模式。原批准預列互斥人工路徑時，只有尚未提出
+任何發訊呼叫、委派工具已確認不可用，且原批准的人工條件成立，才可由 Developer
+在指定 Target 人工啟動。呼叫提出後的拒絕、失敗、逾時、UNKNOWN 或額度耗盡，
+依原 STOP 處理，不重送或切換模式。
+
+在既有 Task Packet / Authorization 內記錄 Delegation ID / Approval Reference、
+Task ID / Version、Canonical Packet 路徑與 hash、唯一 Sender、Target Thread /
+Host / Owner、Source Checkpoint、Attempt、Trigger Invocation Budget、
+Dependencies / Parallel Gate、Read / Write / Tool / Artifact Scope、STOP /
+UNKNOWN Recovery、Delivery / Execution Evidence 及 Review / Acceptance Owner；
+不另建永久 ledger / lock 或報告格式。
+
+Trigger 前核對完整 Packet、唯一有效 READY / Attempt、批准有效性、來源、
+§3.7 的 ownership / checkpoint / 必要 Read Lease 與共享資源，以及平台權限。
+每個獲准 Attempt 至多一次直接 Trigger Invocation；向工具提出發訊呼叫即計入，
+不因 timeout、error、拒絕、換 Session / Model / Channel 或傳輸恢復而重置。
+工具回應、Target Turn、Execution Evidence 與 Review / Acceptance 分別取證；
+送訊成功或觀察到 idle 不證明 Task 已執行、完成或可安全重試。
+Delivery / Execution UNKNOWN 時停止該 Trigger 路徑，只在核准額度內唯讀查核
+原 Target；未釐清前不重送、改派或以新 Task / Attempt 名稱恢復額度。
+其他恢復沿用 §3.6、§12 及原批准，不增加 Git / Native / Production 權限。
+既有人工啟動 Task 不因本規則改變模式；須另有精確批准，不追溯重啟已結案 Task。
+
+獲精確授權後，可使用 `local_data/workspaces/<workspace>/inbox/`、
+`outbox/`、`history/`；不因路徑存在或此規則而取得建立／寫入／搬移權限。
+01 Work 的 Inbox 配置及執行者自身 Outbox 寫入均限當次獲准範圍；
+History 處置依 §13.3。
+Workspace 路徑不取代既有 Task / Review / UI/UX Slots；Outbox 例外依 §13.1。
+Inbox 以完整單一 canonical packet 承載任務，沿用本節格式及 §3.4 的 input 邊界，
+不另建報告系統、永久 ledger / lock 或無人值守背景派工。
+
+重大 Task 應識別 Task ID、Version、原文位置／source identity、原始批准、
+唯一有效 Sender、Target / Host、Owner、Attempt 與交付位置；hash / 長度
+僅實際核對後標 VERIFIED，否則標 UNVERIFIED。配置獲准 Inbox 時，每個
+Workspace 只保留一個有效 READY Task；READY 是可待啟動，不是執行批准。
+Task 狀態與 §1.4 Requirement lifecycle 分開；COMPLETED、REVIEWED、
+ACCEPTED / CLOSED 不互相代替。BLOCKED / UNKNOWN 不推定失敗或安全可重試。
+啟動／恢復前核對版本、批准、Target、Attempt、撤回／取代／結果及 Writer 競爭；
+已 ACCEPTED / CLOSED 不重跑，CANCELED / REVOKED 不復活，SUPERSEDED
+不沿用舊批准。UNKNOWN 先在授權內唯讀核對原 Target，不自動重派或改派；
+沒有原子 claim 不宣稱全域 Exactly-once。
+
+Context Recovery 不構成新派工。任何新的 Task-specific Action 前，先在原批准
+讀取範圍恢復 §13.2 的 Initial Task Binding：原始人類批准 / 適用 Delegation、
+實際 Target Turn、Task / Version / Attempt、指定入口與 Packet identity、Source、
+Scope、已用及剩餘 Budget、STOP；核對同一有效工作單元後才繼續。
+摘要、搜尋結果、歷史附件與未被本次指定的舊 CURRENT 不能替代本次批准或任務；
+不自行選最新 Task、重啟歷史 Task 或以另一 Attempt 恢復額度。
+Task Identity 與 Source Identity 分開核對；必要原文或身分無法恢復時，
+標 INPUT UNKNOWN / STOP；Task 選取不符時標 TASK SELECTION MISMATCH / STOP。
+有限原文恢復與工程預算分開，不重置 Trigger / Observation / Repair / Native / Git
+及其他已核准額度，不解除舊 STOP。沿用 §15.2 SESSION_HANDOFF，不另建報告系統。
+
+標準格式；不適用的欄位填 `None` 或 `Not Applicable`，不得猜測：
+
+```text
+完整 CODEX_TASK_PACKET 格式移至本 Bundle 的 T 附錄 T1；本節觸發義務、權限、例外與規則保持。產生前須讀取原格式全文，不得以此引用代替完整交付。
+```
+
+以下為可選補充欄位，可置於上述 Validation 之後；不改既有必填結構與固定
+Task Slot。簡單 Task 不要求填寫，不適用可省略或填 None。未填不新增 Minor
+Repair 授權，亦不收回 §3.1 原 Task 已包含的 implementation authority。
+
+| 可選欄位 | 應描述的範圍 |
+|---|---|
+| Allowed Minor Repairs | 是否獲 Developer 預先核准；精確 File Allowlist、Diagnostic Categories、禁止修改項目、修正／重驗證預算及 STOP / Escalation 條件（§3.6） |
+| Validation Gates | 適用檢查、成功條件、執行順序與 Conditional Execution Gate；後續操作的獨立授權及失敗／阻擋時行為，不以修正授權代替 Native / Git / 資料操作授權 |
+| Evidence Reuse | 已接受 evidence 的 identity / path / hash 或 commit / run、command / result、環境、接受來源與範圍，以及必須重驗證的觸發條件（§12.1–12.2） |
+| Parallel Coordination | 僅在並行或共享資源時適用；列明 Task Owner、worktree／branch、Source Writer、checkpoint／Read Lease（需要時）、修改範圍、Task／Review／Evidence 位置、Git Integration Owner 與 Native 共用資源協調（§3.7）；欄位本身不授權任何操作 |
+
+修正／重驗證預算由 Developer 依 Task 明確核准，本文件不設定通用次數或
+無限重試預設。Evidence Reuse 沿用 §12，不因填寫此欄位而自動接受新證據、
+豁免 Spec gate，或把 CI / build PASS 當成 device / platform validation 完成。
+
+`Execution Profile` 是 Developer / Chat 的執行建議，並非產品 Requirement 或
+Codex 實際 runtime state。`AGENTS.md` 與 Task Packet 不能保證實際 model、
+reasoning effort、approval mode 或 execution environment。Codex 使用目前實際
+runtime capability；無法確認 model 名稱時不得猜測，也不得把 runtime 設定寫成
+產品 Decision。若建議的 Model / Reasoning / Approval 與實際 runtime 明顯不一致，
+且可能影響安全、正確性或 Developer 預期，開始受影響工作前簡短回報；不因
+Execution Profile 不完全一致就停止所有工作。
+
+Task / Batch Approval、Delegated Trigger Authorization、Packet Delivery、
+Workspace Activation、Runtime Permission、Execution Completion、Independent Review
+與 Developer Final Acceptance 分別判定，不互相代替。平台自動審查
+拒絕時回報被拒操作與理由並停止該操作；只有 Developer 可選擇平台正式支援的
+人工審查途徑，Agent 不自行換 Host / Tool Channel、Full Access 或安全設定繞過。
+
+本次明確指定 Workspace Inbox 時，下列 `CURRENT_TASK.md` 指該入口；
+未指定時使用既有固定 Task Slot。多個入口的有效性不明時先核對，不選最新檔案、
+不雙重啟動；Developer 的 shortcut 只觸發 G0，不另授予 Task Approval 或 Runtime Permission。
+
+Initial Task Binding：在本節既有入口規則下，先核對原始人類批准及適用 Delegation、
+實際 Target Thread / Turn / Host / Owner、Task / Version / Attempt、唯一指定
+Canonical Inbox / Packet、實讀 bytes / SHA-256、獨立 Expected（適用時）、Source
+Checkpoint、Scope / Budget / STOP。指定 Inbox 的 Developer Manual Activation
+與 Delegated Activation 保留各自原批准及互斥規則；Packet 存在不等於啟動批准。
+已指定入口無法取得或身分不符時，只在原批准內有限恢復該入口；不 fallback 到
+Root CURRENT、其他固定 Slot、歷史附件或最新檔案。不能核實則 INPUT UNKNOWN / STOP。
+有實際有效的競爭 Task / Attempt 時停止受影響工作，不將歷史檔案存在視為有效 READY。
+身分及檢查結果沿用 Task / Review Packet 或 SESSION_HANDOFF 記錄；不自行建立
+永久 ledger / lock，也不宣稱此文字規則提供 Runtime Task Pinning 或原子 Claim。
+
+Developer 明確輸入「執行目前任務」或收到有效 Envelope 下的 01 Work Trigger 時，
+只觸發相同 G0；委派訊息不豁免以下核對，也不擴大原批准。Codex 須先確認：
+
+1. `CURRENT_TASK.md` 存在且包含一份完整有效的 `CODEX_TASK_PACKET`；
+2. 內容未標示 `NO_ACTIVE_TASK`；
+3. 該任務未被明確完成、Review、整合或後續任務取代；
+4. 實際 repository state 與 packet 假設相容。
+
+任一項不成立時，不修改 repository；回報沒有有效的當前可執行任務或 task state
+已過期，不因舊 packet 仍在固定路徑而靜默重跑。確認可執行後，仍須完整讀取
+`CURRENT_TASK.md`、重新讀取 `AGENTS.md`、確認 Current Approved Spec，並核對實際
+branch、HEAD、upstream、working tree；判斷 §4 STOP Condition 後，依 packet 與
+正式文件執行。不得要求 Developer 重貼完整 packet、只憑 shortcut 猜測 scope、
+跳過 packet 或只依 previous session。Shortcut 不提升 packet 權威，也不是
+Developer 對任務結果的預先批准。
+
+若 packet 與 Spec、Approved Change Request 或 Decision Record 衝突，缺少必要
+產品決策，要求超出目前 Phase，或需要修改 Spec，依 §4–6 停止受影響部分並
+產生 `CHAT_HANDOFF`；Task Packet 不取代 `CHAT_HANDOFF`。若尚未 Review-ready
+就中斷 session，依 §15.2 建立 `SESSION_HANDOFF`；接續時重新核對 Spec、
+`AGENTS.md`、`CURRENT_TASK.md` 與 Git 狀態。Review-ready 時依 §13.1 建立或
+覆寫 Review Packet，沿用既有交付、validation evidence 與 Human Review 規則。
+
+「我Review完了」不是正式 shortcut，也不自動觸發後續工作；Review 後以新的
+`CURRENT_TASK.md` 或明確、短小且無歧義的 Developer 指令繼續。此流程不依賴
+特定 TUI hotkey；大型正式任務使用 Task Packet，短任務可使用 Composer。
+
+若由 Task Packet 執行且 Review Packet 已建立，最終回覆提供兩個 packet 路徑、
+branch / HEAD、是否有未提交修改及是否等待 Developer Review；完整決策、報告與
+diff 留在 packet 中，不重複貼回 terminal。若 Review Packet 產生失敗，依 §13.1
+第 7 項在終端回報。
+
+## 13.3 Local Task / Review artifact lifecycle
+
+`local_data/` 是 Git 忽略的本機工作區，不是正式 evidence repository。Task／Review
+Packet、snapshot、暫存副本及中間報告，不因存在於該目錄就成為 Source of Truth、
+Developer approval、Spec `APPLIED` 或 Phase 完成證據，也不能取代 Git commit、
+Decision Record、正式 Spec 或已接受的 validation evidence。
+
+需要整理 `local_data/` 產物時，只在任務必要範圍先唯讀分類
+KEEP / ARCHIVE / DELETE CANDIDATE；分類本身不授權處置。建立、覆寫、搬移、
+封存或刪除須有可識別 ownership 與精確批准，可於 Task 中一併界定範圍及方式；
+不得僅因 Review-ready、任務結束或放入 History 而自動處置。保護仍需重現的
+historical / accepted evidence、dirty / untracked source、learner data 與其他 Task
+產物；未知時 KEEP 並回報。Task / Review Slots 仍依 §13.1–13.2 在獲准範圍覆寫，
+不改為永久任務檔案庫；File Write Allowlist 為 NONE 時在原對話交付，不寫入或清理 Slots。
+
+暫存產物可能包含 `*-pre-*`、`*_BEFORE_*`、`*-before-*`、snapshot、暫存 diff
+baseline、暫存 approval-source copy 或內容已由正式 Git 狀態／當前 Review Packet
+承載的一次性報告（例如 `SPEC_UPDATE_REPORT.md`）。**不得只靠檔名判定可刪除**；
+先核對 Git tracking 與 repository 治理。此規則絕不授權刪除 tracked 文件、
+Current Approved／歷史正式 Spec、Decision Record、正式 CHANGE_REQUEST、Phase
+closure／validation evidence、source code、tests、migrations、CI、repository
+configuration 或正式 architecture 文件。即使檔名含 old、previous、before、
+historical、snapshot，只要屬 tracked 或正式證據就不得依暫存規則刪除。
+無法確定本機檔案是否為暫存時，保留並在 Review Packet 列明，交由 Human Review。
+
+暫存清理不授權 commit、push、merge、Spec promotion、Change Request application、
+Phase start／completion 或產品 implementation；也不取代 Developer Review、
+正式 validation evidence 或既有 manual approval／STOP 規則。
+
+---
+
+## 13.4 V2.7.0 協調入口／File-First（條件式）
+
+### 13.4.1 生效與非追溯
+
+本節只有在 Root／D／T 整個治理 Bundle 正式核准、整合且指定生效 revision，Project 設定相容並實際套用、當次 Task 的路徑／模式／Write／Tool／Budget／平台與能力 Gate 成立時，才可使用。未通過則 HOLD 受影響模式，沿 §13.2 原入口，不繞過。候選完成不會修改現有 CURRENT；舊完整 CURRENT 的 occupancy／原 Task 行政處置／Writer 釋放須核實後另有精確 cutover 批准。取消後續執行權不是資源已釋放，也不是 CLOSED／成功。既有 accepted evidence、舊 Task／Attempt／budget／STOP／DENIED／UNKNOWN 不追溯變更。
+
+### 13.4.2 唯一協調者及完整批准
+
+01 Chat 負責規劃、決策分析及統一 Review；Developer 一次批准完整成果與 Task／Version／Attempt、Owner／Target／Host、依賴／Parallel Gate、Read／Write／Tool／Artifact Scope、Budget、Activation Mode、STOP／UNKNOWN、Validation／Review／Acceptance；低風險已授權方法由 Workspace 自主選擇。01 Work 是唯一獲准 Dispatcher／Collector，按 §3.3、§3.7、§13.2 辦理逐 Child 授權內的配置、派工、狀態核對與收件。Developer 保留人工啟動及最終 Acceptance。02～06／Codex A～D 的既有角色與限制保持。
+
+### 13.4.3 File-First Publication 與 Ownership
+
+01 Work 只寫精確獲准 Inbox，Producer 只寫自身獲准 Outbox；Task／Version／Attempt 隔離，完整 TASK.md／READY.json 與 RESULT.md／READY.json create-only，READY 最後發布。發佈前核對原批准、Task Binding、source、原始 bytes／SHA-256、目標不存在、Root／祖先／Link／Reparse、Writer／reader、輸出權限及剩餘預算。必要父目錄、每檔、驗證窗口及控制訊息的額度依當次批准，不引入通用無限重試。
+
+本文完整關閉後計 raw bytes／SHA-256；READY manifest列本文實讀身分，自身 hash 由外部載體引用，不循環自 hash。本文部分發布、檔案已存在、hash不符、錯owner、DENIED／UNKNOWN即STOP，保留安全現況，不覆寫、刪除、改名、改ToolChannel重試或假稱完整。不可未發生就在 immutable RESULT／READY預寫 integrity、Writerrelease 或通知成功；後發生的真實結果於原 Producer Final 補記，不因報告狀態需更新而取得額外寫入權。
+
+這是既有 §13 格式的 transport／位置特例，不另建第二套 report system；固定 Task／Review／UI/UX Slots 及其既有例外保持，只有精確批准才寫或回填。History只是 reference，沒有 archive／move／delete隱含批准。
+
+### 13.4.4 Single Active Task Pointer
+
+正式啟用且獲精確批准的 Workspace inbox/CURRENT_TASK.md 可為可變 pointer，不再承載完整Task；未啟用的其他入口仍用 §13.2 全文。CURRENT 只定位一個 active assignment，不能是授權、Requirement或執行結果。完整 CODEX_TASK_PACKET／CODEX_REVIEW_PACKET 仍在 Task-owned檔，14／19欄、起訖及全部 Scope／Budget／STOP不變。
+
+指標須可識別 Schema／Workspace、AssignmentRevision、PointerRevision、assignment state、Batch／Task／Version／Attempt、ActivationMode、TargetThread／Host、Canonical TASK／READY locator、TASK bytes／SHA-256、OriginalApprovalRef、SourceCheckpointRef；完整批准、scope等可引用完整Packet，不能用pointer縮略正文代替。HistoryFallback=NEVER、ExecuteWithoutG0=FALSE是治理限制，不是Runtime保證。locator相對核准inbox解析，不能跨Workspace、逃出批准Root或透過未准Link／Reparse換源。
+
+同一assignment的Task／Version／Attempt／Target／PacketHash不可藉狀態更新修改；AssignmentRevision只隨合法新assignment改變，PointerRevision隨實際發布遞增，包括合法狀態更新。新assignment不重用已釋放revision；兩revision不是批准或原子CAS。每次更新核對已批准前值revision／hash與合法新值；缺失、倒退、不符或UNKNOWN競爭即STOP。不得預填不存在的ActualTargetTurn，真正啟動後從平台可核身分建立原Activation＋Task／Attempt／AssignmentRevision／PacketHash＋ActualThread／Turn／Host Binding。
+
+### 13.4.5 Initial／Recovery／Final Gate
+
+首次從可信humanActivation／有效Delegation取得預期入口及原批准，核實ActualTargetTurn，讀核准CURRENT並解析唯一TASK／READY；逐項對照外部Expected、完整正文、Source、權限、資源、scope與已用／剩餘budget。CURRENT與READY不代humanapproval。§13.2 H4 Initial Binding、H3 Strict Recovery及§13.1 H2 Final Gate完整適用。
+
+Context Recovery先恢復原Turn啟動與Binding，再在原ReadScope讀原CURRENT／TASK／READY；不是先讀最新pointer換任務。同assignment的合法PointerRevision更新只能表示狀態，不改原Binding。CURRENT已指別assignment標 TASK POINTER CONFLICT／STOP；必要身分／正文無法恢復標INPUT UNKNOWN／STOP；Task選錯標TASK SELECTION MISMATCH／STOP。History搜尋／舊R1／附件／摘要只Reference，不fallback。恢復原額度／STOP／資源，再做source核對才繼續；Final比較Expected／ActualTask及實際成果，不只複製題頭。
+
+### 13.4.6 CURRENT更新、釋放與Windows邊界
+
+01 Work是CURRENT唯一獲准Writer；每次建立、更新或釋放仍需精確批准scope／前值／新值／ownership／操作額度。NO_ACTIVE_TASK須有無有效assignment或合法釋放證據；ASSIGNED表示配置不是啟動；RUNNING須ActualTurn／Binding證據；BLOCKED保留原因及預算；UNKNOWN不切換；VERIFIED TERMINAL須正確Task終態／Final／Artifact／資源證據而非Acceptance；RELEASED對Reader無可啟動任務，不等於TaskCLOSED、封存或額度恢復。不要求每事件都寫CURRENT；缺寫入授權則原件保留並回報HOLD。
+
+安全更新推薦同目錄 create-only staging，完整寫入／關閉／必要flush／讀回檢查後發布；目的地已證不存在才不覆寫移動，既存目的地可在另批精確backup與replace權限下使用平台支援的置換。staging、rename／replace、backup、來源名稱消失及後續清理全部需列入批准，不能藏在「寫檔」內。核對同volume／祖先／目標及前後hash／revision，error／timeout／不一致保留現況，不自retry／rollback／cleanup。不保證失敗原件完全不動、crash transaction一致性或Exactly-once。實際Windows能力與各Runtime合法操作尚需獨立有界驗證；能力不足維持精確Task-ownedLocator人工模式，不用不安全直接覆寫補足，不切換同一失敗Attempt。
+
+### 13.4.7 Activation與最小控制訊息
+
+每Task／Attempt啟動前只選Mode A Delegated File-First或Mode B Developer Manual File-First。首次發訊前的互斥人工條件依 §13.2。A需原human精確准Sender01Work→指定Target發訊且平台允許；B由Developer在指定Target直接啟動。01Work準備Inbox不是啟動，A被拒／DeliveryUNKNOWN不能轉B重啟同Attempt。未授權Delegation仍Manual，歷史模式不追改。Forward最多當次批准的一次Invocation，送出呼叫即耗，不因error／timeout／拒絕／換session回復。
+
+Forward TASK_READY僅傳Batch／Task／Attempt、Target、唯一InboxLocator、bytes／Hash、原始ApprovalLocator、G0指令。Reverse TASK_TERMINAL僅傳Task／Attempt、真實結果／終態、OutboxLocator／Hash、COLLECT_ONLY；不含新工程批准，不刻意隱藏平台需要審核的真實操作。Reverse必須另有人類對精確Producer→Receiver訊息授權、真實產物／終態、Writerrelease、平台Gate及剩餘額度，提出即計入。無明確額度不推定可傳。
+
+TaskApproval、Sandbox可執行能力、平台specificAction Approval分開；ModeR/W/X只是建議的Task權限分類，不是新Sandbox。不得宣稱所有Runtime同設定、on-request或approvals_reviewer=user必保send成功、Batch批准替代平台批准，或用FullAccess／Proxy／安全設定繞過。必要設定變動由Developer另批且只走平台正式支持途徑；Agent不換Host/ToolChannel、重送或改名掩蓋同Attemptretry。
+
+### 13.4.8 Collection／Acceptance／故障
+
+01Work在合法Collection／Observation窗口核READY、RESULT bytes/hash、Task/Attempt/Producer/Source、原ProducerFinal、WriterRelease、工具／ReceiverTurn及實際Budget/STOP，彙整REVIEW_READY。Producer READY、工具ACK、TargetTurn、ExecutionFinal、CollectorVerified、IndependentReview、DeveloperAcceptance各自取證；idle不證完成或安全重試。通知失敗不代表已發布成果消失，合法Outbox保全。ProducerTurn尚inProgress時FINAL PENDING，不先耗唯一FinalReadback；無額外輪詢／Watcher批准不自新增。
+
+Auto-reviewDENIED／Timeout／DeliveryUNKNOWN／SourceDrift／HashMismatch／批准不足／Attempt衝突STOP受影響操作；不還Invocation、不重送／改派／換模式。獨立新Task須獨立成果與原始批准，不用新名稱掩蓋舊retry。真正不相依且已授權安全工作可續。Review及DeveloperAcceptance不等於正式治理Apply、GitIntegration、ProductionRelease或PhaseComplete；Runtime強制Binding／SessionLoad／Exactly-once仍須獨立驗證。
+
+---
+
+# 14. Git 與安全
+
+Current branch、HEAD、工作樹是否乾淨及未提交修改，必須由 Git repository
+實際狀態判定，不得由本文件或 previous session 推定。開始工作與交付時確認
+Git 狀態，保留既有修改。
+
+Source 修改、validation、Git stage / commit 與 push 分別確認明確授權；
+修改或驗證通過不自動授權 stage / commit，commit 不包含 push。
+依 Spec 完成適用 Review 並形成 commit 後，push 須另有 Developer 批准的完整
+Commit SHA、Remote URL、Destination Ref、Integration Owner、非 force 方式、
+Push Invocation 預算、前後核對與 STOP；不能用預先籠統授權代替。
+push 不包含 PR / merge / release；Git HTTPS 唯讀成功不證明 push 能力。
+同一整合目標的 Git 操作仍依 §3.7 序列執行，不改變 Review / Acceptance 或 Phase gate。
+
+分支名稱依 Current Approved Spec 所定義流程。
+
+目前 V2.16 §21 定義：
+
+- `main`
+- `develop`
+- `feature/*`
+- `fix/*`
+
+不得自行新增其他流程或 branch type。
+
+提交訊息使用 Conventional Commit 前綴：
+
+- `feat:`
+- `fix:`
+- `refactor:`
+- `test:`
+- `docs:`
+- `chore:`
+
+不得提交：
+
+- API / Provider Secrets
+- 使用者學習資料
+- 個人敏感資訊
+- 不應進入 repository 的環境設定
+
+Secrets 僅放：
+
+- Local environment configuration
+- 核准的 Secret Store
+
+AI 請求一律經 Backend Gateway。
+
+---
+
+# 15. Codex Session Continuity
+
+## 15.1 Resume 與正式狀態
+
+Codex CLI 是目前 Windows 本機開發與驗證的主要執行介面；Codex Local
+可作替代介面，但須依 §1.5 核對實際 repository、branch、HEAD、dirty state、
+Task 與權限。Codex Cloud 按隔離環境處理，不預設擁有本機 dirty changes 或
+ignored local_data；所需 input / evidence 必須另行確認可取得且 identity 相符。
+
+「主要執行介面」不表示該介面永久獨占 repository，也不表示另一介面可接管
+既有 Task。Task／Source／Git Integration／Native 資源的 ownership 依明確
+Task Authorization 及 §3.7 判定；使用 CLI、Local 或 Cloud 本身不增加權限。
+既有 Task 的唯一 Owner、read-only、source-immutable、預算與 STOP 限制，
+不因新增並行工程師而失效。
+
+下列 resume 指令只適用 Codex CLI，不直接套用其他介面；其他介面依其實際
+session 能力續接，仍遵守 §15.2。更換 Session、Model 或 Execution Interface
+不增加治理權限、不重置 Task 預算或解除 STOP，也不表示可接管另一個執行中
+Task。同一 checkout 有其他進行中工作時，保留其 Task / Review Slot、source
+與 evidence，不因切換介面而覆寫或重跑。
+
+已接受且仍適用的 evidence 依 §12.2 使用，不因換 session 無條件重跑高成本
+驗證。若目前環境不支援所需 Windows Native / OS operation，明確回報限制與
+未執行項目，不宣稱已完成。以上是 Task Execution Guidance，不是產品需求，
+不固定所有 Task 的 model，也不豁免 Spec 的環境／平台驗證要求。
+
+- 預設建議使用 `codex resume`，由 Developer 從 session picker 選擇正確 session。
+- 僅在能明確確認最近 session 就是本次要延續的 session 時，使用 `codex resume --last`。
+- Codex Session 永遠不是 Source of Truth；resume 不代表舊工作範圍、決策、
+  Phase 狀態或驗證證據自動仍有效。
+
+CLI 指令參考：[OpenAI 官方文件](https://learn.chatgpt.com/docs/developer-commands?surface=cli)。
+
+每次遇到以下情況：
+
+- Current Approved Spec 更新；
+- `AGENTS.md` 更新；
+- Developer 提供新的 Approved Change Request；
+- 從 CHAT_HANDOFF 回復；
+- 收到 `CODEX_DECISION` 或 `SESSION_HANDOFF`；
+- 開始新的 Phase；
+
+Codex 應重新讀取相關正式文件，而不能只依賴 previous session memory。
+
+若 session context 與 repository 正式文件不同：
+
+以 repository 正式文件為準。
+
+## 15.2 Session checkpoint / SESSION_HANDOFF
+
+在長任務的可安全中斷點、切換 session 前或需要交接時，建立 session checkpoint；
+以 `SESSION_HANDOFF` 記錄可讓下一 session 核對的事實。至少包含：
+
+- Task、Phase、Current Approved Spec 與相關正式文件；
+- repository / 工作目錄、實際 branch、HEAD、未提交修改及需保留的工作；
+- 已完成項目、尚未完成項目與 Phase gate 狀態；
+- CR 狀態、已核准 `CODEX_DECISION`、未解決 `CHAT_HANDOFF`；
+- validation evidence 分類、command/result、適用版本、未執行與不需重跑的理由；
+- 仍在執行的 process、log／產物位置、已嘗試的診斷及結果；
+- 下一步安全工作、blocked work 與需要 Developer 決定的事項。
+
+交接內容以 `# SESSION_HANDOFF` 開始、`# END_SESSION_HANDOFF` 結束；可在
+交付訊息或專案交接文件保存，不含 secrets 或不必要的敏感資料。
+Checkpoint 不要求為交接而自動 commit、切換 branch 或清除工作樹。
+
+接手時重新核對 Git 與相關正式文件，不把 checkpoint 當成正式需求、批准或新的
+驗證結果。`SESSION_HANDOFF` 用於延續工作，不能取代處理未決產品／架構問題的
+`CHAT_HANDOFF`，也不能解除 STOP Condition。
+
+---
+
+# 16. 核心工作原則
+
+整個專案遵循：
+
+Chat
+→ Requirement / CHAT_HANDOFF 分析
+→ Developer Decision
+
+若為 Implementation Decision：
+
+Developer Decision
+→ CODEX_DECISION
+→ Codex Resume
+→ Implementation / Test / Validation / Review
+
+若為 Specification Decision：
+
+DRAFT discussion
+→ Developer 明確確認
+→ CHANGE_REQUEST: APPROVED
+→ Spec 維護 Work
+→ Impact Analysis / Conflict Check
+→ Candidate Spec
+→ Developer Review / Approve
+→ Repository 更新
+→ APPLIED
+→ Codex Resume
+
+Spec 維護 Work 也可依 Developer 明確授權維護治理文件；遵守 §3.3 的文件與
+實作邊界，不將治理維護視為產品變更或 Phase gate 完成。
+
+若 Codex 發現 Spec / Product / Architecture 問題：
+
+Codex
+→ STOP affected work
+→ CHAT_HANDOFF
+→ 回 Chat 討論
+
+不得跳過 Developer Decision。
